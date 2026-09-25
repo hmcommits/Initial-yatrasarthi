@@ -14,8 +14,8 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
 
     // Compute prev/next from edges
     const edges = await db.collection('edges').find({ tripId: node.tripId }).toArray();
-    const inEdge = edges.find(e => e.toNodeId === id);
-    const outEdge = edges.find(e => e.fromNodeId === id);
+    const inEdge = edges.find((e: any) => e.toNodeId === id);
+    const outEdge = edges.find((e: any) => e.fromNodeId === id);
 
     return NextResponse.json({
       data: {

@@ -11,6 +11,7 @@ import { EventTimeline } from './EventTimeline';
 import { DisruptionSimulator } from './DisruptionSimulator';
 import { KutumbInviteModal } from './trips/KutumbInviteModal';
 import { TripSettingsModal } from './trips/TripSettingsModal';
+import IngestionHub from './ingestion/IngestionHub';
 
 const defaultPreferences = { cost: 40, time: 80, bookings: 100 };
 
@@ -275,8 +276,7 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
                 style={{
                   color: activeTab === tab.id ? '#172017' : '#5F665B',
                   fontWeight: activeTab === tab.id ? 700 : 500,
-                  borderBottom: activeTab === tab.id ? '2px solid #C5D82D' : '2px solid transparent',
-                  marginBottom: -1,
+                                    marginBottom: -1,
                   background: 'none',
                   border: 'none',
                   borderBottomWidth: 3,

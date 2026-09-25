@@ -15,7 +15,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
     if (statusFilter) query.status = statusFilter;
 
     const nodes = await db.collection('nodes').find(query).sort({ time: 1 }).toArray();
-    const mapped = nodes.map(n => ({ id: n._id.toString(), ...n, _id: undefined }));
+    const mapped = nodes.map((n: any) => ({ id: n._id.toString(), ...n, _id: undefined }));
 
     return NextResponse.json({ data: { nodes: mapped } });
   } catch (err) {
