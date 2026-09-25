@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 import { getExtractor } from '@yatrasarthi/llm';
 import type { Node, NodeType } from '@yatrasarthi/types';
-import { ObjectId } from 'mongodb';
 import { getSessionUser } from '@/lib/auth';
 import { publishTripEvent } from '@/lib/realtime';
 
