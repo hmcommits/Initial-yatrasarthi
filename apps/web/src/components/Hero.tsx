@@ -326,25 +326,6 @@ function Stat({ value, label }: { value: string; label: string }) {
 export function Hero({ onNavigate }: HeroProps) {
   return (
     <>
-      {/* ── LIVE ADVISORY TICKER ── */}
-      <div style={{ background: '#172017' }} className="text-white py-1.5 px-4 text-xs overflow-hidden border-b border-[#2C382C]">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2 shrink-0">
-            <span className="w-2 h-2 rounded-full bg-[#C5D82D] animate-pulse" />
-            <span className="font-extrabold uppercase tracking-wider text-[11px] text-[#C5D82D]">Live Travel Radar:</span>
-          </div>
-          <div className="overflow-x-auto whitespace-nowrap font-medium text-[11px] scroll-x text-[#DCE8D2]">
-            🌧️ Western Ghats Monsoon Advisory: Konkan Railway speed restriction · Trains operating with dynamic slack buffers · Mumbai CSIA (BOM) departure hold 20m · YatraSarthi 24/7 Cascade Recovery ACTIVE
-          </div>
-          <button 
-            onClick={() => onNavigate('dashboard')} 
-            className="text-[11px] font-bold shrink-0 hidden sm:inline text-[#C5D82D] hover:underline"
-          >
-            Check My Trips →
-          </button>
-        </div>
-      </div>
-
       {/* ── SECTION 1: Hero (warm cream background) ── */}
       <section style={{ background: '#F5F2E8', paddingTop: '1.5rem', paddingBottom: '3.5rem' }}>
         <div className="max-w-7xl mx-auto px-5 sm:px-8 flex flex-col lg:flex-row items-center gap-10 lg:gap-14">
