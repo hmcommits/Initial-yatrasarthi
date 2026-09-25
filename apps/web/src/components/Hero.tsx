@@ -9,308 +9,302 @@ interface HeroProps {
    BEACH SCENE — signature hero visual
 ────────────────────────────────────────────── */
 /* ──────────────────────────────────────────────
-   MOUNTAIN & ROAD JOURNEY SCENE — Signature Hero Visual
+   MOUNTAIN & ROAD JOURNEY SCENE — Seamless Pastel Hero Visual
    Features:
-   - Sun with warm concentric halos
-   - Drifting soft white clouds
-   - Snow-capped geometric mountain peaks
-   - Ascending flight with dashed trajectory
-   - Charming yellow bus cruising on the winding road
-   - Floating trip health & connected multi-modal cards
+   - 100% borderless, merged into website background (#F5F2E8)
+   - Soft, harmonious pastel color palette
+   - Aeroplane taking off and climbing high UP into the sky
+   - Animated flow on dashed flight trajectory
+   - Gentle cruising mini-bus on pastel road
+   - Gentle floating sun halos & drifting clouds
 ────────────────────────────────────────────── */
 function BeachScene() {
   const W = 560;
   const H = 380;
 
   return (
-    <div className="relative w-full" style={{ maxWidth: 560 }}>
+    <div className="relative w-full flex items-center justify-center overflow-visible" style={{ maxWidth: 580 }}>
       {/* Scoped Keyframe Animations */}
       <style>{`
-        @keyframes sun-glow-pulse {
+        @keyframes sun-halo-breathe {
           0%, 100% { transform: scale(1); opacity: 0.35; }
-          50% { transform: scale(1.05); opacity: 0.55; }
+          50% { transform: scale(1.06); opacity: 0.55; }
         }
-        @keyframes cloud-drift-slow {
+        @keyframes cloud-float-left {
           0%, 100% { transform: translateX(0px); }
-          50% { transform: translateX(12px); }
+          50% { transform: translateX(14px); }
         }
-        @keyframes cloud-drift-alt {
+        @keyframes cloud-float-right {
           0%, 100% { transform: translateX(0px); }
-          50% { transform: translateX(-10px); }
+          50% { transform: translateX(-12px); }
         }
-        @keyframes flight-climb {
-          0%, 100% { transform: translate(0px, 0px) rotate(0deg); }
-          50% { transform: translate(5px, -6px) rotate(1.5deg); }
+        @keyframes flight-takeoff-ascent {
+          0% {
+            transform: translate(125px, 260px) rotate(32deg) scale(0.72);
+            opacity: 0;
+          }
+          10% {
+            opacity: 1;
+            transform: translate(160px, 238px) rotate(32deg) scale(0.82);
+          }
+          50% {
+            transform: translate(275px, 168px) rotate(32deg) scale(1);
+            opacity: 1;
+          }
+          85% {
+            transform: translate(395px, 92px) rotate(32deg) scale(1.08);
+            opacity: 1;
+          }
+          100% {
+            transform: translate(455px, 52px) rotate(32deg) scale(1.12);
+            opacity: 0;
+          }
         }
-        @keyframes bus-cruise {
+        @keyframes dash-flight-trail {
+          to { stroke-dashoffset: -30; }
+        }
+        @keyframes bus-gentle-ride {
           0%, 100% { transform: translate(0px, 0px); }
-          25% { transform: translate(1.5px, -0.8px); }
-          50% { transform: translate(3px, 0.4px); }
-          75% { transform: translate(1.5px, -0.6px); }
+          25% { transform: translate(2px, -1px); }
+          50% { transform: translate(4px, 0.5px); }
+          75% { transform: translate(2px, -0.8px); }
         }
-        @keyframes card-float-1 {
+        @keyframes badge-float-subtle {
           0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-7px); }
-        }
-        @keyframes card-float-2 {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-9px); }
+          50% { transform: translateY(-5px); }
         }
         .anim-sun-halo {
-          transform-origin: 418px 108px;
-          animation: sun-glow-pulse 4s ease-in-out infinite;
+          transform-origin: 418px 105px;
+          animation: sun-halo-breathe 4.5s ease-in-out infinite;
         }
-        .anim-cloud-1 {
-          animation: cloud-drift-slow 6s ease-in-out infinite;
+        .anim-cloud-a {
+          animation: cloud-float-left 7s ease-in-out infinite;
         }
-        .anim-cloud-2 {
-          animation: cloud-drift-alt 7s ease-in-out infinite;
+        .anim-cloud-b {
+          animation: cloud-float-right 8s ease-in-out infinite;
         }
-        .anim-flight {
-          animation: flight-climb 3.5s ease-in-out infinite;
+        .anim-airplane-soar {
+          animation: flight-takeoff-ascent 5.2s cubic-bezier(0.25, 0.8, 0.45, 1) infinite;
         }
-        .anim-bus {
-          animation: bus-cruise 1.8s ease-in-out infinite;
+        .anim-flight-path {
+          animation: dash-flight-trail 1.2s linear infinite;
         }
-        .anim-card-1 {
-          animation: card-float-1 4.5s ease-in-out infinite;
+        .anim-bus-drive {
+          animation: bus-gentle-ride 2s ease-in-out infinite;
         }
-        .anim-card-2 {
-          animation: card-float-2 5s ease-in-out infinite;
-          animation-delay: 1.2s;
+        .anim-pill-badge {
+          animation: badge-float-subtle 4s ease-in-out infinite;
         }
       `}</style>
 
       <svg
         viewBox={`0 0 ${W} ${H}`}
-        className="relative w-full rounded-3xl"
-        style={{ height: 'auto', aspectRatio: `${W}/${H}`, display: 'block', overflow: 'hidden' }}
+        className="w-full overflow-visible"
+        style={{ height: 'auto', aspectRatio: `${W}/${H}`, display: 'block', background: 'transparent' }}
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          {/* Sky Gradient — Soft Mint & Cream */}
-          <linearGradient id="mnt-sky-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#EFF6F0" />
-            <stop offset="45%" stopColor="#E5F0E8" />
-            <stop offset="100%" stopColor="#DBEAE0" />
+          {/* Subtle Ambient Radial Wash behind mountains */}
+          <radialGradient id="pastel-glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#EAF3EC" stopOpacity="0.8" />
+            <stop offset="60%" stopColor="#F5F2E8" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#F5F2E8" stopOpacity="0" />
+          </radialGradient>
+
+          {/* Soft Pastel Rolling Hills Gradients that melt into website background #F5F2E8 */}
+          <linearGradient id="pastel-hill-back" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#A8D2DF" />
+            <stop offset="65%" stopColor="#BFE0E9" />
+            <stop offset="100%" stopColor="#F5F2E8" stopOpacity="0.3" />
           </linearGradient>
 
-          {/* Rolling Hills Gradient */}
-          <linearGradient id="hill-back-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#8CC0D2" />
-            <stop offset="100%" stopColor="#76ACBF" />
-          </linearGradient>
-          <linearGradient id="hill-front-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#70A7BD" />
-            <stop offset="100%" stopColor="#568FA7" />
+          <linearGradient id="pastel-hill-front" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#8EC3D5" />
+            <stop offset="60%" stopColor="#A8D3E2" />
+            <stop offset="95%" stopColor="#F5F2E8" />
           </linearGradient>
 
-          {/* Drop Shadow for overlay cards */}
-          <filter id="mnt-card-shadow" x="-10%" y="-10%" width="125%" height="130%">
-            <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="rgba(23,32,23,0.12)" />
+          {/* Soft Floating Pill Badge Shadow */}
+          <filter id="soft-pill-shadow" x="-10%" y="-20%" width="125%" height="150%">
+            <feDropShadow dx="0" dy="3" stdDeviation="5" floodColor="rgba(23,32,23,0.08)" />
           </filter>
 
-          {/* Scene Rounded Clip */}
-          <clipPath id="mnt-scene-clip">
-            <rect width={W} height={H} rx="24" />
-          </clipPath>
-
-          {/* Dot Pattern for subtle blueprint texture */}
-          <pattern id="mnt-dot-grid" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
-            <circle cx="2" cy="2" r="1.1" fill="#4E7A6C" opacity="0.1" />
+          {/* Very Subtle Dot Texture merging on #F5F2E8 */}
+          <pattern id="pastel-dots" x="0" y="0" width="22" height="22" patternUnits="userSpaceOnUse">
+            <circle cx="2" cy="2" r="1.1" fill="#758A80" opacity="0.08" />
           </pattern>
         </defs>
 
-        <g clipPath="url(#mnt-scene-clip)">
-          {/* ── 1. Sky Background ── */}
-          <rect width={W} height={H} fill="url(#mnt-sky-grad)" />
-          <rect width={W} height={H} fill="url(#mnt-dot-grid)" />
+        {/* ── 1. Seamless Background Wash (No bounding box) ── */}
+        <ellipse cx="280" cy="210" rx="275" ry="170" fill="url(#pastel-glow)" />
+        <rect x="40" y="30" width="480" height="280" fill="url(#pastel-dots)" opacity="0.75" />
 
-          {/* ── 2. Sun & Warm Halos (Top Right) ── */}
+        {/* ── 2. Sun & Concentric Warm Halos (Top Right) ── */}
+        <g>
+          {/* Outer gentle halo */}
+          <circle cx="418" cy="105" r="90" fill="#FDF3D4" className="anim-sun-halo" />
+          {/* Inner gentle halo */}
+          <circle cx="418" cy="105" r="64" fill="#FDE7AA" opacity="0.4" />
+          {/* Core Sun (Soft pastel golden amber) */}
+          <circle cx="418" cy="105" r="40" fill="#F9D072" />
+        </g>
+
+        {/* ── 3. Soft Floating White Clouds ── */}
+        {/* Cloud 1: Upper Center */}
+        <g className="anim-cloud-a" style={{ transformOrigin: '280px 48px' }}>
+          <circle cx="265" cy="45" r="16" fill="#FFFFFF" opacity="0.9" />
+          <circle cx="285" cy="36" r="22" fill="#FFFFFF" opacity="0.95" />
+          <circle cx="308" cy="44" r="15" fill="#FFFFFF" opacity="0.9" />
+          <rect x="250" y="44" width="70" height="18" rx="9" fill="#FFFFFF" opacity="0.92" />
+        </g>
+
+        {/* Cloud 2: Middle Left */}
+        <g className="anim-cloud-b" style={{ transformOrigin: '150px 92px' }}>
+          <circle cx="132" cy="90" r="14" fill="#FFFFFF" opacity="0.9" />
+          <circle cx="150" cy="82" r="18" fill="#FFFFFF" opacity="0.94" />
+          <circle cx="168" cy="90" r="13" fill="#FFFFFF" opacity="0.9" />
+          <rect x="120" y="88" width="60" height="16" rx="8" fill="#FFFFFF" opacity="0.92" />
+        </g>
+
+        {/* Cloud 3: Right (passing near sun) */}
+        <g className="anim-cloud-a" style={{ transformOrigin: '468px 146px' }}>
+          <circle cx="452" cy="144" r="14" fill="#FFFFFF" opacity="0.92" />
+          <circle cx="470" cy="135" r="19" fill="#FFFFFF" opacity="0.95" />
+          <circle cx="488" cy="144" r="13" fill="#FFFFFF" opacity="0.92" />
+          <rect x="438" y="142" width="64" height="16" rx="8" fill="#FFFFFF" opacity="0.93" />
+        </g>
+
+        {/* ── 4. Soft Pastel Triangular Mountain Peaks ── */}
+        {/* Far Left Step Block */}
+        <polygon points="78,320 78,285 150,285 180,312 180,340 78,340" fill="#9CC5B7" opacity="0.75" />
+        <polygon points="78,285 150,285 180,296 108,296" fill="#BFE0D5" opacity="0.85" />
+
+        {/* Distant Ridge Peak (between left and center) */}
+        <polygon points="175,246 265,335 88,335" fill="#B2DDD0" opacity="0.8" />
+
+        {/* Left Mountain (Pastel Sage) */}
+        <polygon points="155,188 228,330 82,330" fill="#8EBEAF" />
+        {/* Left Mountain Snowcap */}
+        <path d="M 132 230 Q 155 235 178 230 L 155 188 Z" fill="#EEF7F3" />
+
+        {/* Center Mountain (Tallest Peak - Pastel Pine Teal) */}
+        <polygon points="275,165 378,335 172,335" fill="#5AA899" />
+        {/* Center Mountain Snowcap */}
+        <path d="M 241 221 Q 275 227 309 221 L 275 165 Z" fill="#ECF6F1" />
+
+        {/* Right Mountain (Pastel Jade Sage) */}
+        <polygon points="426,176 520,335 332,335" fill="#78B3A4" />
+        {/* Right Mountain Snowcap */}
+        <path d="M 394 222 Q 426 228 458 222 L 426 176 Z" fill="#F0F8F4" />
+
+        {/* ── 5. Flight Trajectory & Continuously Ascending Airplane ── */}
+        {/* Dashed trajectory line extending up across the sky */}
+        <line
+          x1="130"
+          y1="258"
+          x2="450"
+          y2="55"
+          stroke="#72A89C"
+          strokeWidth="2"
+          strokeDasharray="6 5"
+          strokeLinecap="round"
+          className="anim-flight-path"
+          opacity="0.8"
+        />
+
+        {/* The Aeroplane — Soaring UPWARD along the flight path */}
+        <g className="anim-airplane-soar">
+          {/* Stylized Monoplane (Crisp pastel teal & white) */}
           <g>
-            {/* Outer halo */}
-            <circle cx="418" cy="108" r="92" fill="#FDF3D0" className="anim-sun-halo" />
-            {/* Middle halo */}
-            <circle cx="418" cy="108" r="66" fill="#FCE6A4" opacity="0.45" />
-            {/* Core Sun */}
-            <circle cx="418" cy="108" r="42" fill="#F8C762" />
+            {/* Left wing */}
+            <path d="M 0 -2 L -13 -13 L -6 -14 L 4 -4 Z" fill="#246D63" stroke="#246D63" strokeWidth="1" />
+            {/* Right wing */}
+            <path d="M 0 2 L -13 13 L -6 14 L 4 4 Z" fill="#246D63" stroke="#246D63" strokeWidth="1" />
+            {/* Tail fin */}
+            <path d="M -16 -1 L -23 -7 L -20 -8 L -13 -2 Z" fill="#246D63" />
+            <path d="M -16 1 L -23 7 L -20 8 L -13 2 Z" fill="#246D63" />
+            {/* Fuselage */}
+            <path
+              d="M 13 0 C 13 -4.5, -17 -4.5, -19 0 C -17 4.5, 13 4.5, 13 0 Z"
+              fill="#FFFFFF"
+              stroke="#246D63"
+              strokeWidth="2.4"
+              strokeLinejoin="round"
+            />
+            {/* Cockpit windshield */}
+            <ellipse cx="7" cy="0" rx="3.5" ry="1.6" fill="#246D63" />
           </g>
+        </g>
 
-          {/* ── 3. Soft Puffy Clouds ── */}
-          {/* Cloud 1: Upper Center */}
-          <g className="anim-cloud-1" style={{ transformOrigin: '280px 52px' }}>
-            <circle cx="265" cy="46" r="16" fill="#FFFFFF" opacity="0.94" />
-            <circle cx="285" cy="38" r="22" fill="#FFFFFF" opacity="0.96" />
-            <circle cx="308" cy="45" r="16" fill="#FFFFFF" opacity="0.94" />
-            <rect x="250" y="46" width="70" height="18" rx="9" fill="#FFFFFF" opacity="0.95" />
+        {/* ── 6. Rolling Ground Hills & Winding Road (Melting into #F5F2E8) ── */}
+        {/* Back rolling hill */}
+        <path
+          d="M -10 326 Q 140 308 280 318 Q 420 328 570 312 L 570 380 L -10 380 Z"
+          fill="url(#pastel-hill-back)"
+        />
+        {/* Front rolling hill (fades seamlessly into website cream) */}
+        <path
+          d="M -10 338 Q 180 322 360 330 Q 480 336 570 322 L 570 380 L -10 380 Z"
+          fill="url(#pastel-hill-front)"
+        />
+
+        {/* Road (Smooth pastel golden ribbon) */}
+        <path
+          d="M -10 345 Q 180 335 360 324 T 570 302"
+          fill="none"
+          stroke="#E5AF5E"
+          strokeWidth="3.2"
+          strokeLinecap="round"
+        />
+
+        {/* ── 7. Animated Pastel Travel Mini-Bus ── */}
+        <g className="anim-bus-drive" style={{ transformOrigin: '260px 316px' }}>
+          <g transform="translate(235, 300)">
+            {/* Bus shadow */}
+            <rect x="2" y="22" width="48" height="3.5" rx="1.8" fill="rgba(23,32,23,0.12)" />
+
+            {/* Main Body (Soft Warm Honey/Amber) */}
+            <rect x="0" y="0" width="52" height="23" rx="6" fill="#F5BA58" />
+            {/* Roof tint layer */}
+            <path d="M 0 6 Q 0 0 6 0 L 46 0 Q 52 0 52 6 L 52 9.5 L 0 9.5 Z" fill="#F9CA77" />
+
+            {/* Windows (3 rounded passenger windows) */}
+            <rect x="6" y="5" width="9" height="7.5" rx="2" fill="#FFF7EA" />
+            <rect x="18" y="5" width="9" height="7.5" rx="2" fill="#FFF7EA" />
+            <rect x="30" y="5" width="9" height="7.5" rx="2" fill="#FFF7EA" />
+            {/* Front windshield */}
+            <rect x="42" y="5" width="6" height="7.5" rx="2" fill="#FFF7EA" />
+
+            {/* Wheels */}
+            {/* Rear Wheel */}
+            <circle cx="12" cy="24" r="5.8" fill="#253A3A" />
+            <circle cx="12" cy="24" r="2.2" fill="#A1BCBC" />
+            {/* Front Wheel */}
+            <circle cx="41" cy="23.5" r="5.8" fill="#253A3A" />
+            <circle cx="41" cy="23.5" r="2.2" fill="#A1BCBC" />
           </g>
+        </g>
 
-          {/* Cloud 2: Middle Left */}
-          <g className="anim-cloud-2" style={{ transformOrigin: '150px 96px' }}>
-            <circle cx="132" cy="92" r="14" fill="#FFFFFF" opacity="0.92" />
-            <circle cx="150" cy="84" r="18" fill="#FFFFFF" opacity="0.94" />
-            <circle cx="168" cy="92" r="13" fill="#FFFFFF" opacity="0.92" />
-            <rect x="120" y="90" width="60" height="16" rx="8" fill="#FFFFFF" opacity="0.93" />
-          </g>
+        {/* ── 8. Soft Floating Pastel Pill Badges (Borderless, Merged Integration) ── */}
+        {/* Left Pill: Trip Health */}
+        <g transform="translate(20, 218)" className="anim-pill-badge" filter="url(#soft-pill-shadow)">
+          <rect width="138" height="42" rx="21" fill="rgba(255,255,255,0.92)" stroke="#D5D9CC" strokeWidth="1" />
+          <circle cx="21" cy="21" r="11" fill="#DCE8D2" />
+          <path d="M 17 21 L 20 24 L 25 18" fill="none" stroke="#2D7836" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <text x="38" y="18" fontSize="8" fill="#5F665B" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="700" letterSpacing="0.04em">TRIP HEALTH</text>
+          <text x="38" y="31" fontSize="13" fill="#172017" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="800">
+            94% <tspan fontSize="8.5" fontWeight="600" fill="#3E6F4B">· Safe</tspan>
+          </text>
+        </g>
 
-          {/* Cloud 3: Right (passing near sun) */}
-          <g className="anim-cloud-1" style={{ transformOrigin: '465px 150px' }}>
-            <circle cx="452" cy="144" r="14" fill="#FFFFFF" opacity="0.92" />
-            <circle cx="470" cy="136" r="19" fill="#FFFFFF" opacity="0.94" />
-            <circle cx="488" cy="144" r="13" fill="#FFFFFF" opacity="0.92" />
-            <rect x="438" y="142" width="64" height="16" rx="8" fill="#FFFFFF" opacity="0.93" />
-          </g>
-
-          {/* ── 4. Geometric Mountain Peaks ── */}
-          {/* Far Left Step Block (per reference illustration) */}
-          <polygon points="78,320 78,285 150,285 180,312 180,340 78,340" fill="#88B8AA" opacity="0.85" />
-          <polygon points="78,285 150,285 180,296 108,296" fill="#A8D0C4" opacity="0.9" />
-
-          {/* Distant Mountain Peak (between left and center) */}
-          <polygon points="175,248 265,335 88,335" fill="#A2CCBF" opacity="0.9" />
-
-          {/* Left Mountain */}
-          <polygon points="155,190 226,330 84,330" fill="#7FAEA2" />
-          {/* Left Mountain Snowcap */}
-          <path d="M 132 232 Q 155 237 178 232 L 155 190 Z" fill="#D6ECE5" />
-
-          {/* Center Mountain (Tallest Peak) */}
-          <polygon points="275,168 375,335 175,335" fill="#4A998C" />
-          {/* Center Mountain Snowcap */}
-          <path d="M 242 224 Q 275 230 308 224 L 275 168 Z" fill="#D4ECE5" />
-
-          {/* Right Mountain */}
-          <polygon points="426,178 518,335 334,335" fill="#6AA295" />
-          {/* Right Mountain Snowcap */}
-          <path d="M 395 224 Q 426 230 457 224 L 426 178 Z" fill="#D8EEE7" />
-
-          {/* ── 5. Flight Trajectory & Animated Airplane ── */}
-          {/* Dashed trajectory line */}
-          <line
-            x1="170"
-            y1="214"
-            x2="268"
-            y2="182"
-            stroke="#689E92"
-            strokeWidth="1.8"
-            strokeDasharray="4 4"
-            strokeLinecap="round"
-          />
-
-          {/* Airplane ascending above center mountain */}
-          <g className="anim-flight" style={{ transformOrigin: '286px 172px' }}>
-            <g transform="translate(286, 172) rotate(34)">
-              {/* Cute Stylized Monoplane (Teal outline & crisp body) */}
-              {/* Left wing */}
-              <path d="M 0 -2 L -12 -12 L -6 -13 L 4 -4 Z" fill="#246D63" stroke="#246D63" strokeWidth="1" />
-              {/* Right wing */}
-              <path d="M 0 2 L -12 12 L -6 13 L 4 4 Z" fill="#246D63" stroke="#246D63" strokeWidth="1" />
-              {/* Tail fin */}
-              <path d="M -15 -1 L -22 -6 L -19 -7 L -12 -2 Z" fill="#246D63" />
-              <path d="M -15 1 L -22 6 L -19 7 L -12 2 Z" fill="#246D63" />
-              {/* Fuselage */}
-              <path
-                d="M 12 0 C 12 -4, -16 -4, -18 0 C -16 4, 12 4, 12 0 Z"
-                fill="#EDF7F4"
-                stroke="#246D63"
-                strokeWidth="2.4"
-                strokeLinejoin="round"
-              />
-              {/* Cockpit / window */}
-              <ellipse cx="6" cy="0" rx="3.5" ry="1.5" fill="#246D63" />
-            </g>
-          </g>
-
-          {/* ── 6. Rolling Ground Hills & Winding Road ── */}
-          {/* Back rolling hill */}
-          <path
-            d="M -10 326 Q 140 310 280 320 Q 420 330 570 315 L 570 380 L -10 380 Z"
-            fill="url(#hill-back-grad)"
-          />
-          {/* Front rolling hill */}
-          <path
-            d="M -10 338 Q 180 324 360 332 Q 480 338 570 326 L 570 380 L -10 380 Z"
-            fill="url(#hill-front-grad)"
-          />
-
-          {/* Road (Smooth ochre ribbon) */}
-          <path
-            d="M -10 345 Q 180 336 360 326 T 570 305"
-            fill="none"
-            stroke="#DF9E40"
-            strokeWidth="3.2"
-            strokeLinecap="round"
-          />
-
-          {/* ── 7. Animated Mini-Bus ── */}
-          <g className="anim-bus" style={{ transformOrigin: '260px 316px' }}>
-            <g transform="translate(235, 302)">
-              {/* Bus body shadow */}
-              <rect x="2" y="22" width="48" height="4" rx="2" fill="rgba(23,32,23,0.18)" />
-
-              {/* Main Body */}
-              <rect x="0" y="0" width="52" height="23" rx="6" fill="#F1AD48" />
-              {/* Roof tint layer */}
-              <path d="M 0 6 Q 0 0 6 0 L 46 0 Q 52 0 52 6 L 52 10 L 0 10 Z" fill="#F5B859" />
-
-              {/* Windows (3 passenger/windshield rounded windows) */}
-              <rect x="6" y="5" width="9" height="7.5" rx="2" fill="#FEF2D9" />
-              <rect x="18" y="5" width="9" height="7.5" rx="2" fill="#FEF2D9" />
-              <rect x="30" y="5" width="9" height="7.5" rx="2" fill="#FEF2D9" />
-              {/* Front windshield */}
-              <rect x="42" y="5" width="6" height="7.5" rx="2" fill="#FEF2D9" />
-
-              {/* Wheels */}
-              {/* Rear Wheel */}
-              <circle cx="12" cy="24" r="6" fill="#203434" />
-              <circle cx="12" cy="24" r="2.2" fill="#88A6A6" />
-              {/* Front Wheel */}
-              <circle cx="41" cy="23.6" r="6" fill="#203434" />
-              <circle cx="41" cy="23.6" r="2.2" fill="#88A6A6" />
-            </g>
-          </g>
-
-          {/* ── 8. Sleek Floating Journey Protection Badges ── */}
-          {/* Card 1: Trip Health (Left) */}
-          <g transform="translate(24, 215)" className="anim-card-1" filter="url(#mnt-card-shadow)">
-            <rect width="130" height="56" rx="14" fill="#FFFFFF" opacity="0.97" />
-            <rect width="130" height="56" rx="14" fill="none" stroke="#D5D9CC" strokeWidth="1" />
-            <text x="12" y="17" fontSize="8" fill="#5F665B" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="700" letterSpacing="0.05em">TRIP HEALTH</text>
-            <text x="12" y="36" fontSize="18" fill="#172017" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="800">94%</text>
-            <circle cx="16" cy="46" r="3" fill="#3E6F4B" />
-            <text x="23" y="49" fontSize="7.5" fill="#3E6F4B" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="600">All connections safe</text>
-            <rect x="66" y="27" width="52" height="6" rx="3" fill="#DCE8D2" />
-            <rect x="66" y="27" width="48" height="6" rx="3" fill="#C5D82D" />
-          </g>
-
-          {/* Card 2: Connected Journey (Right) */}
-          <g transform="translate(390, 215)" className="anim-card-2" filter="url(#mnt-card-shadow)">
-            <rect width="144" height="60" rx="14" fill="#FFFFFF" opacity="0.97" />
-            <rect width="144" height="60" rx="14" fill="none" stroke="#D5D9CC" strokeWidth="1" />
-            <text x="12" y="17" fontSize="8" fill="#5F665B" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="700" letterSpacing="0.05em">CONNECTED JOURNEY</text>
-            <text x="12" y="34" fontSize="12" fill="#172017" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="800">Goa · Active Sync</text>
-            <g transform="translate(12, 41)">
-              <rect x="0" y="0" width="34" height="13" rx="4" fill="#EDE9D8" />
-              <text x="4" y="9.5" fontSize="7.5" fill="#172017" fontWeight="700">✈ Flight</text>
-              <rect x="38" y="0" width="28" height="13" rx="4" fill="#DCE8D2" />
-              <text x="42" y="9.5" fontSize="7.5" fill="#172017" fontWeight="700">🚕 Cab</text>
-              <rect x="70" y="0" width="32" height="13" rx="4" fill="#EDE9D8" />
-              <text x="74" y="9.5" fontSize="7.5" fill="#172017" fontWeight="700">🏨 Stay</text>
-            </g>
-          </g>
-
-          {/* Bottom subtle watermark */}
-          <text
-            x={W / 2}
-            y={H - 10}
-            textAnchor="middle"
-            fontSize="8.5"
-            fill="rgba(255,255,255,0.75)"
-            fontFamily="Plus Jakarta Sans, sans-serif"
-            fontWeight="700"
-            letterSpacing="0.09em"
-          >
-            YATRASARTHI · MULTI-MODAL TRAVEL ORCHESTRATION
+        {/* Right Pill: Multi-modal Sync */}
+        <g transform="translate(376, 218)" className="anim-pill-badge" style={{ animationDelay: '1.5s' }} filter="url(#soft-pill-shadow)">
+          <rect width="164" height="42" rx="21" fill="rgba(255,255,255,0.92)" stroke="#D5D9CC" strokeWidth="1" />
+          <circle cx="21" cy="21" r="11" fill="#DCE8D2" />
+          <text x="14" y="25" fontSize="11">✈</text>
+          <text x="38" y="18" fontSize="8" fill="#5F665B" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="700" letterSpacing="0.04em">CONNECTED TRIP</text>
+          <text x="38" y="31" fontSize="10.5" fill="#172017" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="700">
+            Flight + Cab + Stay
           </text>
         </g>
       </svg>
