@@ -33,14 +33,14 @@ export function TripHealth({ score, status, weakestEdge }: TripHealthProps) {
   const radius = 52;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (animatedScore / 100) * circumference;
-  const color = score >= 80 ? '#63A66B' : score >= 60 ? '#E7A943' : '#E45B4D';
-  const statusLabel = score >= 80 ? '🟢 Healthy' : score >= 60 ? '🟠 At Risk' : '🔴 Disrupted';
+  const color = score >= 80 ? '#2E7D32' : score >= 60 ? '#172017' : '#D93829';
+  const statusLabel = score >= 80 ? '🟢 Healthy' : score >= 60 ? '🟡 At Risk' : '🔴 Disrupted';
 
   return (
-    <div className="card p-6">
+    <div className="card p-6" style={{ background: '#FFFFFF', borderColor: '#D5D9CC' }}>
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-bold" style={{ color: '#1D211C' }}>Trip Health</h3>
-        <span className="text-xs font-medium px-2 py-1 rounded-full" style={{ background: '#EEF1E4', color: '#65855A' }}>
+        <h3 className="font-bold" style={{ color: '#172017' }}>Trip Health</h3>
+        <span className="text-xs font-semibold px-2.5 py-1 rounded-full border" style={{ background: '#DCE8D2', color: '#172017', borderColor: '#D5D9CC' }}>
           Weakest-link scoring
         </span>
       </div>
@@ -49,7 +49,7 @@ export function TripHealth({ score, status, weakestEdge }: TripHealthProps) {
         {/* Circular score */}
         <div className="relative flex-shrink-0">
           <svg width={120} height={120} viewBox="0 0 120 120">
-            <circle cx="60" cy="60" r={radius} fill="none" stroke="#E3E2D7" strokeWidth="10" />
+            <circle cx="60" cy="60" r={radius} fill="none" stroke="#D5D9CC" strokeWidth="10" />
             <circle
               cx="60" cy="60" r={radius}
               fill="none"
@@ -61,14 +61,14 @@ export function TripHealth({ score, status, weakestEdge }: TripHealthProps) {
               transform="rotate(-90 60 60)"
               style={{ transition: 'stroke-dashoffset 0.1s' }}
             />
-            <text x="60" y="55" textAnchor="middle" fontSize="22" fontWeight="800" fill="#1D211C" fontFamily="Plus Jakarta Sans, sans-serif">
+            <text x="60" y="55" textAnchor="middle" fontSize="22" fontWeight="800" fill="#172017" fontFamily="Plus Jakarta Sans, sans-serif">
               {animatedScore}
             </text>
-            <text x="60" y="70" textAnchor="middle" fontSize="9" fill="#73776E" fontFamily="Plus Jakarta Sans, sans-serif">
+            <text x="60" y="70" textAnchor="middle" fontSize="9" fill="#5F665B" fontFamily="Plus Jakarta Sans, sans-serif">
               / 100
             </text>
           </svg>
-          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-semibold" style={{ color }}>
+          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-bold" style={{ color }}>
             {statusLabel}
           </div>
         </div>
@@ -78,15 +78,15 @@ export function TripHealth({ score, status, weakestEdge }: TripHealthProps) {
           {breakdown.map(b => (
             <div key={b.label}>
               <div className="flex items-center justify-between mb-1">
-                <span className="text-xs font-medium" style={{ color: '#73776E' }}>{b.label}</span>
-                <span className="text-xs font-bold" style={{ color: '#1D211C' }}>{b.score}</span>
+                <span className="text-xs font-medium" style={{ color: '#5F665B' }}>{b.label}</span>
+                <span className="text-xs font-bold" style={{ color: '#172017' }}>{b.score}</span>
               </div>
-              <div className="h-1.5 rounded-full overflow-hidden" style={{ background: '#E3E2D7' }}>
+              <div className="h-1.5 rounded-full overflow-hidden" style={{ background: '#D5D9CC' }}>
                 <div
                   className="h-full rounded-full transition-all"
                   style={{
                     width: `${b.score}%`,
-                    background: b.score >= 90 ? '#63A66B' : b.score >= 80 ? '#A9C39A' : '#E7A943',
+                    background: b.score >= 90 ? '#2E7D32' : b.score >= 80 ? '#4E8752' : '#858B80',
                   }}
                 />
               </div>
@@ -97,12 +97,12 @@ export function TripHealth({ score, status, weakestEdge }: TripHealthProps) {
 
       {/* Weakest link */}
       {weakestEdge && (
-        <div className="mt-4 p-3 rounded-xl flex items-start gap-3" style={{ background: '#FDF3E3', border: '1px solid #F0C97A' }}>
-          <AlertTriangle size={15} style={{ color: '#E7A943', flexShrink: 0, marginTop: 1 }} />
+        <div className="mt-4 p-3 rounded-xl flex items-start gap-3 border" style={{ background: '#EDE9D8', borderColor: '#D5D9CC' }}>
+          <AlertTriangle size={15} style={{ color: '#172017', flexShrink: 0, marginTop: 1 }} />
           <div>
-            <div className="text-xs font-semibold" style={{ color: '#A05B00' }}>Weakest link</div>
-            <div className="text-xs" style={{ color: '#73776E' }}>{weakestEdge.from} → {weakestEdge.to}</div>
-            <div className="text-xs mt-0.5" style={{ color: '#73776E' }}>
+            <div className="text-xs font-bold" style={{ color: '#172017' }}>Weakest link</div>
+            <div className="text-xs" style={{ color: '#5F665B' }}>{weakestEdge.from} → {weakestEdge.to}</div>
+            <div className="text-xs mt-0.5" style={{ color: '#5F665B' }}>
               {weakestEdge.slack < 0 ? 'Negative slack!' : `Slack: ${weakestEdge.slack}m`} — Suggestion: Add 30 min buffer
             </div>
           </div>

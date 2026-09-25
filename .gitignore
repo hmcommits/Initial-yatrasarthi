@@ -27,4 +27,6 @@ pnpm-debug.log*
 
 # OS files
 .DS_Store
-Thumbs.db
+# Dev database
+.dev-db.json
+*.dev-db.json

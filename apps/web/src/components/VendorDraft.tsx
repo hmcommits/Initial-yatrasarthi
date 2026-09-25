@@ -33,39 +33,39 @@ export function VendorDraft() {
   };
 
   return (
-    <div className="card p-6">
+    <div className="card p-6" style={{ background: '#FFFFFF', borderColor: '#D5D9CC' }}>
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-bold" style={{ color: '#1D211C' }}>Vendor Communication</h3>
+        <h3 className="font-bold" style={{ color: '#172017' }}>Vendor Communication</h3>
         {confirmed && (
           <span className="flex items-center gap-1.5 text-xs font-semibold status-confirmed px-3 py-1 rounded-full">
             <CheckCircle size={12} /> Vendor confirmed
           </span>
         )}
         {!confirmed && (
-          <span className="text-xs font-medium px-2 py-1 rounded-full status-pending">
-            🟠 Awaiting response
+          <span className="text-xs font-semibold px-2.5 py-1 rounded-full border" style={{ background: '#EDE9D8', color: '#172017', borderColor: '#D5D9CC' }}>
+            ⏱ Awaiting response
           </span>
         )}
       </div>
 
       <div className="flex flex-col gap-2 mb-4">
         <div className="flex gap-3 text-xs">
-          <span style={{ color: '#73776E', minWidth: 40 }}>To:</span>
-          <span className="font-medium" style={{ color: '#1D211C' }}>Grand Goa Resort</span>
+          <span style={{ color: '#5F665B', minWidth: 40 }}>To:</span>
+          <span className="font-semibold" style={{ color: '#172017' }}>Grand Goa Resort</span>
         </div>
         <div className="flex gap-3 text-xs">
-          <span style={{ color: '#73776E', minWidth: 40 }}>Subject:</span>
-          <span className="font-medium" style={{ color: '#1D211C' }}>Request to update check-in time — Booking GGR-2024-09</span>
+          <span style={{ color: '#5F665B', minWidth: 40 }}>Subject:</span>
+          <span className="font-semibold" style={{ color: '#172017' }}>Request to update check-in time — Booking GGR-2024-09</span>
         </div>
         <div className="flex gap-3 text-xs">
-          <span style={{ color: '#73776E', minWidth: 40 }}>Policy:</span>
-          <span style={{ color: '#65855A' }}>Standard late arrival policy · No guaranteed right to free rescheduling</span>
+          <span style={{ color: '#5F665B', minWidth: 40 }}>Policy:</span>
+          <span style={{ color: '#2E7D32' }}>Standard late arrival policy · No guaranteed right to free rescheduling</span>
         </div>
       </div>
 
       <div
         className="rounded-xl p-4 mb-4 text-sm leading-relaxed whitespace-pre-wrap"
-        style={{ background: '#F5F3E8', color: '#1D211C', border: '1px solid #E3E2D7', fontFamily: 'monospace', fontSize: 12 }}
+        style={{ background: '#F5F2E8', color: '#172017', border: '1px solid #D5D9CC', fontFamily: 'monospace', fontSize: 12 }}
       >
         {message}
       </div>
@@ -75,7 +75,7 @@ export function VendorDraft() {
           onClick={handleCopy}
           className="btn-secondary flex items-center gap-2 px-4 py-2 text-sm"
         >
-          {copied ? <CheckCircle size={14} style={{ color: '#63A66B' }} /> : <Copy size={14} />}
+          {copied ? <CheckCircle size={14} style={{ color: '#2E7D32' }} /> : <Copy size={14} />}
           {copied ? 'Copied!' : 'Copy'}
         </button>
         <button className="btn-secondary flex items-center gap-2 px-4 py-2 text-sm">
@@ -98,9 +98,9 @@ export function VendorDraft() {
       </div>
 
       {confirmed && (
-        <div className="mt-4 p-3 rounded-xl" style={{ background: '#E8F5EA', border: '1px solid #B8DDB9' }}>
-          <div className="font-semibold text-sm mb-1" style={{ color: '#2D7A34' }}>Vendor confirmation detected</div>
-          <div className="text-xs" style={{ color: '#65855A' }}>
+        <div className="mt-4 p-3 rounded-xl border" style={{ background: '#E8F0E2', borderColor: '#D5D9CC' }}>
+          <div className="font-bold text-sm mb-1" style={{ color: '#172017' }}>Vendor confirmation detected</div>
+          <div className="text-xs" style={{ color: '#5F665B' }}>
             Grand Goa Resort confirmed late check-in for 15:30. Reservation retained. Action marked confirmed.
           </div>
         </div>

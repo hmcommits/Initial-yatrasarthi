@@ -21,7 +21,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 
     // In a real app, we'd pass the specific broken node id
     // For now, we mock it.
-    const brokenNodeId = nodes.find(n => n.status === 'broken')?.id || 'mock-id';
+    const brokenNodeId = nodes.find((n: any) => n.status === 'broken')?.id || 'mock-id';
     
     // @ts-ignore
     const options = generateRecoveryOptions(id, nodes, edges, brokenNodeId);
