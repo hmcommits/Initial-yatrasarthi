@@ -8,12 +8,79 @@ interface HeroProps {
 /* ──────────────────────────────────────────────
    BEACH SCENE — signature hero visual
 ────────────────────────────────────────────── */
+/* ──────────────────────────────────────────────
+   MOUNTAIN & ROAD JOURNEY SCENE — Signature Hero Visual
+   Features:
+   - Sun with warm concentric halos
+   - Drifting soft white clouds
+   - Snow-capped geometric mountain peaks
+   - Ascending flight with dashed trajectory
+   - Charming yellow bus cruising on the winding road
+   - Floating trip health & connected multi-modal cards
+────────────────────────────────────────────── */
 function BeachScene() {
   const W = 560;
-  const H = 420;
+  const H = 380;
 
   return (
     <div className="relative w-full" style={{ maxWidth: 560 }}>
+      {/* Scoped Keyframe Animations */}
+      <style>{`
+        @keyframes sun-glow-pulse {
+          0%, 100% { transform: scale(1); opacity: 0.35; }
+          50% { transform: scale(1.05); opacity: 0.55; }
+        }
+        @keyframes cloud-drift-slow {
+          0%, 100% { transform: translateX(0px); }
+          50% { transform: translateX(12px); }
+        }
+        @keyframes cloud-drift-alt {
+          0%, 100% { transform: translateX(0px); }
+          50% { transform: translateX(-10px); }
+        }
+        @keyframes flight-climb {
+          0%, 100% { transform: translate(0px, 0px) rotate(0deg); }
+          50% { transform: translate(5px, -6px) rotate(1.5deg); }
+        }
+        @keyframes bus-cruise {
+          0%, 100% { transform: translate(0px, 0px); }
+          25% { transform: translate(1.5px, -0.8px); }
+          50% { transform: translate(3px, 0.4px); }
+          75% { transform: translate(1.5px, -0.6px); }
+        }
+        @keyframes card-float-1 {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-7px); }
+        }
+        @keyframes card-float-2 {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-9px); }
+        }
+        .anim-sun-halo {
+          transform-origin: 418px 108px;
+          animation: sun-glow-pulse 4s ease-in-out infinite;
+        }
+        .anim-cloud-1 {
+          animation: cloud-drift-slow 6s ease-in-out infinite;
+        }
+        .anim-cloud-2 {
+          animation: cloud-drift-alt 7s ease-in-out infinite;
+        }
+        .anim-flight {
+          animation: flight-climb 3.5s ease-in-out infinite;
+        }
+        .anim-bus {
+          animation: bus-cruise 1.8s ease-in-out infinite;
+        }
+        .anim-card-1 {
+          animation: card-float-1 4.5s ease-in-out infinite;
+        }
+        .anim-card-2 {
+          animation: card-float-2 5s ease-in-out infinite;
+          animation-delay: 1.2s;
+        }
+      `}</style>
+
       <svg
         viewBox={`0 0 ${W} ${H}`}
         className="relative w-full rounded-3xl"
@@ -21,207 +88,230 @@ function BeachScene() {
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          {/* Sky gradient — serene coastal morning */}
-          <linearGradient id="sky-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#9BB5A4" />
-            <stop offset="35%" stopColor="#BCD3C1" />
-            <stop offset="70%" stopColor="#DCE8D2" />
-            <stop offset="100%" stopColor="#F5F2E8" />
+          {/* Sky Gradient — Soft Mint & Cream */}
+          <linearGradient id="mnt-sky-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#EFF6F0" />
+            <stop offset="45%" stopColor="#E5F0E8" />
+            <stop offset="100%" stopColor="#DBEAE0" />
           </linearGradient>
-          {/* Sea gradient */}
-          <linearGradient id="sea-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#2A5C52" />
-            <stop offset="60%" stopColor="#1E443C" />
-            <stop offset="100%" stopColor="#172F2A" />
+
+          {/* Rolling Hills Gradient */}
+          <linearGradient id="hill-back-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#8CC0D2" />
+            <stop offset="100%" stopColor="#76ACBF" />
           </linearGradient>
-          {/* Sand gradient */}
-          <linearGradient id="sand-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#EDE9D8" />
-            <stop offset="100%" stopColor="#D5D9CC" />
+          <linearGradient id="hill-front-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#70A7BD" />
+            <stop offset="100%" stopColor="#568FA7" />
           </linearGradient>
-          {/* Sun glow */}
-          <radialGradient id="sun-grad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#EBF4A6" />
-            <stop offset="60%" stopColor="#C5D82D" />
-            <stop offset="100%" stopColor="#C5D82D" stopOpacity="0" />
-          </radialGradient>
-          {/* Water shimmer */}
-          <linearGradient id="shimmer-grad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="rgba(255,255,255,0)" />
-            <stop offset="50%" stopColor="rgba(255,255,255,0.4)" />
-            <stop offset="100%" stopColor="rgba(255,255,255,0)" />
-          </linearGradient>
-          <filter id="card-shadow">
-            <feDropShadow dx="0" dy="3" stdDeviation="5" floodColor="rgba(0,0,0,0.12)" />
+
+          {/* Drop Shadow for overlay cards */}
+          <filter id="mnt-card-shadow" x="-10%" y="-10%" width="125%" height="130%">
+            <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="rgba(23,32,23,0.12)" />
           </filter>
-          <clipPath id="scene-clip">
+
+          {/* Scene Rounded Clip */}
+          <clipPath id="mnt-scene-clip">
             <rect width={W} height={H} rx="24" />
           </clipPath>
+
+          {/* Dot Pattern for subtle blueprint texture */}
+          <pattern id="mnt-dot-grid" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+            <circle cx="2" cy="2" r="1.1" fill="#4E7A6C" opacity="0.1" />
+          </pattern>
         </defs>
 
-        <g clipPath="url(#scene-clip)">
+        <g clipPath="url(#mnt-scene-clip)">
+          {/* ── 1. Sky Background ── */}
+          <rect width={W} height={H} fill="url(#mnt-sky-grad)" />
+          <rect width={W} height={H} fill="url(#mnt-dot-grid)" />
 
-          {/* ── Sky ── */}
-          <rect width={W} height={H} fill="url(#sky-grad)" />
-
-          {/* ── Sun with glow ── */}
-          <circle cx="430" cy="85" r="55" fill="url(#sun-grad)" opacity="0.4" className="animate-sun-pulse" />
-          <circle cx="430" cy="85" r="30" fill="#EBF4A6" opacity="0.9" />
-          <circle cx="430" cy="85" r="20" fill="#F8FBE6" />
-          {/* Sun reflection strip on water */}
-          <ellipse cx="430" cy="268" rx="24" ry="40" fill="rgba(197,216,45,0.18)" className="animate-wave-wash" />
-
-          {/* ── Horizon haze ── */}
-          <rect x="0" y="218" width={W} height="14" fill="rgba(220,232,210,0.3)" />
-
-          {/* ── Sea ── */}
-          <rect x="0" y="228" width={W} height="192" fill="url(#sea-grad)" />
-
-          {/* ── Wave layers (animated) ── */}
-          <g className="animate-wave-1" style={{ transformOrigin: '280px 240px' }}>
-            <path
-              d="M -30 240 Q 50 234 120 240 Q 200 246 280 240 Q 360 234 440 240 Q 510 246 590 240 L 590 248 Q 510 254 440 248 Q 360 242 280 248 Q 200 254 120 248 Q 50 242 -30 248 Z"
-              fill="rgba(255,255,255,0.28)"
-            />
-          </g>
-          <g className="animate-wave-2" style={{ transformOrigin: '280px 265px' }}>
-            <path
-              d="M -20 268 Q 70 262 150 268 Q 240 274 320 268 Q 400 262 480 268 Q 540 274 590 268 L 590 276 Q 540 282 480 276 Q 400 270 320 276 Q 240 282 150 276 Q 70 270 -20 276 Z"
-              fill="rgba(255,255,255,0.22)"
-            />
-          </g>
-          <g className="animate-wave-3" style={{ transformOrigin: '280px 290px' }}>
-            <path
-              d="M -30 292 Q 60 286 140 292 Q 220 298 300 292 Q 380 286 460 292 Q 530 298 590 292 L 590 300 Q 530 306 460 300 Q 380 294 300 300 Q 220 306 140 300 Q 60 294 -30 300 Z"
-              fill="rgba(255,255,255,0.18)"
-            />
+          {/* ── 2. Sun & Warm Halos (Top Right) ── */}
+          <g>
+            {/* Outer halo */}
+            <circle cx="418" cy="108" r="92" fill="#FDF3D0" className="anim-sun-halo" />
+            {/* Middle halo */}
+            <circle cx="418" cy="108" r="66" fill="#FCE6A4" opacity="0.45" />
+            {/* Core Sun */}
+            <circle cx="418" cy="108" r="42" fill="#F8C762" />
           </g>
 
-          {/* ── Boat (bobbing) ── */}
-          <g className="animate-boat" style={{ transformOrigin: '340px 285px' }}>
-            {/* Hull */}
-            <path d="M 296 298 Q 340 310 384 298 L 378 308 Q 340 318 302 308 Z" fill="#172017" />
-            <path d="M 302 308 Q 340 318 378 308 L 376 312 Q 340 320 304 312 Z" fill="#0C140C" />
-            {/* Deck */}
-            <rect x="296" y="290" width="88" height="8" rx="2" fill="#E8F0E2" />
-            {/* Mast */}
-            <line x1="340" y1="288" x2="340" y2="248" stroke="#4A3B32" strokeWidth="2.5" />
-            {/* Sail */}
-            <path d="M 340 250 L 368 260 L 368 285 L 340 282 Z" fill="rgba(245,242,232,0.95)" stroke="rgba(213,217,204,0.7)" strokeWidth="1" />
-            {/* Flag */}
-            <path d="M 340 250 L 352 245 L 340 254 Z" fill="#C5D82D" />
-            {/* Cabin */}
-            <rect x="312" y="282" width="28" height="10" rx="2" fill="#DCE8D2" />
-            <rect x="316" y="284" width="7" height="6" rx="1" fill="#87CEEB" opacity="0.7" />
+          {/* ── 3. Soft Puffy Clouds ── */}
+          {/* Cloud 1: Upper Center */}
+          <g className="anim-cloud-1" style={{ transformOrigin: '280px 52px' }}>
+            <circle cx="265" cy="46" r="16" fill="#FFFFFF" opacity="0.94" />
+            <circle cx="285" cy="38" r="22" fill="#FFFFFF" opacity="0.96" />
+            <circle cx="308" cy="45" r="16" fill="#FFFFFF" opacity="0.94" />
+            <rect x="250" y="46" width="70" height="18" rx="9" fill="#FFFFFF" opacity="0.95" />
           </g>
 
-          {/* ── Water shimmer strips ── */}
-          <rect x="0" y="310" width={W} height="6" fill="url(#shimmer-grad)" className="animate-wave-wash" style={{ animationDelay: '0.5s' }} />
-          <rect x="0" y="340" width={W} height="4" fill="url(#shimmer-grad)" className="animate-wave-wash" style={{ animationDelay: '1.2s' }} />
-          <rect x="0" y="370" width={W} height="3" fill="url(#shimmer-grad)" className="animate-wave-wash" style={{ animationDelay: '0.8s' }} />
+          {/* Cloud 2: Middle Left */}
+          <g className="anim-cloud-2" style={{ transformOrigin: '150px 96px' }}>
+            <circle cx="132" cy="92" r="14" fill="#FFFFFF" opacity="0.92" />
+            <circle cx="150" cy="84" r="18" fill="#FFFFFF" opacity="0.94" />
+            <circle cx="168" cy="92" r="13" fill="#FFFFFF" opacity="0.92" />
+            <rect x="120" y="90" width="60" height="16" rx="8" fill="#FFFFFF" opacity="0.93" />
+          </g>
 
-          {/* ── Shore / Beach ── */}
-          <path
-            d="M -20 390 Q 80 376 180 382 Q 280 388 380 376 Q 460 368 590 378 L 590 420 L -20 420 Z"
-            fill="url(#sand-grad)"
+          {/* Cloud 3: Right (passing near sun) */}
+          <g className="anim-cloud-1" style={{ transformOrigin: '465px 150px' }}>
+            <circle cx="452" cy="144" r="14" fill="#FFFFFF" opacity="0.92" />
+            <circle cx="470" cy="136" r="19" fill="#FFFFFF" opacity="0.94" />
+            <circle cx="488" cy="144" r="13" fill="#FFFFFF" opacity="0.92" />
+            <rect x="438" y="142" width="64" height="16" rx="8" fill="#FFFFFF" opacity="0.93" />
+          </g>
+
+          {/* ── 4. Geometric Mountain Peaks ── */}
+          {/* Far Left Step Block (per reference illustration) */}
+          <polygon points="78,320 78,285 150,285 180,312 180,340 78,340" fill="#88B8AA" opacity="0.85" />
+          <polygon points="78,285 150,285 180,296 108,296" fill="#A8D0C4" opacity="0.9" />
+
+          {/* Distant Mountain Peak (between left and center) */}
+          <polygon points="175,248 265,335 88,335" fill="#A2CCBF" opacity="0.9" />
+
+          {/* Left Mountain */}
+          <polygon points="155,190 226,330 84,330" fill="#7FAEA2" />
+          {/* Left Mountain Snowcap */}
+          <path d="M 132 232 Q 155 237 178 232 L 155 190 Z" fill="#D6ECE5" />
+
+          {/* Center Mountain (Tallest Peak) */}
+          <polygon points="275,168 375,335 175,335" fill="#4A998C" />
+          {/* Center Mountain Snowcap */}
+          <path d="M 242 224 Q 275 230 308 224 L 275 168 Z" fill="#D4ECE5" />
+
+          {/* Right Mountain */}
+          <polygon points="426,178 518,335 334,335" fill="#6AA295" />
+          {/* Right Mountain Snowcap */}
+          <path d="M 395 224 Q 426 230 457 224 L 426 178 Z" fill="#D8EEE7" />
+
+          {/* ── 5. Flight Trajectory & Animated Airplane ── */}
+          {/* Dashed trajectory line */}
+          <line
+            x1="170"
+            y1="214"
+            x2="268"
+            y2="182"
+            stroke="#689E92"
+            strokeWidth="1.8"
+            strokeDasharray="4 4"
+            strokeLinecap="round"
           />
-          {/* Wet sand edge */}
-          <path
-            d="M -20 390 Q 80 376 180 382 Q 280 388 380 376 Q 460 368 590 378 L 590 392 Q 460 382 380 390 Q 280 400 180 396 Q 80 390 -20 404 Z"
-            fill="rgba(180,185,170,0.4)"
-          />
 
-          {/* ── Palm trees ── */}
-          {/* Palm 1 - left */}
-          <line x1="68" y1="420" x2="72" y2="340" stroke="#3E342B" strokeWidth="5" strokeLinecap="round" />
-          <line x1="72" y1="342" x2="40" y2="318" stroke="#2D2620" strokeWidth="3.5" strokeLinecap="round" />
-          <line x1="72" y1="342" x2="104" y2="315" stroke="#2D2620" strokeWidth="3.5" strokeLinecap="round" />
-          <line x1="72" y1="342" x2="72" y2="308" stroke="#2D2620" strokeWidth="3.5" strokeLinecap="round" />
-          <ellipse cx="40" cy="316" rx="16" ry="8" fill="#2E4A35" opacity="0.9" transform="rotate(-20, 40, 316)" />
-          <ellipse cx="104" cy="313" rx="18" ry="8" fill="#3D5A42" opacity="0.9" transform="rotate(15, 104, 313)" />
-          <ellipse cx="72" cy="307" rx="16" ry="8" fill="#4E7054" opacity="0.9" />
-          {/* Coconuts */}
-          <circle cx="74" cy="342" r="4" fill="#5F665B" />
-          <circle cx="68" cy="346" r="4" fill="#4B5248" />
-
-          {/* Palm 2 - right edge */}
-          <line x1="488" y1="420" x2="492" y2="348" stroke="#3E342B" strokeWidth="5" strokeLinecap="round" />
-          <line x1="492" y1="350" x2="460" y2="326" stroke="#2D2620" strokeWidth="3.5" strokeLinecap="round" />
-          <line x1="492" y1="350" x2="525" y2="322" stroke="#2D2620" strokeWidth="3.5" strokeLinecap="round" />
-          <ellipse cx="460" cy="324" rx="17" ry="8" fill="#2E4A35" opacity="0.9" transform="rotate(-18, 460, 324)" />
-          <ellipse cx="525" cy="320" rx="18" ry="8" fill="#3D5A42" opacity="0.9" transform="rotate(14, 525, 320)" />
-          <circle cx="493" cy="351" r="4" fill="#5F665B" />
-
-          {/* ── Beach umbrella ── */}
-          <line x1="200" y1="420" x2="200" y2="378" stroke="#5F665B" strokeWidth="2.5" strokeLinecap="round" />
-          <path d="M 160 384 Q 200 368 240 384 Q 200 374 160 384 Z" fill="#172017" />
-          <path d="M 160 384 Q 178 376 200 374 Q 200 374 160 384 Z" fill="#C5D82D" opacity="0.85" />
-          {/* Beach chair */}
-          <rect x="184" y="400" width="30" height="5" rx="2" fill="#858B80" />
-          <rect x="182" y="396" width="32" height="6" rx="2" fill="#D4A574" />
-          <line x1="186" y1="402" x2="184" y2="412" stroke="#BC8A5F" strokeWidth="2" />
-          <line x1="212" y1="402" x2="214" y2="412" stroke="#BC8A5F" strokeWidth="2" />
-
-          {/* ── Seagulls (animated) ── */}
-          <g className="animate-seagull" style={{ transformOrigin: '280px 180px' }}>
-            {/* Seagull 1 */}
-            <path d="M 250 175 Q 258 170 266 175" fill="none" stroke="#172017" strokeWidth="1.8" strokeLinecap="round" />
-            <path d="M 266 175 Q 274 170 282 175" fill="none" stroke="#172017" strokeWidth="1.8" strokeLinecap="round" />
-            {/* Seagull 2 (smaller, slightly behind) */}
-            <path d="M 290 162 Q 296 158 302 162" fill="none" stroke="#3A3A3A" strokeWidth="1.4" strokeLinecap="round" opacity="0.7" />
-            <path d="M 302 162 Q 308 158 314 162" fill="none" stroke="#3A3A3A" strokeWidth="1.4" strokeLinecap="round" opacity="0.7" />
-          </g>
-
-          {/* Static distant seagulls */}
-          <path d="M 100 155 Q 106 151 112 155" fill="none" stroke="#555" strokeWidth="1.2" strokeLinecap="round" opacity="0.5" />
-          <path d="M 112 155 Q 118 151 124 155" fill="none" stroke="#555" strokeWidth="1.2" strokeLinecap="round" opacity="0.5" />
-          <path d="M 480 140 Q 485 137 490 140" fill="none" stroke="#555" strokeWidth="1.2" strokeLinecap="round" opacity="0.4" />
-
-          {/* ── Clouds (warm-tinted) ── */}
-          <g className="animate-wave-1" style={{ transformOrigin: '160px 95px' }}>
-            <ellipse cx="160" cy="102" rx="55" ry="20" fill="rgba(255,255,240,0.88)" />
-            <ellipse cx="135" cy="106" rx="34" ry="17" fill="rgba(255,255,240,0.82)" />
-            <ellipse cx="186" cy="106" rx="38" ry="17" fill="rgba(255,255,240,0.82)" />
-            <ellipse cx="160" cy="94" rx="44" ry="19" fill="rgba(255,255,248,0.92)" />
-          </g>
-          <g className="animate-wave-2" style={{ transformOrigin: '390px 65px' }}>
-            <ellipse cx="390" cy="68" rx="42" ry="16" fill="rgba(255,240,220,0.80)" />
-            <ellipse cx="368" cy="72" rx="26" ry="14" fill="rgba(255,240,220,0.74)" />
-            <ellipse cx="414" cy="72" rx="30" ry="14" fill="rgba(255,240,220,0.74)" />
-            <ellipse cx="390" cy="60" rx="34" ry="15" fill="rgba(255,248,230,0.88)" />
-          </g>
-
-          {/* ── Floating info cards ── */}
-          {/* Card 1: Trip Health */}
-          <g transform="translate(30, 226)" className="animate-float" style={{ animationDelay: '0s' }} filter="url(#card-shadow)">
-            <rect width="126" height="58" rx="14" fill="#FFFFFF" opacity="0.97" />
-            <rect width="126" height="58" rx="14" fill="none" stroke="#D5D9CC" strokeWidth="1" />
-            <text x="10" y="18" fontSize="8" fill="#5F665B" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="600">TRIP HEALTH</text>
-            <text x="10" y="36" fontSize="17" fill="#172017" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="800">94%</text>
-            <text x="10" y="50" fontSize="7" fill="#4E8752" fontFamily="Plus Jakarta Sans, sans-serif">● All connections safe</text>
-            <rect x="60" y="29" width="56" height="6" rx="3" fill="#DCE8D2" />
-            <rect x="60" y="29" width="53" height="6" rx="3" fill="#C5D82D" />
-          </g>
-
-          {/* Card 2: Group */}
-          <g transform="translate(394, 238)" className="animate-float" style={{ animationDelay: '1.8s' }} filter="url(#card-shadow)">
-            <rect width="140" height="62" rx="14" fill="#FFFFFF" opacity="0.97" />
-            <rect width="140" height="62" rx="14" fill="none" stroke="#D5D9CC" strokeWidth="1" />
-            <text x="10" y="18" fontSize="8" fill="#5F665B" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="600">GROUP JOURNEY</text>
-            <text x="10" y="34" fontSize="11" fill="#172017" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="700">Goa Trip · 14:30</text>
-            <g transform="translate(10, 40)">
-              {['#172017','#C5D82D','#4E8752','#858B80'].map((c,i)=>(
-                <circle key={i} cx={i*14} cy="8" r="6" fill={c} stroke="white" strokeWidth="1.5" />
-              ))}
+          {/* Airplane ascending above center mountain */}
+          <g className="anim-flight" style={{ transformOrigin: '286px 172px' }}>
+            <g transform="translate(286, 172) rotate(34)">
+              {/* Cute Stylized Monoplane (Teal outline & crisp body) */}
+              {/* Left wing */}
+              <path d="M 0 -2 L -12 -12 L -6 -13 L 4 -4 Z" fill="#246D63" stroke="#246D63" strokeWidth="1" />
+              {/* Right wing */}
+              <path d="M 0 2 L -12 12 L -6 13 L 4 4 Z" fill="#246D63" stroke="#246D63" strokeWidth="1" />
+              {/* Tail fin */}
+              <path d="M -15 -1 L -22 -6 L -19 -7 L -12 -2 Z" fill="#246D63" />
+              <path d="M -15 1 L -22 6 L -19 7 L -12 2 Z" fill="#246D63" />
+              {/* Fuselage */}
+              <path
+                d="M 12 0 C 12 -4, -16 -4, -18 0 C -16 4, 12 4, 12 0 Z"
+                fill="#EDF7F4"
+                stroke="#246D63"
+                strokeWidth="2.4"
+                strokeLinejoin="round"
+              />
+              {/* Cockpit / window */}
+              <ellipse cx="6" cy="0" rx="3.5" ry="1.5" fill="#246D63" />
             </g>
-            <text x="72" y="52" fontSize="8" fill="#5F665B" fontFamily="Plus Jakarta Sans, sans-serif">4 travelers</text>
           </g>
 
-          {/* ── Bottom label ── */}
-          <text x={W / 2} y={H - 8} textAnchor="middle" fontSize="9" fill="rgba(245,242,232,0.85)" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="600" letterSpacing="0.08em">
-            YATRASARTHI · INTELLIGENT JOURNEY PROTECTION
-          </text>
+          {/* ── 6. Rolling Ground Hills & Winding Road ── */}
+          {/* Back rolling hill */}
+          <path
+            d="M -10 326 Q 140 310 280 320 Q 420 330 570 315 L 570 380 L -10 380 Z"
+            fill="url(#hill-back-grad)"
+          />
+          {/* Front rolling hill */}
+          <path
+            d="M -10 338 Q 180 324 360 332 Q 480 338 570 326 L 570 380 L -10 380 Z"
+            fill="url(#hill-front-grad)"
+          />
 
+          {/* Road (Smooth ochre ribbon) */}
+          <path
+            d="M -10 345 Q 180 336 360 326 T 570 305"
+            fill="none"
+            stroke="#DF9E40"
+            strokeWidth="3.2"
+            strokeLinecap="round"
+          />
+
+          {/* ── 7. Animated Mini-Bus ── */}
+          <g className="anim-bus" style={{ transformOrigin: '260px 316px' }}>
+            <g transform="translate(235, 302)">
+              {/* Bus body shadow */}
+              <rect x="2" y="22" width="48" height="4" rx="2" fill="rgba(23,32,23,0.18)" />
+
+              {/* Main Body */}
+              <rect x="0" y="0" width="52" height="23" rx="6" fill="#F1AD48" />
+              {/* Roof tint layer */}
+              <path d="M 0 6 Q 0 0 6 0 L 46 0 Q 52 0 52 6 L 52 10 L 0 10 Z" fill="#F5B859" />
+
+              {/* Windows (3 passenger/windshield rounded windows) */}
+              <rect x="6" y="5" width="9" height="7.5" rx="2" fill="#FEF2D9" />
+              <rect x="18" y="5" width="9" height="7.5" rx="2" fill="#FEF2D9" />
+              <rect x="30" y="5" width="9" height="7.5" rx="2" fill="#FEF2D9" />
+              {/* Front windshield */}
+              <rect x="42" y="5" width="6" height="7.5" rx="2" fill="#FEF2D9" />
+
+              {/* Wheels */}
+              {/* Rear Wheel */}
+              <circle cx="12" cy="24" r="6" fill="#203434" />
+              <circle cx="12" cy="24" r="2.2" fill="#88A6A6" />
+              {/* Front Wheel */}
+              <circle cx="41" cy="23.6" r="6" fill="#203434" />
+              <circle cx="41" cy="23.6" r="2.2" fill="#88A6A6" />
+            </g>
+          </g>
+
+          {/* ── 8. Sleek Floating Journey Protection Badges ── */}
+          {/* Card 1: Trip Health (Left) */}
+          <g transform="translate(24, 215)" className="anim-card-1" filter="url(#mnt-card-shadow)">
+            <rect width="130" height="56" rx="14" fill="#FFFFFF" opacity="0.97" />
+            <rect width="130" height="56" rx="14" fill="none" stroke="#D5D9CC" strokeWidth="1" />
+            <text x="12" y="17" fontSize="8" fill="#5F665B" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="700" letterSpacing="0.05em">TRIP HEALTH</text>
+            <text x="12" y="36" fontSize="18" fill="#172017" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="800">94%</text>
+            <circle cx="16" cy="46" r="3" fill="#3E6F4B" />
+            <text x="23" y="49" fontSize="7.5" fill="#3E6F4B" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="600">All connections safe</text>
+            <rect x="66" y="27" width="52" height="6" rx="3" fill="#DCE8D2" />
+            <rect x="66" y="27" width="48" height="6" rx="3" fill="#C5D82D" />
+          </g>
+
+          {/* Card 2: Connected Journey (Right) */}
+          <g transform="translate(390, 215)" className="anim-card-2" filter="url(#mnt-card-shadow)">
+            <rect width="144" height="60" rx="14" fill="#FFFFFF" opacity="0.97" />
+            <rect width="144" height="60" rx="14" fill="none" stroke="#D5D9CC" strokeWidth="1" />
+            <text x="12" y="17" fontSize="8" fill="#5F665B" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="700" letterSpacing="0.05em">CONNECTED JOURNEY</text>
+            <text x="12" y="34" fontSize="12" fill="#172017" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="800">Goa · Active Sync</text>
+            <g transform="translate(12, 41)">
+              <rect x="0" y="0" width="34" height="13" rx="4" fill="#EDE9D8" />
+              <text x="4" y="9.5" fontSize="7.5" fill="#172017" fontWeight="700">✈ Flight</text>
+              <rect x="38" y="0" width="28" height="13" rx="4" fill="#DCE8D2" />
+              <text x="42" y="9.5" fontSize="7.5" fill="#172017" fontWeight="700">🚕 Cab</text>
+              <rect x="70" y="0" width="32" height="13" rx="4" fill="#EDE9D8" />
+              <text x="74" y="9.5" fontSize="7.5" fill="#172017" fontWeight="700">🏨 Stay</text>
+            </g>
+          </g>
+
+          {/* Bottom subtle watermark */}
+          <text
+            x={W / 2}
+            y={H - 10}
+            textAnchor="middle"
+            fontSize="8.5"
+            fill="rgba(255,255,255,0.75)"
+            fontFamily="Plus Jakarta Sans, sans-serif"
+            fontWeight="700"
+            letterSpacing="0.09em"
+          >
+            YATRASARTHI · MULTI-MODAL TRAVEL ORCHESTRATION
+          </text>
         </g>
       </svg>
     </div>
