@@ -13,12 +13,18 @@ node_modules/
 /dist
 /build
 
-# Environment variables
+# Environment variables — ignore real secrets, but keep the example template
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+# Explicitly allow the example file (negation rule)
+!.env.example
+**/.env
+**/.env.local
+**/.env.*.local
+!**/.env.example
 
 # Logs
 npm-debug.log*
