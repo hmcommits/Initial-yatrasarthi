@@ -1,40 +1,86 @@
 import { NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 import { ObjectId } from 'mongodb';
+import { getSessionUser } from '@/lib/auth';
+import { Trip } from '@yatrasarthi/types';
 
-export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function POST(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const { id } = await params;
-    const body = await request.json();
-    const { userId, joinCode } = body;
+    const body = await request.json().catch(() => ({}));
+    const { joinCode } = body;
 
-    if (!userId) {
-      return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
+    const sessionUser = await getSessionUser(request);
+    const userId = sessionUser?.id || body.userId || 'guest_member';
+
+    if (!ObjectId.isValid(id)) {
+      return NextResponse.json(
+        { error: { code: 'NOT_FOUND', message: 'Trip not found' } },
+        { status: 404 }
+      );
     }
 
     const client = await clientPromise;
     const db = client.db();
-
     const tripId = new ObjectId(id);
     const trip = await db.collection('trips').findOne({ _id: tripId });
 
     if (!trip) {
-      return NextResponse.json({ error: 'Trip not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: { code: 'NOT_FOUND', message: 'Trip not found' } },
+        { status: 404 }
+      );
     }
 
-    // Usually joinCode is required to join, but keeping it flexible for now
-    if (trip.joinCode && joinCode && trip.joinCode !== joinCode) {
-      return NextResponse.json({ error: 'Invalid join code' }, { status: 403 });
+    // Join code check per contract: returns NOT_FOUND if code is wrong/doesn't match
+    if (trip.joinCode && joinCode) {
+      if (trip.joinCode.toUpperCase() !== joinCode.trim().toUpperCase()) {
+        return NextResponse.json(
+          { error: { code: 'NOT_FOUND', message: 'Invalid join code for this trip' } },
+          { status: 404 }
+        );
+      }
     }
 
+    // Idempotent addition to memberIds
     await db.collection('trips').updateOne(
       { _id: tripId },
-      { $addToSet: { memberIds: userId } }
+      {
+        $addToSet: { memberIds: userId },
+        $set: { updatedAt: new Date().toISOString() },
+        $inc: { version: 1 },
+      }
     );
 
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error('Failed to join trip', error);
-    return NextResponse.json({ error: 'Failed to join trip' }, { status: 500 });
+    const updated = await db.collection('trips').findOne({ _id: tripId });
+
+    const tripData: Trip = {
+      id: updated!._id.toString(),
+      name: updated!.name,
+      destination: updated!.destination,
+      startDate: updated!.startDate,
+      endDate: updated!.endDate,
+      ownerId: updated!.ownerId,
+      memberIds: updated!.memberIds || [updated!.ownerId],
+      joinCode: updated!.joinCode,
+      status: updated!.status || 'healthy',
+      healthScore: updated!.healthScore ?? 100,
+      weakestEdge: updated!.weakestEdge,
+      activeDisruptionId: updated!.activeDisruptionId,
+      createdAt: updated!.createdAt,
+      updatedAt: updated!.updatedAt,
+      version: updated!.version || 1,
+    };
+
+    return NextResponse.json({ data: tripData });
+  } catch (error: any) {
+    console.error('Failed to join trip:', error);
+    return NextResponse.json(
+      { error: { code: 'SERVER_ERROR', message: 'Failed to join trip' } },
+      { status: 500 }
+    );
   }
 }

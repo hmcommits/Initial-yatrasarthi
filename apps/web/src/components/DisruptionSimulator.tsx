@@ -90,14 +90,14 @@ export function DisruptionSimulator({ onDisrupt, isDisrupted }: DisruptionSimula
   };
 
   return (
-    <div className="card p-6">
+    <div className="card p-6" style={{ background: '#FFFFFF', borderColor: '#D5D9CC' }}>
       <div className="flex items-center gap-3 mb-5">
-        <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: '#FDECEA' }}>
-          <AlertTriangle size={16} style={{ color: '#E45B4D' }} />
+        <div className="w-8 h-8 rounded-xl flex items-center justify-center border" style={{ background: '#FDEDEC', borderColor: '#F5B7B1' }}>
+          <AlertTriangle size={16} style={{ color: '#D93829' }} />
         </div>
         <div>
-          <h3 className="font-semibold" style={{ color: '#1B211C' }}>Disruption Simulator</h3>
-          <p className="text-xs" style={{ color: '#6F756C' }}>See how your connected trip responds · Simulated data</p>
+          <h3 className="font-bold" style={{ color: '#172017' }}>Disruption Simulator</h3>
+          <p className="text-xs" style={{ color: '#5F665B' }}>See how your connected trip responds · Simulated data</p>
         </div>
       </div>
 
@@ -108,13 +108,13 @@ export function DisruptionSimulator({ onDisrupt, isDisrupted }: DisruptionSimula
             onClick={() => setSelected(scenario.id)}
             className="flex items-center gap-2.5 p-3 rounded-xl text-sm text-left transition-all"
             style={{
-              background: selected === scenario.id ? 'rgba(228,91,77,0.06)' : '#F7F5EC',
-              border: `1px solid ${selected === scenario.id ? '#E45B4D' : '#E3E2D7'}`,
-              color: selected === scenario.id ? '#B03028' : '#6F756C',
-              fontWeight: selected === scenario.id ? 600 : 400,
+              background: selected === scenario.id ? '#FDEDEC' : '#F5F2E8',
+              border: `1px solid ${selected === scenario.id ? '#D93829' : '#D5D9CC'}`,
+              color: selected === scenario.id ? '#D93829' : '#5F665B',
+              fontWeight: selected === scenario.id ? 600 : 500,
             }}
           >
-            <span style={{ color: selected === scenario.id ? '#E45B4D' : '#6F756C' }}>
+            <span style={{ color: selected === scenario.id ? '#D93829' : '#5F665B' }}>
               {scenarioIcons[scenario.id]}
             </span>
             <span className="text-xs leading-tight">{scenario.label}</span>
@@ -123,17 +123,17 @@ export function DisruptionSimulator({ onDisrupt, isDisrupted }: DisruptionSimula
       </div>
 
       {processing && (
-        <div className="mb-4 p-4 rounded-xl" style={{ background: '#EBF1FD', border: '1px solid #9DB8F0' }}>
+        <div className="mb-4 p-4 rounded-xl border" style={{ background: '#EDE9D8', borderColor: '#D5D9CC' }}>
           <div className="flex flex-col gap-1.5">
             {processingSteps.map((s, i) => (
               <div key={i} className="flex items-center gap-2 text-xs transition-all"
-                style={{ color: i <= step ? '#1B211C' : '#C4C9C2' }}>
+                style={{ color: i <= step ? '#172017' : '#858B80' }}>
                 {i < step ? (
-                  <span style={{ color: '#62A86B' }}>✓</span>
+                  <span style={{ color: '#2E7D32', fontWeight: 'bold' }}>✓</span>
                 ) : i === step ? (
-                  <Loader size={11} style={{ color: '#6D9EEB', animation: 'spin-slow 1s linear infinite' }} />
+                  <Loader size={11} style={{ color: '#172017', animation: 'spin-slow 1s linear infinite' }} />
                 ) : (
-                  <span className="w-3 h-3 rounded-full border" style={{ borderColor: '#E3E2D7' }} />
+                  <span className="w-3 h-3 rounded-full border" style={{ borderColor: '#D5D9CC' }} />
                 )}
                 {s}
               </div>
@@ -143,9 +143,9 @@ export function DisruptionSimulator({ onDisrupt, isDisrupted }: DisruptionSimula
       )}
 
       {done && !processing && (
-        <div className="mb-4 p-4 rounded-xl" style={{ background: '#FDECEA', border: '1px solid #EFAAA5' }}>
-          <div className="font-semibold text-sm mb-1" style={{ color: '#B03028' }}>Cascade detected</div>
-          <div className="text-xs" style={{ color: '#6F756C' }}>3 components affected. Recovery options generated in Recovery tab.</div>
+        <div className="mb-4 p-4 rounded-xl border" style={{ background: '#FDEDEC', borderColor: '#F5B7B1' }}>
+          <div className="font-semibold text-sm mb-1" style={{ color: '#D93829' }}>Cascade detected</div>
+          <div className="text-xs" style={{ color: '#5F665B' }}>3 components affected. Recovery options generated in Recovery tab.</div>
         </div>
       )}
 

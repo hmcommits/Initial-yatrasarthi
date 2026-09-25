@@ -5,12 +5,12 @@ interface FooterProps {
 function LogoMark({ size = 22 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
-      <path d="M6 26 Q6 18 16 16 Q26 14 26 6" stroke="#F28A28" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-      <circle cx="6" cy="26" r="3" fill="#F28A28" />
-      <circle cx="26" cy="6" r="5.5" fill="#F28A28" />
-      <path d="M26 3.5 L27.2 5.8 L26 5.2 L24.8 5.8 Z" fill="white" />
-      <path d="M26 8.5 L24.8 6.2 L26 6.8 L27.2 6.2 Z" fill="white" opacity="0.6" />
-      <circle cx="16" cy="16" r="2.5" fill="white" stroke="#F28A28" strokeWidth="2" />
+      <path d="M6 26 Q6 18 16 16 Q26 14 26 6" stroke="#C5D82D" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+      <circle cx="6" cy="26" r="3" fill="#C5D82D" />
+      <circle cx="26" cy="6" r="5.5" fill="#C5D82D" />
+      <path d="M26 3.5 L27.2 5.8 L26 5.2 L24.8 5.8 Z" fill="#172017" />
+      <path d="M26 8.5 L24.8 6.2 L26 6.8 L27.2 6.2 Z" fill="#172017" opacity="0.6" />
+      <circle cx="16" cy="16" r="2.5" fill="#172017" stroke="#C5D82D" strokeWidth="2" />
     </svg>
   );
 }
@@ -33,7 +33,7 @@ export function Footer({ onNavigate }: FooterProps) {
   };
 
   return (
-    <footer style={{ background: '#1B211C', color: '#E3E2D7' }}>
+    <footer style={{ background: '#172017', color: '#EDE9D8' }}>
       <div className="max-w-7xl mx-auto px-5 sm:px-8 py-14">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-10">
 
@@ -41,12 +41,12 @@ export function Footer({ onNavigate }: FooterProps) {
           <div className="col-span-2">
             <button onClick={() => onNavigate('home')} className="flex items-center gap-2.5 mb-4">
               <LogoMark size={26} />
-              <span className="font-extrabold text-lg" style={{ color: 'white', letterSpacing: '-0.01em' }}>YatraSarthi</span>
+              <span className="font-extrabold text-lg" style={{ color: '#F5F2E8', letterSpacing: '-0.01em' }}>YatraSarthi</span>
             </button>
-            <p className="text-sm leading-relaxed mb-4" style={{ color: '#8C9088', maxWidth: 240 }}>
+            <p className="text-sm leading-relaxed mb-4" style={{ color: '#858B80', maxWidth: 240 }}>
               An intelligent travel companion for group trips. Plan, connect, monitor, and recover.
             </p>
-            <div className="font-semibold text-sm" style={{ color: '#A8C39A' }}>
+            <div className="font-bold text-sm tracking-wide" style={{ color: '#C5D82D' }}>
               Plan. Connect. Recover.
             </div>
           </div>
@@ -63,9 +63,9 @@ export function Footer({ onNavigate }: FooterProps) {
                     <button
                       onClick={() => pageMap[item] && onNavigate(pageMap[item])}
                       className="text-sm transition-colors"
-                      style={{ color: '#8C9088', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
-                      onMouseEnter={e => (e.target as HTMLElement).style.color = '#E3E2D7'}
-                      onMouseLeave={e => (e.target as HTMLElement).style.color = '#8C9088'}
+                      style={{ color: '#858B80', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                      onMouseEnter={e => (e.target as HTMLElement).style.color = '#C5D82D'}
+                      onMouseLeave={e => (e.target as HTMLElement).style.color = '#858B80'}
                     >
                       {item}
                     </button>

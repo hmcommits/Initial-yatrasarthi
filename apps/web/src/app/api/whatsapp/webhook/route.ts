@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 import { getExtractor } from '@yatrasarthi/llm';
-
+import { publishTripEvent } from '@/lib/realtime';
 import type { NodeType } from '@yatrasarthi/types';
 // Always return 200 to Twilio; errors are reported back to the user via WhatsApp reply.
 export async function POST(request: Request) {
@@ -75,10 +75,10 @@ export async function POST(request: Request) {
       updatedAt: now,
     };
 
-    await db.collection('nodes').insertOne(doc);
+    const insertResult = await db.collection('nodes').insertOne(doc);
 
-    // Realtime publish stubbed — Person 5 will provide publishTripEvent()
-    // publishTripEvent(tripId, { type: 'node.created', entityId: result.insertedId.toString() });
+    // Publish realtime so the trip timeline updates live for all members
+    await publishTripEvent(tripId, { type: 'node.created', entityId: insertResult.insertedId.toString() });
 
     return new Response('', { status: 200 });
   } catch (err) {

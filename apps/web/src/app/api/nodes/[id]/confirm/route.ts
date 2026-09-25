@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 import { ObjectId } from 'mongodb';
+import { publishTripEvent } from '@/lib/realtime';
 
 // POST /api/nodes/:id/confirm — user confirms extraction, moves node out of pending_review
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -31,11 +32,11 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       };
     }
 
-    const updated = await db.collection('nodes').findOneAndUpdate(
+    await db.collection('nodes').updateOne(
       { _id: new ObjectId(id) },
       { $set: update },
-      { returnDocument: 'after' }
     );
+    const updated = await db.collection('nodes').findOne({ _id: new ObjectId(id) });
 
     if (!updated) {
       return NextResponse.json({ error: { code: 'NOT_FOUND', message: 'Node not found' } }, { status: 404 });
@@ -63,6 +64,9 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         });
       }
     }
+
+    // Publish realtime so the trip timeline updates live
+    await publishTripEvent(node.tripId as string, { type: 'node.updated', entityId: id });
 
     return NextResponse.json({ data: { id: updated._id.toString(), ...updated, _id: undefined } });
   } catch (err) {

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
+import { getSessionUser } from '@/lib/auth';
 
 // POST /api/nodes/phantom — add an unbooked leg (auto, walk, local train, etc.)
 // Skips pending_review — the user typed it directly, so it goes straight to on_track.
@@ -30,13 +31,14 @@ export async function POST(request: Request) {
       // routing failure is non-fatal; use fallback value
     }
 
+    const sessionUser = await getSessionUser(request);
     const client = await clientPromise;
     const db = client.db();
     const now = new Date().toISOString();
 
     const doc = {
       tripId,
-      ownerId: 'demo', // replaced once auth wired
+      ownerId: sessionUser?.id ?? 'anonymous',
       type: 'phantom' as const,
       phantomMode: mode,
       label: `${mode}: ${fromLabel} to ${toLabel}`,

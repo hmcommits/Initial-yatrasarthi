@@ -50,11 +50,11 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       await db.collection('edges').updateOne({ fromNodeId: id }, { $set: { paddingMin: body.paddingMin } });
     }
 
-    const result = await db.collection('nodes').findOneAndUpdate(
+    await db.collection('nodes').updateOne(
       { _id: new ObjectId(id) },
       { $set: update },
-      { returnDocument: 'after' }
     );
+    const result = await db.collection('nodes').findOne({ _id: new ObjectId(id) });
     if (!result) return NextResponse.json({ error: { code: 'NOT_FOUND', message: 'Node not found' } }, { status: 404 });
 
     return NextResponse.json({ data: { id: result._id.toString(), ...result, _id: undefined } });
