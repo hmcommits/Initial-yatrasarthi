@@ -34,9 +34,12 @@ export interface EmergencyContact {
   id: string; name: string; phone: string; deliveryMethod: "sms" | "whatsapp";
 }
 
+export type TripType = 'solo' | 'group';
+
 export interface Trip {
   id: string; name: string; destination: string;
   startDate: string; endDate: string;
+  tripType?: TripType;
   ownerId: string; memberIds: string[]; joinCode: string;
   status: TripStatus;                    // derived
   healthScore: number;                   // 0-100

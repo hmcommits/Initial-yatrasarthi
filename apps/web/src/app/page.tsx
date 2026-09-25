@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useCallback, useEffect } from 'react';
+import { AuthProvider, useAuth } from '../context/AuthContext';
+import { AuthFlowModal } from '../components/auth/AuthFlowModal';
 import { Navbar } from '../components/Navbar';
 import { BottomNav } from '../components/BottomNav';
 import { Hero } from '../components/Hero';
@@ -15,25 +17,37 @@ import type { TripData } from '../types';
 
 type Page = 'home' | 'dashboard' | 'trips' | 'recovery' | 'group' | 'suraksha' | 'new-trip';
 
-export default function App() {
+function MainApp() {
   const [page, setPage] = useState<Page>('home');
   const [activeTrip, setActiveTrip] = useState<TripData | null>(null);
   const [trips, setTrips] = useState<TripData[]>([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
-  useEffect(() => {
+  const fetchTrips = useCallback(() => {
+    setLoading(true);
     fetch('/api/trips')
       .then(r => r.json())
       .then(data => {
         if (data.data?.trips) {
           setTrips(data.data.trips);
+          if (!activeTrip && data.data.trips.length > 0) {
+            setActiveTrip(data.data.trips[0]);
+          }
         } else if (Array.isArray(data.trips)) {
           setTrips(data.trips);
+          if (!activeTrip && data.trips.length > 0) {
+            setActiveTrip(data.trips[0]);
+          }
         }
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, []);
+  }, [activeTrip]);
+
+  useEffect(() => {
+    fetchTrips();
+  }, [fetchTrips]);
 
   const navigate = useCallback((p: string) => {
     setPage(p as Page);
@@ -49,15 +63,11 @@ export default function App() {
   };
 
   const handleTripCreated = useCallback(() => {
-    // Refresh trips
-    fetch('/api/trips')
-      .then(r => r.json())
-      .then(data => {
-        if (data.data?.trips) {
-          setTrips(data.data.trips);
-          if (data.data.trips.length > 0) setActiveTrip(data.data.trips[0]);
-        }
-      });
+    fetchTrips();
+  }, [fetchTrips]);
+
+  const handleTripCreatedWithData = useCallback((newTrip: TripData) => {
+    setActiveTrip(newTrip);
   }, []);
 
   const handleDisrupt = useCallback((scenarioId: string) => {
@@ -89,7 +99,8 @@ export default function App() {
   const showFooter = page === 'home' || page === 'dashboard';
 
   return (
-    <div style={{ background: '#F7F5EC', fontFamily: "'Plus Jakarta Sans', sans-serif", minHeight: '100vh' }}>
+    <div style={{ background: '#F5F2E8', fontFamily: "'Plus Jakarta Sans', sans-serif", minHeight: '100vh', color: '#172017' }}>
+      <AuthFlowModal />
       <Navbar activePage={page} onNavigate={navigate} />
 
       <main>
@@ -100,12 +111,19 @@ export default function App() {
             trips={trips} 
             activeTrip={activeTrip || trips[0]} 
             onSelectTrip={handleSelectTrip} 
-            onNavigate={navigate} 
+            onNavigate={navigate}
+            user={user}
           />
         )}
 
         {page === 'trips' && (
-          <MyTrips trips={trips} onSelectTrip={handleSelectTrip} onNavigate={navigate} />
+          <MyTrips
+            trips={trips}
+            loading={loading}
+            onSelectTrip={handleSelectTrip}
+            onNavigate={navigate}
+            onRefreshTrips={fetchTrips}
+          />
         )}
 
         {page === 'recovery' && activeTrip && (
@@ -117,7 +135,11 @@ export default function App() {
         {page === 'suraksha' && <SurakshaPanel trip={activeTrip} />}
 
         {page === 'new-trip' && (
-          <CreateTrip onNavigate={navigate} onTripCreated={handleTripCreated} />
+          <CreateTrip
+            onNavigate={navigate}
+            onTripCreated={handleTripCreated}
+            onTripCreatedWithData={handleTripCreatedWithData}
+          />
         )}
       </main>
 
@@ -125,5 +147,13 @@ export default function App() {
 
       <BottomNav activePage={page} onNavigate={navigate} />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <MainApp />
+    </AuthProvider>
   );
 }

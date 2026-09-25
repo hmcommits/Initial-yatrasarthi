@@ -2,4 +2,6 @@ packages:
   - "apps/*"
   - "packages/*"
 allowBuilds:
+  '@google/genai': true
+  protobufjs: true
   unrs-resolver: true

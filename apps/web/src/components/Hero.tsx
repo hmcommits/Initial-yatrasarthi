@@ -21,29 +21,29 @@ function BeachScene() {
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          {/* Sky gradient — warm golden hour */}
+          {/* Sky gradient — serene coastal morning */}
           <linearGradient id="sky-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#FF9A3C" />
-            <stop offset="35%" stopColor="#FFB347" />
-            <stop offset="70%" stopColor="#FFD580" />
-            <stop offset="100%" stopColor="#FFF0C0" />
+            <stop offset="0%" stopColor="#9BB5A4" />
+            <stop offset="35%" stopColor="#BCD3C1" />
+            <stop offset="70%" stopColor="#DCE8D2" />
+            <stop offset="100%" stopColor="#F5F2E8" />
           </linearGradient>
           {/* Sea gradient */}
           <linearGradient id="sea-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#1A8FD8" />
-            <stop offset="60%" stopColor="#0E6FAA" />
-            <stop offset="100%" stopColor="#064F82" />
+            <stop offset="0%" stopColor="#2A5C52" />
+            <stop offset="60%" stopColor="#1E443C" />
+            <stop offset="100%" stopColor="#172F2A" />
           </linearGradient>
           {/* Sand gradient */}
           <linearGradient id="sand-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#F5D87C" />
-            <stop offset="100%" stopColor="#E8B84B" />
+            <stop offset="0%" stopColor="#EDE9D8" />
+            <stop offset="100%" stopColor="#D5D9CC" />
           </linearGradient>
           {/* Sun glow */}
           <radialGradient id="sun-grad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#FFEF60" />
-            <stop offset="60%" stopColor="#FFB83F" />
-            <stop offset="100%" stopColor="#FF7A00" stopOpacity="0" />
+            <stop offset="0%" stopColor="#EBF4A6" />
+            <stop offset="60%" stopColor="#C5D82D" />
+            <stop offset="100%" stopColor="#C5D82D" stopOpacity="0" />
           </radialGradient>
           {/* Water shimmer */}
           <linearGradient id="shimmer-grad" x1="0" y1="0" x2="1" y2="0">
@@ -65,14 +65,14 @@ function BeachScene() {
           <rect width={W} height={H} fill="url(#sky-grad)" />
 
           {/* ── Sun with glow ── */}
-          <circle cx="430" cy="85" r="55" fill="url(#sun-grad)" opacity="0.5" className="animate-sun-pulse" />
-          <circle cx="430" cy="85" r="32" fill="#FFEF60" opacity="0.9" />
-          <circle cx="430" cy="85" r="22" fill="#FFF3A0" />
+          <circle cx="430" cy="85" r="55" fill="url(#sun-grad)" opacity="0.4" className="animate-sun-pulse" />
+          <circle cx="430" cy="85" r="30" fill="#EBF4A6" opacity="0.9" />
+          <circle cx="430" cy="85" r="20" fill="#F8FBE6" />
           {/* Sun reflection strip on water */}
-          <ellipse cx="430" cy="268" rx="24" ry="40" fill="rgba(255,220,60,0.22)" className="animate-wave-wash" />
+          <ellipse cx="430" cy="268" rx="24" ry="40" fill="rgba(197,216,45,0.18)" className="animate-wave-wash" />
 
           {/* ── Horizon haze ── */}
-          <rect x="0" y="218" width={W} height="14" fill="rgba(255,200,80,0.18)" />
+          <rect x="0" y="218" width={W} height="14" fill="rgba(220,232,210,0.3)" />
 
           {/* ── Sea ── */}
           <rect x="0" y="228" width={W} height="192" fill="url(#sea-grad)" />
@@ -100,18 +100,18 @@ function BeachScene() {
           {/* ── Boat (bobbing) ── */}
           <g className="animate-boat" style={{ transformOrigin: '340px 285px' }}>
             {/* Hull */}
-            <path d="M 296 298 Q 340 310 384 298 L 378 308 Q 340 318 302 308 Z" fill="#C0392B" />
-            <path d="M 302 308 Q 340 318 378 308 L 376 312 Q 340 320 304 312 Z" fill="#922B21" />
+            <path d="M 296 298 Q 340 310 384 298 L 378 308 Q 340 318 302 308 Z" fill="#172017" />
+            <path d="M 302 308 Q 340 318 378 308 L 376 312 Q 340 320 304 312 Z" fill="#0C140C" />
             {/* Deck */}
-            <rect x="296" y="290" width="88" height="8" rx="2" fill="#E8E8D0" />
+            <rect x="296" y="290" width="88" height="8" rx="2" fill="#E8F0E2" />
             {/* Mast */}
-            <line x1="340" y1="288" x2="340" y2="248" stroke="#8B4513" strokeWidth="2.5" />
+            <line x1="340" y1="288" x2="340" y2="248" stroke="#4A3B32" strokeWidth="2.5" />
             {/* Sail */}
-            <path d="M 340 250 L 368 260 L 368 285 L 340 282 Z" fill="rgba(255,250,240,0.95)" stroke="rgba(200,180,120,0.5)" strokeWidth="1" />
+            <path d="M 340 250 L 368 260 L 368 285 L 340 282 Z" fill="rgba(245,242,232,0.95)" stroke="rgba(213,217,204,0.7)" strokeWidth="1" />
             {/* Flag */}
-            <path d="M 340 250 L 352 245 L 340 254 Z" fill="#F28A28" />
+            <path d="M 340 250 L 352 245 L 340 254 Z" fill="#C5D82D" />
             {/* Cabin */}
-            <rect x="312" y="282" width="28" height="10" rx="2" fill="#D4AC70" />
+            <rect x="312" y="282" width="28" height="10" rx="2" fill="#DCE8D2" />
             <rect x="316" y="284" width="7" height="6" rx="1" fill="#87CEEB" opacity="0.7" />
           </g>
 
@@ -128,36 +128,36 @@ function BeachScene() {
           {/* Wet sand edge */}
           <path
             d="M -20 390 Q 80 376 180 382 Q 280 388 380 376 Q 460 368 590 378 L 590 392 Q 460 382 380 390 Q 280 400 180 396 Q 80 390 -20 404 Z"
-            fill="rgba(180,140,60,0.35)"
+            fill="rgba(180,185,170,0.4)"
           />
 
           {/* ── Palm trees ── */}
           {/* Palm 1 - left */}
-          <line x1="68" y1="420" x2="72" y2="340" stroke="#5D4037" strokeWidth="5" strokeLinecap="round" />
-          <line x1="72" y1="342" x2="40" y2="318" stroke="#4E342E" strokeWidth="3.5" strokeLinecap="round" />
-          <line x1="72" y1="342" x2="104" y2="315" stroke="#4E342E" strokeWidth="3.5" strokeLinecap="round" />
-          <line x1="72" y1="342" x2="72" y2="308" stroke="#4E342E" strokeWidth="3.5" strokeLinecap="round" />
-          <ellipse cx="40" cy="316" rx="16" ry="8" fill="#2E7D32" opacity="0.85" transform="rotate(-20, 40, 316)" />
-          <ellipse cx="104" cy="313" rx="18" ry="8" fill="#388E3C" opacity="0.85" transform="rotate(15, 104, 313)" />
-          <ellipse cx="72" cy="307" rx="16" ry="8" fill="#43A047" opacity="0.85" />
+          <line x1="68" y1="420" x2="72" y2="340" stroke="#3E342B" strokeWidth="5" strokeLinecap="round" />
+          <line x1="72" y1="342" x2="40" y2="318" stroke="#2D2620" strokeWidth="3.5" strokeLinecap="round" />
+          <line x1="72" y1="342" x2="104" y2="315" stroke="#2D2620" strokeWidth="3.5" strokeLinecap="round" />
+          <line x1="72" y1="342" x2="72" y2="308" stroke="#2D2620" strokeWidth="3.5" strokeLinecap="round" />
+          <ellipse cx="40" cy="316" rx="16" ry="8" fill="#2E4A35" opacity="0.9" transform="rotate(-20, 40, 316)" />
+          <ellipse cx="104" cy="313" rx="18" ry="8" fill="#3D5A42" opacity="0.9" transform="rotate(15, 104, 313)" />
+          <ellipse cx="72" cy="307" rx="16" ry="8" fill="#4E7054" opacity="0.9" />
           {/* Coconuts */}
-          <circle cx="74" cy="342" r="4" fill="#795548" />
-          <circle cx="68" cy="346" r="4" fill="#6D4C41" />
+          <circle cx="74" cy="342" r="4" fill="#5F665B" />
+          <circle cx="68" cy="346" r="4" fill="#4B5248" />
 
           {/* Palm 2 - right edge */}
-          <line x1="488" y1="420" x2="492" y2="348" stroke="#5D4037" strokeWidth="5" strokeLinecap="round" />
-          <line x1="492" y1="350" x2="460" y2="326" stroke="#4E342E" strokeWidth="3.5" strokeLinecap="round" />
-          <line x1="492" y1="350" x2="525" y2="322" stroke="#4E342E" strokeWidth="3.5" strokeLinecap="round" />
-          <ellipse cx="460" cy="324" rx="17" ry="8" fill="#2E7D32" opacity="0.85" transform="rotate(-18, 460, 324)" />
-          <ellipse cx="525" cy="320" rx="18" ry="8" fill="#388E3C" opacity="0.85" transform="rotate(14, 525, 320)" />
-          <circle cx="493" cy="351" r="4" fill="#795548" />
+          <line x1="488" y1="420" x2="492" y2="348" stroke="#3E342B" strokeWidth="5" strokeLinecap="round" />
+          <line x1="492" y1="350" x2="460" y2="326" stroke="#2D2620" strokeWidth="3.5" strokeLinecap="round" />
+          <line x1="492" y1="350" x2="525" y2="322" stroke="#2D2620" strokeWidth="3.5" strokeLinecap="round" />
+          <ellipse cx="460" cy="324" rx="17" ry="8" fill="#2E4A35" opacity="0.9" transform="rotate(-18, 460, 324)" />
+          <ellipse cx="525" cy="320" rx="18" ry="8" fill="#3D5A42" opacity="0.9" transform="rotate(14, 525, 320)" />
+          <circle cx="493" cy="351" r="4" fill="#5F665B" />
 
           {/* ── Beach umbrella ── */}
-          <line x1="200" y1="420" x2="200" y2="378" stroke="#8D6E63" strokeWidth="2.5" strokeLinecap="round" />
-          <path d="M 160 384 Q 200 368 240 384 Q 200 374 160 384 Z" fill="#F28A28" />
-          <path d="M 160 384 Q 178 376 200 374 Q 200 374 160 384 Z" fill="#FFB347" opacity="0.7" />
+          <line x1="200" y1="420" x2="200" y2="378" stroke="#5F665B" strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M 160 384 Q 200 368 240 384 Q 200 374 160 384 Z" fill="#172017" />
+          <path d="M 160 384 Q 178 376 200 374 Q 200 374 160 384 Z" fill="#C5D82D" opacity="0.85" />
           {/* Beach chair */}
-          <rect x="184" y="400" width="30" height="5" rx="2" fill="#BC8A5F" />
+          <rect x="184" y="400" width="30" height="5" rx="2" fill="#858B80" />
           <rect x="182" y="396" width="32" height="6" rx="2" fill="#D4A574" />
           <line x1="186" y1="402" x2="184" y2="412" stroke="#BC8A5F" strokeWidth="2" />
           <line x1="212" y1="402" x2="214" y2="412" stroke="#BC8A5F" strokeWidth="2" />
@@ -165,8 +165,8 @@ function BeachScene() {
           {/* ── Seagulls (animated) ── */}
           <g className="animate-seagull" style={{ transformOrigin: '280px 180px' }}>
             {/* Seagull 1 */}
-            <path d="M 250 175 Q 258 170 266 175" fill="none" stroke="#1B211C" strokeWidth="1.8" strokeLinecap="round" />
-            <path d="M 266 175 Q 274 170 282 175" fill="none" stroke="#1B211C" strokeWidth="1.8" strokeLinecap="round" />
+            <path d="M 250 175 Q 258 170 266 175" fill="none" stroke="#172017" strokeWidth="1.8" strokeLinecap="round" />
+            <path d="M 266 175 Q 274 170 282 175" fill="none" stroke="#172017" strokeWidth="1.8" strokeLinecap="round" />
             {/* Seagull 2 (smaller, slightly behind) */}
             <path d="M 290 162 Q 296 158 302 162" fill="none" stroke="#3A3A3A" strokeWidth="1.4" strokeLinecap="round" opacity="0.7" />
             <path d="M 302 162 Q 308 158 314 162" fill="none" stroke="#3A3A3A" strokeWidth="1.4" strokeLinecap="round" opacity="0.7" />
@@ -194,31 +194,31 @@ function BeachScene() {
           {/* ── Floating info cards ── */}
           {/* Card 1: Trip Health */}
           <g transform="translate(30, 226)" className="animate-float" style={{ animationDelay: '0s' }} filter="url(#card-shadow)">
-            <rect width="126" height="58" rx="14" fill="white" opacity="0.97" />
-            <rect width="126" height="58" rx="14" fill="none" stroke="#E3E2D7" strokeWidth="1" />
-            <text x="10" y="18" fontSize="8" fill="#6F756C" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="600">TRIP HEALTH</text>
-            <text x="10" y="36" fontSize="17" fill="#F28A28" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="800">94%</text>
-            <text x="10" y="50" fontSize="7" fill="#62A86B" fontFamily="Plus Jakarta Sans, sans-serif">● All connections safe</text>
-            <rect x="60" y="29" width="56" height="6" rx="3" fill="#EEF1E5" />
-            <rect x="60" y="29" width="53" height="6" rx="3" fill="#F28A28" opacity="0.65" />
+            <rect width="126" height="58" rx="14" fill="#FFFFFF" opacity="0.97" />
+            <rect width="126" height="58" rx="14" fill="none" stroke="#D5D9CC" strokeWidth="1" />
+            <text x="10" y="18" fontSize="8" fill="#5F665B" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="600">TRIP HEALTH</text>
+            <text x="10" y="36" fontSize="17" fill="#172017" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="800">94%</text>
+            <text x="10" y="50" fontSize="7" fill="#4E8752" fontFamily="Plus Jakarta Sans, sans-serif">● All connections safe</text>
+            <rect x="60" y="29" width="56" height="6" rx="3" fill="#DCE8D2" />
+            <rect x="60" y="29" width="53" height="6" rx="3" fill="#C5D82D" />
           </g>
 
           {/* Card 2: Group */}
           <g transform="translate(394, 238)" className="animate-float" style={{ animationDelay: '1.8s' }} filter="url(#card-shadow)">
-            <rect width="140" height="62" rx="14" fill="white" opacity="0.97" />
-            <rect width="140" height="62" rx="14" fill="none" stroke="#E3E2D7" strokeWidth="1" />
-            <text x="10" y="18" fontSize="8" fill="#6F756C" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="600">GROUP JOURNEY</text>
-            <text x="10" y="34" fontSize="11" fill="#1B211C" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="700">Goa Trip · 14:30</text>
+            <rect width="140" height="62" rx="14" fill="#FFFFFF" opacity="0.97" />
+            <rect width="140" height="62" rx="14" fill="none" stroke="#D5D9CC" strokeWidth="1" />
+            <text x="10" y="18" fontSize="8" fill="#5F665B" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="600">GROUP JOURNEY</text>
+            <text x="10" y="34" fontSize="11" fill="#172017" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="700">Goa Trip · 14:30</text>
             <g transform="translate(10, 40)">
-              {['#F28A28','#62A86B','#6D9EEB','#E5A43F'].map((c,i)=>(
+              {['#172017','#C5D82D','#4E8752','#858B80'].map((c,i)=>(
                 <circle key={i} cx={i*14} cy="8" r="6" fill={c} stroke="white" strokeWidth="1.5" />
               ))}
             </g>
-            <text x="72" y="52" fontSize="8" fill="#6F756C" fontFamily="Plus Jakarta Sans, sans-serif">4 travelers</text>
+            <text x="72" y="52" fontSize="8" fill="#5F665B" fontFamily="Plus Jakarta Sans, sans-serif">4 travelers</text>
           </g>
 
           {/* ── Bottom label ── */}
-          <text x={W / 2} y={H - 8} textAnchor="middle" fontSize="9" fill="rgba(255,255,255,0.65)" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="600" letterSpacing="0.08em">
+          <text x={W / 2} y={H - 8} textAnchor="middle" fontSize="9" fill="rgba(245,242,232,0.85)" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="600" letterSpacing="0.08em">
             YATRASARTHI · INTELLIGENT JOURNEY PROTECTION
           </text>
 
@@ -235,8 +235,8 @@ function BeachScene() {
 function Stat({ value, label }: { value: string; label: string }) {
   return (
     <div className="text-center lg:text-left">
-      <div className="font-extrabold text-2xl tracking-tight" style={{ color: '#1B211C' }}>{value}</div>
-      <div className="text-sm mt-0.5" style={{ color: '#6F756C' }}>{label}</div>
+      <div className="font-extrabold text-2xl tracking-tight" style={{ color: '#172017' }}>{value}</div>
+      <div className="text-sm mt-0.5" style={{ color: '#5F665B' }}>{label}</div>
     </div>
   );
 }
@@ -248,41 +248,41 @@ export function Hero({ onNavigate }: HeroProps) {
   return (
     <>
       {/* ── LIVE ADVISORY TICKER ── */}
-      <div style={{ background: '#1C1917' }} className="text-white py-1.5 px-4 text-xs overflow-hidden border-b border-stone-800">
+      <div style={{ background: '#172017' }} className="text-white py-1.5 px-4 text-xs overflow-hidden border-b border-[#2C382C]">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           <div className="flex items-center gap-2 shrink-0">
-            <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-            <span className="font-extrabold uppercase tracking-wider text-[11px]" style={{ color: '#F28A28' }}>Live Travel Radar:</span>
+            <span className="w-2 h-2 rounded-full bg-[#C5D82D] animate-pulse" />
+            <span className="font-extrabold uppercase tracking-wider text-[11px] text-[#C5D82D]">Live Travel Radar:</span>
           </div>
-          <div className="overflow-x-auto whitespace-nowrap font-medium text-[11px] scroll-x" style={{ color: '#D6D3D1' }}>
+          <div className="overflow-x-auto whitespace-nowrap font-medium text-[11px] scroll-x text-[#DCE8D2]">
             🌧️ Western Ghats Monsoon Advisory: Konkan Railway speed restriction · Trains operating with dynamic slack buffers · Mumbai CSIA (BOM) departure hold 20m · YatraSarthi 24/7 Cascade Recovery ACTIVE
           </div>
           <button 
             onClick={() => onNavigate('dashboard')} 
-            className="text-[11px] font-bold shrink-0 hidden sm:inline text-amber-400 hover:text-amber-300"
+            className="text-[11px] font-bold shrink-0 hidden sm:inline text-[#C5D82D] hover:underline"
           >
             Check My Trips →
           </button>
         </div>
       </div>
 
-      {/* ── SECTION 1: Hero (compact spacing & refined text size) ── */}
-      <section style={{ background: '#F7F5EC', paddingTop: '1.5rem', paddingBottom: '3rem' }}>
+      {/* ── SECTION 1: Hero (warm cream background) ── */}
+      <section style={{ background: '#F5F2E8', paddingTop: '1.5rem', paddingBottom: '3.5rem' }}>
         <div className="max-w-7xl mx-auto px-5 sm:px-8 flex flex-col lg:flex-row items-center gap-10 lg:gap-14">
 
           {/* Left */}
           <div className="flex-1 text-center lg:text-left" style={{ maxWidth: 530 }}>
             <div
               className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-4 tracking-wide"
-              style={{ background: 'rgba(242,138,40,0.1)', color: '#D96D16', border: '1px solid rgba(242,138,40,0.25)', letterSpacing: '0.04em' }}
+              style={{ background: '#DCE8D2', color: '#172017', border: '1px solid #D5D9CC', letterSpacing: '0.04em' }}
             >
-              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#F28A28' }} />
+              <span className="w-1.5 h-1.5 rounded-full animate-pulse bg-[#172017]" />
               INTELLIGENT GROUP TRAVEL RECOVERY
             </div>
 
             <h1
               className="font-extrabold leading-tight mb-4"
-              style={{ fontSize: 'clamp(2rem, 3.8vw, 3.1rem)', color: '#1B211C', letterSpacing: '-0.025em', lineHeight: 1.1 }}
+              style={{ fontSize: 'clamp(2rem, 3.8vw, 3.1rem)', color: '#172017', letterSpacing: '-0.025em', lineHeight: 1.1 }}
             >
               Your trip can change.
               <br />
@@ -291,14 +291,14 @@ export function Hero({ onNavigate }: HeroProps) {
               don't have to.
             </h1>
 
-            <p className="mb-6 leading-relaxed text-sm sm:text-[15px]" style={{ color: '#6F756C', maxWidth: 440 }}>
+            <p className="mb-6 leading-relaxed text-sm sm:text-[15px]" style={{ color: '#5F665B', maxWidth: 440 }}>
               YatraSarthi watches the connections between your flights, trains, cabs, hotels and activities — analyzing dependencies, calculating slack, and coordinating verified vendor actions when disruptions strike.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start mb-8">
               <button
                 onClick={() => onNavigate('new-trip')}
-                className="btn-primary px-5 py-3 text-sm flex items-center justify-center gap-2 shadow-md"
+                className="btn-accent px-5 py-3 text-sm flex items-center justify-center gap-2 shadow-sm font-bold"
               >
                 Plan a trip
                 <ArrowRight size={16} />
@@ -308,7 +308,7 @@ export function Hero({ onNavigate }: HeroProps) {
                 onClick={() => onNavigate('dashboard')}
                 className="btn-secondary px-4 py-3 text-sm flex items-center justify-center gap-2 shadow-sm"
               >
-                <Sparkles size={15} className="text-amber-600" />
+                <Sparkles size={15} style={{ color: '#172017' }} />
                 User Dashboard
               </button>
 
@@ -317,21 +317,21 @@ export function Hero({ onNavigate }: HeroProps) {
                 className="btn-secondary px-4 py-3 text-sm flex items-center justify-center gap-1.5"
               >
                 See Recovery
-                <ChevronRight size={15} style={{ color: '#6F756C' }} />
+                <ChevronRight size={15} style={{ color: '#5F665B' }} />
               </button>
             </div>
 
             {/* Stats */}
             <div className="flex flex-wrap gap-6 justify-center lg:justify-start">
               <Stat value="4.8k+" label="Trips protected" />
-              <div className="w-px self-stretch" style={{ background: '#E3E2D7' }} />
+              <div className="w-px self-stretch" style={{ background: '#D5D9CC' }} />
               <Stat value="94%" label="Recovery success" />
-              <div className="w-px self-stretch" style={{ background: '#E3E2D7' }} />
+              <div className="w-px self-stretch" style={{ background: '#D5D9CC' }} />
               <Stat value="2.3 min" label="Avg. detection time" />
-              <div className="w-px self-stretch" style={{ background: '#E3E2D7' }} />
+              <div className="w-px self-stretch" style={{ background: '#D5D9CC' }} />
               <Stat value="100%" label="Honest state proof" />
             </div>
-            <p className="text-xs mt-2" style={{ color: '#66855A' }}>✓ Built for Indian multi-modal group journeys</p>
+            <p className="text-xs mt-2.5 font-medium" style={{ color: '#4E8752' }}>✓ Built for Indian multi-modal group journeys</p>
           </div>
 
           {/* Right — beach scene */}
@@ -367,17 +367,17 @@ export function Hero({ onNavigate }: HeroProps) {
 ────────────────────────────────────────────── */
 function SolutionV2PillarsSection({ onNavigate }: { onNavigate: (p: string) => void }) {
   return (
-    <section style={{ background: '#FAF8F2', padding: '4.5rem 0', borderTop: '1px solid #E3E2D7', borderBottom: '1px solid #E3E2D7' }}>
+    <section style={{ background: '#EDE9D8', padding: '4.5rem 0', borderTop: '1px solid #D5D9CC', borderBottom: '1px solid #D5D9CC' }}>
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         
         <div className="text-center max-w-3xl mx-auto mb-10">
-          <div className="text-xs font-semibold tracking-widest mb-3 uppercase" style={{ color: '#F28A28', letterSpacing: '0.1em' }}>
+          <div className="text-xs font-bold tracking-widest mb-3 uppercase" style={{ color: '#172017', letterSpacing: '0.12em' }}>
             ENGINEERED FOR REAL INDIAN TRAVEL
           </div>
-          <h2 className="font-extrabold text-2xl sm:text-3xl text-gray-900 mb-3 tracking-tight">
+          <h2 className="font-extrabold text-2xl sm:text-3xl mb-3 tracking-tight" style={{ color: '#172017' }}>
             What makes YatraSarthi v2 different
           </h2>
-          <p className="text-sm text-gray-600 leading-relaxed">
+          <p className="text-sm leading-relaxed" style={{ color: '#5F665B' }}>
             It doesn't just guess or alert. It understands what breaks, calculates buffer slack, orchestrates regulated aggregator payments, and enforces honest vendor confirmation.
           </p>
         </div>
@@ -385,45 +385,45 @@ function SolutionV2PillarsSection({ onNavigate }: { onNavigate: (p: string) => v
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           
           {/* Pillar 1 */}
-          <div className="card p-5 bg-white border border-gray-200 hover:shadow-md transition-all">
-            <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center text-amber-700 font-bold mb-3">
+          <div className="card p-5 bg-white border hover:shadow-md transition-all" style={{ borderColor: '#D5D9CC' }}>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center font-bold mb-3" style={{ background: '#DCE8D2', color: '#172017' }}>
               <Shield size={20} />
             </div>
-            <h3 className="font-bold text-base text-gray-900 mb-1.5">Honest State Engine</h3>
-            <p className="text-xs text-gray-600 leading-relaxed">
-              Your itinerary turns <strong className="text-emerald-700">Green</strong> only when the vendor confirms with real API proof or signed response. Never on user tap alone. Red = broken, Amber = awaiting vendor.
+            <h3 className="font-bold text-base mb-1.5" style={{ color: '#172017' }}>Honest State Engine</h3>
+            <p className="text-xs leading-relaxed" style={{ color: '#5F665B' }}>
+              Your itinerary turns <strong style={{ color: '#2E7D32' }}>Green</strong> only when the vendor confirms with real API proof or signed response. Never on user tap alone. Red = broken, Amber = awaiting vendor.
             </p>
           </div>
 
           {/* Pillar 2 */}
-          <div className="card p-5 bg-white border border-gray-200 hover:shadow-md transition-all">
-            <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center text-orange-700 font-bold mb-3">
+          <div className="card p-5 bg-white border hover:shadow-md transition-all" style={{ borderColor: '#D5D9CC' }}>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center font-bold mb-3" style={{ background: '#E8F0E2', color: '#172017' }}>
               <Zap size={20} />
             </div>
-            <h3 className="font-bold text-base text-gray-900 mb-1.5">Slack-Aware Cascade</h3>
-            <p className="text-xs text-gray-600 leading-relaxed">
+            <h3 className="font-bold text-base mb-1.5" style={{ color: '#172017' }}>Slack-Aware Cascade</h3>
+            <p className="text-xs leading-relaxed" style={{ color: '#5F665B' }}>
               Delays flow through buffers. Hard constraints (fixed cabs, flight departures) break; soft constraints (hotel check-in windows, dinner reservations) absorb the delay gracefully without false alarms.
             </p>
           </div>
 
           {/* Pillar 3 */}
-          <div className="card p-5 bg-white border border-gray-200 hover:shadow-md transition-all">
-            <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold mb-3">
+          <div className="card p-5 bg-white border hover:shadow-md transition-all" style={{ borderColor: '#D5D9CC' }}>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center font-bold mb-3" style={{ background: '#DCE8D2', color: '#172017' }}>
               <CreditCard size={20} />
             </div>
-            <h3 className="font-bold text-base text-gray-900 mb-1.5">Aggregator Split-Pay Rail</h3>
-            <p className="text-xs text-gray-600 leading-relaxed">
+            <h3 className="font-bold text-base mb-1.5" style={{ color: '#172017' }}>Aggregator Split-Pay Rail</h3>
+            <p className="text-xs leading-relaxed" style={{ color: '#5F665B' }}>
               Compliant with RBI digital lending & UPI P2P collect regulations (October 2025). Unique payment links via Razorpay/Cashfree class aggregators with signed webhooks and auto-refund timeouts.
             </p>
           </div>
 
           {/* Pillar 4 */}
-          <div className="card p-5 bg-white border border-gray-200 hover:shadow-md transition-all">
-            <div className="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center text-red-700 font-bold mb-3">
+          <div className="card p-5 bg-white border hover:shadow-md transition-all" style={{ borderColor: '#D5D9CC' }}>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center font-bold mb-3" style={{ background: '#FDECEA', color: '#D93829' }}>
               <CheckCircle2 size={20} />
             </div>
-            <h3 className="font-bold text-base text-gray-900 mb-1.5">DGCA Passenger Rights</h3>
-            <p className="text-xs text-gray-600 leading-relaxed">
+            <h3 className="font-bold text-base mb-1.5" style={{ color: '#172017' }}>DGCA Passenger Rights</h3>
+            <p className="text-xs leading-relaxed" style={{ color: '#5F665B' }}>
               Models statutory compensation under CAR Section 3, Series M, Part IV. Distinguishes airline fault from extraordinary monsoon/ATC circumstances without misleadingly netting compensation into quotes.
             </p>
           </div>
@@ -440,33 +440,33 @@ function SolutionV2PillarsSection({ onNavigate }: { onNavigate: (p: string) => v
 ────────────────────────────────────────────── */
 function GroupJourneySection({ onNavigate }: { onNavigate: (p: string) => void }) {
   const travelers = [
-    { name: 'Harsh', origin: 'Mumbai', mode: 'Flight', color: '#F28A28', status: 'on_track' },
-    { name: 'Tanvi', origin: 'Pune', mode: 'Train', color: '#E45B4D', status: 'delayed', delay: '+4h' },
-    { name: 'Nupur', origin: 'Nashik', mode: 'Bus', color: '#62A86B', status: 'on_track' },
-    { name: 'Shravani', origin: 'Bangalore', mode: 'Flight', color: '#E5A43F', status: 'on_track' },
+    { name: 'Harsh', origin: 'Mumbai', mode: 'Flight', color: '#172017', status: 'on_track' },
+    { name: 'Tanvi', origin: 'Pune', mode: 'Train', color: '#D93829', status: 'delayed', delay: '+4h' },
+    { name: 'Nupur', origin: 'Nashik', mode: 'Bus', color: '#4E8752', status: 'on_track' },
+    { name: 'Shravani', origin: 'Bangalore', mode: 'Flight', color: '#858B80', status: 'on_track' },
   ];
 
   return (
-    <section style={{ background: '#FAF8F2', padding: '5rem 0' }}>
+    <section style={{ background: '#F5F2E8', padding: '5rem 0' }}>
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         <div className="flex flex-col lg:flex-row items-center gap-12">
 
           {/* Text side */}
           <div className="flex-1" style={{ maxWidth: 460 }}>
-            <div className="text-xs font-semibold tracking-widest mb-4" style={{ color: '#D96D16', letterSpacing: '0.1em' }}>
+            <div className="text-xs font-bold tracking-widest mb-4 uppercase" style={{ color: '#5F665B', letterSpacing: '0.12em' }}>
               THE GROUP JOURNEY
             </div>
             <h2
               className="font-extrabold mb-4 leading-tight"
-              style={{ fontSize: 'clamp(2rem, 3.8vw, 2.8rem)', color: '#1B211C', letterSpacing: '-0.02em' }}
+              style={{ fontSize: 'clamp(2rem, 3.8vw, 2.8rem)', color: '#172017', letterSpacing: '-0.02em' }}
             >
               Four travelers.
               <br />
               Four starting points.
               <br />
-              <span style={{ color: '#F28A28' }}>One journey.</span>
+              <span className="px-2 py-0.5 rounded-lg bg-[#DCE8D2] text-[#172017]">One journey.</span>
             </h2>
-            <p className="text-sm sm:text-base leading-relaxed mb-6" style={{ color: '#6F756C' }}>
+            <p className="text-sm sm:text-base leading-relaxed mb-6" style={{ color: '#5F665B' }}>
               YatraSarthi understands every traveler individually — then connects the journeys that depend on each other. A group trip is not one itinerary. It's multiple journeys becoming one connected trip.
             </p>
             <button
@@ -485,8 +485,8 @@ function GroupJourneySection({ onNavigate }: { onNavigate: (p: string) => void }
               {travelers.map(t => (
                 <div
                   key={t.name}
-                  className="card-sm px-4 py-3 flex items-center gap-4 bg-white"
-                  style={{ borderLeft: `3px solid ${t.color}` }}
+                  className="card-sm px-4 py-3 flex items-center gap-4 bg-white border"
+                  style={{ borderLeft: `4px solid ${t.color}`, borderColor: '#D5D9CC' }}
                 >
                   <div
                     className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white flex-shrink-0"
@@ -496,32 +496,32 @@ function GroupJourneySection({ onNavigate }: { onNavigate: (p: string) => void }
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <span className="font-semibold text-sm" style={{ color: '#1B211C' }}>{t.name}</span>
+                      <span className="font-semibold text-sm" style={{ color: '#172017' }}>{t.name}</span>
                       {t.delay && (
-                        <span className="text-xs px-2 py-0.5 rounded-full font-semibold badge-pending">{t.delay}</span>
+                        <span className="text-xs px-2 py-0.5 rounded-full font-semibold badge-danger">{t.delay}</span>
                       )}
                     </div>
-                    <div className="text-xs mt-0.5" style={{ color: '#6F756C' }}>{t.origin} → {t.mode} → Goa</div>
+                    <div className="text-xs mt-0.5" style={{ color: '#5F665B' }}>{t.origin} → {t.mode} → Goa</div>
                   </div>
                   <div
-                    className="w-2 h-2 rounded-full flex-shrink-0"
-                    style={{ background: t.status === 'on_track' ? '#62A86B' : '#E5A43F' }}
+                    className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                    style={{ background: t.status === 'on_track' ? '#4E8752' : '#D93829' }}
                   />
                 </div>
               ))}
 
               {/* Convergence arrow */}
               <div className="flex items-center gap-3 py-1 px-4">
-                <div className="flex-1 h-px" style={{ background: '#E3E2D7' }} />
-                <div className="text-xs font-semibold" style={{ color: '#D96D16' }}>All routes converge</div>
-                <div className="flex-1 h-px" style={{ background: '#E3E2D7' }} />
+                <div className="flex-1 h-px" style={{ background: '#D5D9CC' }} />
+                <div className="text-xs font-semibold" style={{ color: '#5F665B' }}>All routes converge</div>
+                <div className="flex-1 h-px" style={{ background: '#D5D9CC' }} />
               </div>
 
               {/* Meetup */}
-              <div className="card px-4 py-4 border-2 bg-white" style={{ borderColor: '#F28A28' }}>
+              <div className="card px-4 py-4 border bg-white" style={{ borderColor: '#D5D9CC' }}>
                 <div className="flex items-center justify-between mb-3">
-                  <span className="font-bold" style={{ color: '#D96D16', fontSize: 13, letterSpacing: '0.06em' }}>GOA MEETUP POINT</span>
-                  <span className="text-xs font-semibold badge-pending px-2 py-1 rounded-full">14:30</span>
+                  <span className="font-bold" style={{ color: '#172017', fontSize: 13, letterSpacing: '0.06em' }}>GOA MEETUP POINT</span>
+                  <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#DCE8D2] text-[#172017]">14:30</span>
                 </div>
                 <div className="flex gap-2 flex-wrap">
                   {[
@@ -529,7 +529,7 @@ function GroupJourneySection({ onNavigate }: { onNavigate: (p: string) => void }
                     { label: 'Hotel', icon: '🏨' },
                     { label: 'Sunset Dinner', icon: '🌅' },
                   ].map(s => (
-                    <div key={s.label} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium" style={{ background: '#FDF2E6', color: '#D96D16' }}>
+                    <div key={s.label} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold" style={{ background: '#E8F0E2', color: '#172017', border: '1px solid #D5D9CC' }}>
                       <span>{s.icon}</span>
                       {s.label}
                     </div>
@@ -549,64 +549,64 @@ function GroupJourneySection({ onNavigate }: { onNavigate: (p: string) => void }
 ────────────────────────────────────────────── */
 function PlanOrImportSection({ onNavigate }: { onNavigate: (p: string) => void }) {
   return (
-    <section style={{ background: '#F5F2E8', padding: '5rem 0' }}>
+    <section style={{ background: '#EDE9D8', padding: '5rem 0' }}>
       <div className="max-w-5xl mx-auto px-5 sm:px-8 text-center mb-10">
-        <div className="text-xs font-semibold tracking-widest mb-3 uppercase" style={{ color: '#D96D16', letterSpacing: '0.1em' }}>
+        <div className="text-xs font-bold tracking-widest mb-3 uppercase" style={{ color: '#5F665B', letterSpacing: '0.12em' }}>
           GET STARTED
         </div>
-        <h2 className="font-extrabold mb-3" style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)', color: '#1B211C', letterSpacing: '-0.02em' }}>
+        <h2 className="font-extrabold mb-3" style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)', color: '#172017', letterSpacing: '-0.02em' }}>
           Start from scratch — or bring your bookings.
         </h2>
-        <p style={{ color: '#6F756C', fontSize: '1rem' }}>
+        <p style={{ color: '#5F665B', fontSize: '1rem' }}>
           YatraSarthi works with what you have.
         </p>
       </div>
 
       <div className="max-w-4xl mx-auto px-5 sm:px-8 grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Create from scratch */}
-        <div className="card p-7 flex flex-col bg-white">
-          <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-5" style={{ background: 'linear-gradient(135deg, #F28A28, #D96D16)' }}>
+        <div className="card p-7 flex flex-col bg-white border" style={{ borderColor: '#D5D9CC' }}>
+          <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-5" style={{ background: '#172017', color: '#C5D82D' }}>
             <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-              <path d="M11 3v16M3 11h16" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
+              <path d="M11 3v16M3 11h16" stroke="#C5D82D" strokeWidth="2.5" strokeLinecap="round" />
             </svg>
           </div>
-          <h3 className="font-bold text-xl mb-2" style={{ color: '#1B211C' }}>Plan a new trip</h3>
-          <p className="text-sm leading-relaxed mb-6 flex-1" style={{ color: '#6F756C' }}>
+          <h3 className="font-bold text-xl mb-2" style={{ color: '#172017' }}>Plan a new trip</h3>
+          <p className="text-sm leading-relaxed mb-6 flex-1" style={{ color: '#5F665B' }}>
             Tell YatraSarthi where each traveler is coming from, set preferences, and get connected itinerary recommendations — flights, trains, hotels and more.
           </p>
           <ul className="flex flex-col gap-2 mb-6">
             {['Set destinations & dates', 'Add multiple travelers + origins', 'Get personalized recommendations', 'Build the connected graph'].map(f => (
-              <li key={f} className="flex items-center gap-2.5 text-sm" style={{ color: '#6F756C' }}>
-                <span className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: '#FDF2E6' }}>
-                  <svg width="8" height="8" viewBox="0 0 8 8"><path d="M1.5 4L3.5 6L6.5 2" stroke="#D96D16" strokeWidth="1.5" strokeLinecap="round" /></svg>
+              <li key={f} className="flex items-center gap-2.5 text-sm" style={{ color: '#5F665B' }}>
+                <span className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: '#DCE8D2' }}>
+                  <svg width="8" height="8" viewBox="0 0 8 8"><path d="M1.5 4L3.5 6L6.5 2" stroke="#172017" strokeWidth="1.5" strokeLinecap="round" /></svg>
                 </span>
                 {f}
               </li>
             ))}
           </ul>
-          <button onClick={() => onNavigate('new-trip')} className="btn-primary py-3 text-sm w-full">
+          <button onClick={() => onNavigate('new-trip')} className="btn-accent py-3 text-sm w-full font-bold">
             Plan a trip <ArrowRight size={14} />
           </button>
         </div>
 
         {/* Import */}
-        <div className="card p-7 flex flex-col bg-white">
-          <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-5" style={{ background: 'linear-gradient(135deg, #FF9E50, #F28A28)' }}>
+        <div className="card p-7 flex flex-col bg-white border" style={{ borderColor: '#D5D9CC' }}>
+          <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-5" style={{ background: '#DCE8D2', color: '#172017' }}>
             <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-              <path d="M19 14v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="white" strokeWidth="2" strokeLinecap="round" />
-              <polyline points="7 10 11 14 15 10" stroke="white" strokeWidth="2" strokeLinecap="round" />
-              <line x1="11" y1="14" x2="11" y2="3" stroke="white" strokeWidth="2" strokeLinecap="round" />
+              <path d="M19 14v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="#172017" strokeWidth="2" strokeLinecap="round" />
+              <polyline points="7 10 11 14 15 10" stroke="#172017" strokeWidth="2" strokeLinecap="round" />
+              <line x1="11" y1="14" x2="11" y2="3" stroke="#172017" strokeWidth="2" strokeLinecap="round" />
             </svg>
           </div>
-          <h3 className="font-bold text-xl mb-2" style={{ color: '#1B211C' }}>Import existing bookings</h3>
-          <p className="text-sm leading-relaxed mb-6 flex-1" style={{ color: '#6F756C' }}>
+          <h3 className="font-bold text-xl mb-2" style={{ color: '#172017' }}>Import existing bookings</h3>
+          <p className="text-sm leading-relaxed mb-6 flex-1" style={{ color: '#5F665B' }}>
             Already have bookings? Import them once. YatraSarthi extracts, connects, and monitors them. No re-upload needed when disruptions happen.
           </p>
           <ul className="flex flex-col gap-2 mb-6">
             {['PDF, screenshot, SMS, email', 'Automatic extraction + review', 'Connections built once', 'Trip saved — always ready'].map(f => (
-              <li key={f} className="flex items-center gap-2.5 text-sm" style={{ color: '#6F756C' }}>
-                <span className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: '#FDF2E6' }}>
-                  <svg width="8" height="8" viewBox="0 0 8 8"><path d="M1.5 4L3.5 6L6.5 2" stroke="#D96D16" strokeWidth="1.5" strokeLinecap="round" /></svg>
+              <li key={f} className="flex items-center gap-2.5 text-sm" style={{ color: '#5F665B' }}>
+                <span className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: '#DCE8D2' }}>
+                  <svg width="8" height="8" viewBox="0 0 8 8"><path d="M1.5 4L3.5 6L6.5 2" stroke="#172017" strokeWidth="1.5" strokeLinecap="round" /></svg>
                 </span>
                 {f}
               </li>
@@ -614,7 +614,7 @@ function PlanOrImportSection({ onNavigate }: { onNavigate: (p: string) => void }
           </ul>
           <button onClick={() => onNavigate('new-trip')} className="btn-secondary py-3 text-sm w-full">
             Import itinerary
-            <ArrowRight size={14} style={{ color: '#6F756C' }} />
+            <ArrowRight size={14} style={{ color: '#172017' }} />
           </button>
         </div>
       </div>
@@ -634,11 +634,11 @@ function HowItWorksSection() {
   ];
 
   return (
-    <section style={{ background: '#FAF8F2', padding: '5rem 0' }}>
+    <section style={{ background: '#F5F2E8', padding: '5rem 0' }}>
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         <div className="text-center mb-12">
-          <div className="text-xs font-semibold tracking-widest mb-3 uppercase" style={{ color: '#D96D16', letterSpacing: '0.1em' }}>HOW IT WORKS</div>
-          <h2 className="font-extrabold" style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)', color: '#1B211C', letterSpacing: '-0.02em' }}>
+          <div className="text-xs font-bold tracking-widest mb-3 uppercase" style={{ color: '#5F665B', letterSpacing: '0.12em' }}>HOW IT WORKS</div>
+          <h2 className="font-extrabold" style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)', color: '#172017', letterSpacing: '-0.02em' }}>
             Plan → Connect → Monitor → Recover
           </h2>
         </div>
@@ -647,19 +647,19 @@ function HowItWorksSection() {
           {/* Connector line */}
           <div
             className="hidden lg:block absolute top-8 left-0 right-0 h-px"
-            style={{ background: 'linear-gradient(to right, transparent, #E3E2D7, #E3E2D7, transparent)', top: 24 }}
+            style={{ background: 'linear-gradient(to right, transparent, #D5D9CC, #D5D9CC, transparent)', top: 24 }}
           />
 
           {steps.map((s) => (
             <div key={s.n} className="flex flex-col items-center lg:items-start px-6 py-5 relative">
               <div
                 className="w-12 h-12 rounded-full flex items-center justify-center font-extrabold text-base mb-4 relative z-10"
-                style={{ background: '#FDF2E6', border: '2px solid #F7C59F', color: '#D96D16', fontVariantNumeric: 'tabular-nums' }}
+                style={{ background: '#DCE8D2', border: '2px solid #C5D82D', color: '#172017', fontVariantNumeric: 'tabular-nums' }}
               >
                 {s.n}
               </div>
-              <h3 className="font-bold text-lg mb-2" style={{ color: '#1B211C' }}>{s.title}</h3>
-              <p className="text-sm leading-relaxed" style={{ color: '#6F756C' }}>{s.desc}</p>
+              <h3 className="font-bold text-lg mb-2" style={{ color: '#172017' }}>{s.title}</h3>
+              <p className="text-sm leading-relaxed" style={{ color: '#5F665B' }}>{s.desc}</p>
             </div>
           ))}
         </div>
@@ -713,27 +713,27 @@ function DisruptionStorySection({ onNavigate }: { onNavigate: (p: string) => voi
     },
   ];
 
-  const colorMap: Record<string, string> = { confirmed: '#62A86B', pending: '#E5A43F', disrupted: '#E45B4D' };
-  const bgMap: Record<string, string> = { confirmed: '#E6F4E8', pending: '#FDF2E0', disrupted: '#FDECEA' };
+  const colorMap: Record<string, string> = { confirmed: '#2E7D32', pending: '#8D6E1A', disrupted: '#D93829' };
+  const bgMap: Record<string, string> = { confirmed: '#E8F0E2', pending: '#FAF5D8', disrupted: '#FDECEA' };
 
   return (
-    <section style={{ background: '#F5F2E8', padding: '5rem 0' }}>
+    <section style={{ background: '#EDE9D8', padding: '5rem 0' }}>
       <div className="max-w-6xl mx-auto px-5 sm:px-8">
         <div className="flex flex-col lg:flex-row items-center gap-12">
 
           {/* Left text */}
           <div className="flex-1" style={{ maxWidth: 430 }}>
-            <div className="text-xs font-semibold tracking-widest mb-3 uppercase" style={{ color: '#D96D16', letterSpacing: '0.1em' }}>
+            <div className="text-xs font-bold tracking-widest mb-3 uppercase" style={{ color: '#5F665B', letterSpacing: '0.12em' }}>
               DISRUPTION RECOVERY
             </div>
-            <h2 className="font-extrabold mb-4" style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.7rem)', color: '#1B211C', letterSpacing: '-0.02em', lineHeight: 1.1 }}>
+            <h2 className="font-extrabold mb-4" style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.7rem)', color: '#172017', letterSpacing: '-0.02em', lineHeight: 1.1 }}>
               Only what breaks
               <br />
               gets flagged.
               <br />
-              <span style={{ color: '#F28A28' }}>The rest stays safe.</span>
+              <span className="px-2 py-0.5 rounded-lg bg-[#C5D82D] text-[#172017]">The rest stays safe.</span>
             </h2>
-            <p className="text-sm sm:text-base leading-relaxed mb-6" style={{ color: '#6F756C' }}>
+            <p className="text-sm sm:text-base leading-relaxed mb-6" style={{ color: '#5F665B' }}>
               YatraSarthi calculates the actual slack in each connection. A delayed train doesn't automatically break dinner — only the nodes with exhausted buffers are affected.
             </p>
 
@@ -745,18 +745,18 @@ function DisruptionStorySection({ onNavigate }: { onNavigate: (p: string) => voi
                   onClick={() => setActive(i)}
                   className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-left transition-all"
                   style={{
-                    background: active === i ? 'white' : 'transparent',
-                    border: active === i ? '1px solid #F28A28' : '1px solid transparent',
-                    color: active === i ? '#1B211C' : '#6F756C',
-                    fontWeight: active === i ? 600 : 500,
-                    boxShadow: active === i ? '0 2px 10px rgba(242,138,40,0.12)' : 'none',
+                    background: active === i ? '#FFFFFF' : 'transparent',
+                    border: active === i ? '1px solid #172017' : '1px solid transparent',
+                    color: active === i ? '#172017' : '#5F665B',
+                    fontWeight: active === i ? 700 : 500,
+                    boxShadow: active === i ? '0 2px 10px rgba(23,32,23,0.08)' : 'none',
                   }}
                 >
                   <span
                     className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
                     style={{
-                      background: active === i ? '#F28A28' : '#FDF2E6',
-                      color: active === i ? 'white' : '#D96D16',
+                      background: active === i ? '#172017' : '#DCE8D2',
+                      color: active === i ? '#F5F2E8' : '#172017',
                     }}
                   >
                     {i + 1}
@@ -773,13 +773,13 @@ function DisruptionStorySection({ onNavigate }: { onNavigate: (p: string) => voi
 
           {/* Right — state visualization */}
           <div className="flex-1 w-full" style={{ maxWidth: 420 }}>
-            <div className="card p-6 bg-white shadow-sm">
+            <div className="card p-6 bg-white shadow-sm border" style={{ borderColor: '#D5D9CC' }}>
               <div className="flex items-center justify-between mb-4">
-                <span className="font-semibold text-sm" style={{ color: '#1B211C' }}>
+                <span className="font-semibold text-sm" style={{ color: '#172017' }}>
                   {states[active].label}
                 </span>
                 {active > 0 && (
-                  <span className="text-xs font-semibold badge-pending px-2.5 py-1 rounded-full">
+                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#E8F0E2] text-[#172017]">
                     Simulated
                   </span>
                 )}
@@ -789,12 +789,12 @@ function DisruptionStorySection({ onNavigate }: { onNavigate: (p: string) => voi
                 {states[active].nodes.map((node, i) => (
                   <div
                     key={i}
-                    className="flex items-center gap-3 p-3 rounded-xl transition-all animate-fade-in"
-                    style={{ background: bgMap[node.status] }}
+                    className="flex items-center gap-3 p-3 rounded-xl transition-all animate-fade-in border"
+                    style={{ background: bgMap[node.status], borderColor: '#D5D9CC' }}
                   >
-                    <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: colorMap[node.status] }} />
+                    <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: colorMap[node.status] }} />
                     <div className="flex-1">
-                      <div className="font-medium text-sm" style={{ color: '#1B211C' }}>{node.label}</div>
+                      <div className="font-medium text-sm" style={{ color: '#172017' }}>{node.label}</div>
                       <div className="text-xs font-semibold" style={{ color: colorMap[node.status] }}>{node.note}</div>
                     </div>
                   </div>
@@ -802,9 +802,9 @@ function DisruptionStorySection({ onNavigate }: { onNavigate: (p: string) => voi
               </div>
 
               {active === 3 && (
-                <div className="mt-4 p-3 rounded-xl text-center" style={{ background: '#E6F4EE' }}>
-                  <div className="font-bold text-sm" style={{ color: '#1A6B3A' }}>Trip Health: 91/100 ↑</div>
-                  <div className="text-xs mt-0.5" style={{ color: '#2D7A34' }}>Recovered — all bookings preserved</div>
+                <div className="mt-4 p-3 rounded-xl text-center border" style={{ background: '#E8F0E2', borderColor: '#D5D9CC' }}>
+                  <div className="font-bold text-sm" style={{ color: '#172017' }}>Trip Health: 91/100 ↑</div>
+                  <div className="text-xs mt-0.5" style={{ color: '#4E8752' }}>Recovered — all bookings preserved</div>
                 </div>
               )}
             </div>
@@ -820,29 +820,29 @@ function DisruptionStorySection({ onNavigate }: { onNavigate: (p: string) => voi
 ────────────────────────────────────────────── */
 function FinalCTASection({ onNavigate }: { onNavigate: (p: string) => void }) {
   return (
-    <section style={{ background: 'linear-gradient(135deg, #1C1917 0%, #2A1D16 50%, #1C1917 100%)', padding: '6rem 0' }}>
+    <section style={{ background: 'linear-gradient(135deg, #172017 0%, #202D20 50%, #172017 100%)', padding: '6rem 0' }}>
       <div className="max-w-3xl mx-auto px-5 sm:px-8 text-center">
         <h2
           className="font-extrabold mb-4"
-          style={{ fontSize: 'clamp(2rem, 4.5vw, 3.2rem)', color: 'white', letterSpacing: '-0.03em', lineHeight: 1.15 }}
+          style={{ fontSize: 'clamp(2rem, 4.5vw, 3.2rem)', color: '#F5F2E8', letterSpacing: '-0.03em', lineHeight: 1.15 }}
         >
           Travel changes.
           <br />
-          <span style={{ color: '#F28A28' }}>Your plans don't have to fall apart.</span>
+          <span style={{ color: '#C5D82D' }}>Your plans don't have to fall apart.</span>
         </h2>
-        <p className="text-base sm:text-lg mb-8" style={{ color: 'rgba(255,255,255,0.75)' }}>
+        <p className="text-base sm:text-lg mb-8" style={{ color: '#DCE8D2' }}>
           Connect your journey once. YatraSarthi takes care of the changes.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
             onClick={() => onNavigate('new-trip')}
-            className="btn-primary px-7 py-3.5 text-sm"
+            className="btn-accent px-7 py-3.5 text-sm font-bold shadow-md"
           >
             Plan my trip <ArrowRight size={16} />
           </button>
           <button
             onClick={() => onNavigate('new-trip')}
-            className="btn-secondary px-7 py-3.5 text-sm"
+            className="px-7 py-3.5 text-sm font-semibold rounded-full border border-[#D5D9CC] text-[#F5F2E8] hover:bg-[#202D20] transition-all"
           >
             Import itinerary
           </button>

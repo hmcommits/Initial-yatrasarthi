@@ -11,46 +11,46 @@ export function SurakshaPanel({ trip }: { trip?: TripData | null }) {
   
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
-      <div className="card p-8">
+      <div className="card p-8 bg-white border border-[#D5D9CC]">
         <div className="flex items-center gap-4 mb-6">
-          <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #F28C28, #D96F16)' }}>
-            <Shield size={24} color="white" />
+          <div className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-sm" style={{ background: '#172017' }}>
+            <Shield size={24} color="#C5D82D" />
           </div>
           <div>
-            <h2 className="font-extrabold text-2xl" style={{ color: '#1D211C' }}>🛡️ Suraksha</h2>
-            <p className="text-sm" style={{ color: '#73776E' }}>Your trip's emergency communication layer</p>
+            <h2 className="font-extrabold text-2xl" style={{ color: '#172017' }}>🛡️ Suraksha</h2>
+            <p className="text-sm" style={{ color: '#5F665B' }}>Your trip's emergency communication layer</p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
           {/* Status cards */}
-          <div className="p-4 rounded-2xl" style={{ background: '#EEF1E4' }}>
+          <div className="p-4 rounded-2xl border border-[#D5D9CC]" style={{ background: '#EDE9D8' }}>
             <div className="flex items-center gap-2 mb-3">
-              <MapPin size={16} style={{ color: '#65855A' }} />
-              <span className="font-semibold text-sm" style={{ color: '#1D211C' }}>Last Known Location</span>
+              <MapPin size={16} style={{ color: '#172017' }} />
+              <span className="font-bold text-sm" style={{ color: '#172017' }}>Last Known Location</span>
             </div>
-            <p className="text-sm font-medium" style={{ color: '#73776E' }}>{currentLoc}</p>
-            <p className="text-xs mt-1" style={{ color: '#A9C39A' }}>Realtime fetching unavailable</p>
+            <p className="text-sm font-semibold" style={{ color: '#172017' }}>{currentLoc}</p>
+            <p className="text-xs mt-1" style={{ color: '#5F665B' }}>Realtime fetching unavailable</p>
           </div>
 
-          <div className="p-4 rounded-2xl" style={{ background: '#EEF1E4' }}>
+          <div className="p-4 rounded-2xl border border-[#D5D9CC]" style={{ background: '#EDE9D8' }}>
             <div className="flex items-center gap-2 mb-3">
-              <Battery size={16} style={{ color: '#65855A' }} />
-              <span className="font-semibold text-sm" style={{ color: '#1D211C' }}>Device Status</span>
+              <Battery size={16} style={{ color: '#172017' }} />
+              <span className="font-bold text-sm" style={{ color: '#172017' }}>Device Status</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm" style={{ color: '#73776E' }}>Not connected to device telemetry.</span>
+              <span className="text-sm font-semibold" style={{ color: '#5F665B' }}>Not connected to device telemetry.</span>
             </div>
           </div>
         </div>
 
         {/* Journey progress */}
-        <div className="p-4 rounded-2xl mb-6" style={{ background: '#F5F3E8', border: '1px solid #E3E2D7' }}>
-          <div className="font-semibold text-sm mb-3" style={{ color: '#1D211C' }}>Journey nodes</div>
+        <div className="p-4 rounded-2xl mb-6" style={{ background: '#F5F2E8', border: '1px solid #D5D9CC' }}>
+          <div className="font-bold text-sm mb-3" style={{ color: '#172017' }}>Journey nodes</div>
           <div className="flex flex-col gap-2">
             {nodes.map(n => (
-              <div key={n.id} className="text-xs text-gray-500 flex items-center gap-2">
-                <div className={`w-2 h-2 rounded-full ${n.status === 'confirmed' || n.status === 'on_track' ? 'bg-green-500' : n.status === 'at_risk' ? 'bg-yellow-500' : 'bg-red-500'}`} />
+              <div key={n.id} className="text-xs flex items-center gap-2" style={{ color: '#5F665B' }}>
+                <div className={`w-2 h-2 rounded-full ${n.status === 'confirmed' || n.status === 'on_track' ? 'bg-[#2E7D32]' : n.status === 'at_risk' ? 'bg-[#C5D82D]' : 'bg-[#D93829]'}`} />
                 {n.label} ({new Date(n.time).toLocaleTimeString()})
               </div>
             ))}
@@ -59,7 +59,7 @@ export function SurakshaPanel({ trip }: { trip?: TripData | null }) {
 
         {/* Emergency contacts */}
         <div className="mb-6">
-          <div className="font-semibold text-sm mb-3" style={{ color: '#1D211C' }}>Emergency numbers</div>
+          <div className="font-bold text-sm mb-3" style={{ color: '#172017' }}>Emergency numbers</div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {[
               { label: 'National Emergency', number: '112' },
@@ -70,10 +70,10 @@ export function SurakshaPanel({ trip }: { trip?: TripData | null }) {
                 key={c.number}
                 href={`tel:${c.number}`}
                 className="p-3 rounded-xl text-center transition-all hover:scale-105"
-                style={{ background: '#FDECEA', border: '1px solid #F0A9A5' }}
+                style={{ background: '#FDEDEC', border: '1px solid #F5B7B1' }}
               >
-                <div className="font-bold text-lg" style={{ color: '#B53027' }}>{c.number}</div>
-                <div className="text-xs" style={{ color: '#73776E' }}>{c.label}</div>
+                <div className="font-bold text-lg" style={{ color: '#D93829' }}>{c.number}</div>
+                <div className="text-xs" style={{ color: '#5F665B' }}>{c.label}</div>
               </a>
             ))}
           </div>

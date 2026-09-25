@@ -1,5 +1,6 @@
 # dependencies
-/node_modules
+node_modules/
+**/node_modules/
 /.pnpm
 .pnpm-store/
 
@@ -27,4 +28,6 @@ pnpm-debug.log*
 
 # OS files
 .DS_Store
-Thumbs.db
+# Dev database
+.dev-db.json
+*.dev-db.json
