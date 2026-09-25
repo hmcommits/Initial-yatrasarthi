@@ -40,23 +40,23 @@ function BeachScene() {
         }
         @keyframes flight-takeoff-ascent {
           0% {
-            transform: translate(125px, 260px) rotate(32deg) scale(0.72);
+            transform: translate(125px, 260px) rotate(-33deg) scale(0.75);
             opacity: 0;
           }
           10% {
             opacity: 1;
-            transform: translate(160px, 238px) rotate(32deg) scale(0.82);
+            transform: translate(160px, 238px) rotate(-33deg) scale(0.85);
           }
           50% {
-            transform: translate(275px, 168px) rotate(32deg) scale(1);
+            transform: translate(275px, 165px) rotate(-33deg) scale(1);
             opacity: 1;
           }
           85% {
-            transform: translate(395px, 92px) rotate(32deg) scale(1.08);
+            transform: translate(395px, 89px) rotate(-33deg) scale(1.05);
             opacity: 1;
           }
           100% {
-            transform: translate(455px, 52px) rotate(32deg) scale(1.12);
+            transform: translate(455px, 51px) rotate(-33deg) scale(1.1);
             opacity: 0;
           }
         }
