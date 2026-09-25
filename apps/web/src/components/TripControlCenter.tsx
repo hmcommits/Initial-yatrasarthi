@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Share, Bell, Users, MapPin, ChevronDown, AlertTriangle, Clock, Check, RotateCcw } from 'lucide-react';
-import type { TripData, UserPreferences, RecoveryPlan } from '../types';
+import type { TripData, UserPreferences, RecoveryOption } from '../types';
 import { TripTimeline } from './TripTimeline';
 import { DependencyGraph } from './DependencyGraph';
 import { TripHealth } from './TripHealth';
@@ -9,7 +9,8 @@ import { GroupPanel } from './GroupPanel';
 import { VendorDraft } from './VendorDraft';
 import { EventTimeline } from './EventTimeline';
 import { DisruptionSimulator } from './DisruptionSimulator';
-import { defaultPreferences } from '../data/mockData';
+
+const defaultPreferences = { cost: 40, time: 80, bookings: 100 };
 
 type Tab = 'overview' | 'journey' | 'group' | 'bookings' | 'recovery' | 'activity';
 
@@ -34,7 +35,7 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
   
   const [trip, setTrip] = useState(initialTrip);
   const [weakestEdge, setWeakestEdge] = useState<{ from: string; to: string; slack: number } | null>(null);
-  const [fetchedRecoveryPlans, setFetchedRecoveryPlans] = useState<RecoveryPlan[] | null>(null);
+  const [fetchedRecoveryOptions, setFetchedRecoveryOptions] = useState<RecoveryOption[] | null>(null);
   const [paymentLinks, setPaymentLinks] = useState<any[]>([]);
   const [generatingLinks, setGeneratingLinks] = useState(false);
 
@@ -62,13 +63,13 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
   }, [initialTrip]);
 
   useEffect(() => {
-    if (initialTrip.id === 'default' || initialTrip.id === 'disrupted') return;
+    if (initialTrip.id === 'default' || initialTrip.id === 'needs_attention') return;
     
-    if (trip.status === 'disrupted' || trip.status === 'recovering') {
+    if (trip.status === 'needs_attention' || trip.status === 'resolving') {
       fetch(`/api/trips/${initialTrip.id}/recovery-options`)
         .then(r => r.json())
         .then(data => {
-          if (data.recoveryOptions) setFetchedRecoveryPlans(data.recoveryOptions);
+          if (data.recoveryOptions) setFetchedRecoveryOptions(data.recoveryOptions);
         })
         .catch(() => {});
     }
@@ -76,7 +77,7 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
 
   useEffect(() => {
     // Only poll if it's a real trip ID (not our mock data ids)
-    if (initialTrip.id === 'default' || initialTrip.id === 'disrupted') return;
+    if (initialTrip.id === 'default' || initialTrip.id === 'needs_attention') return;
 
     const fetchGraph = async () => {
       try {
@@ -122,9 +123,9 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
     return () => clearInterval(interval);
   }, [initialTrip.id]);
 
-  const isDisrupted = trip.status === 'disrupted' || trip.status === 'recovering';
+  const isDisrupted = trip.status === 'needs_attention' || trip.status === 'resolving';
   const healthColor = trip.health >= 80 ? '#62A86B' : trip.health >= 60 ? '#E5A43F' : '#E45B4D';
-  const statusLabel = trip.status === 'healthy' ? 'Stable' : trip.status === 'disrupted' ? 'Disrupted' : trip.status === 'recovering' ? 'Recovering' : 'Recovered';
+  const statusLabel = trip.status === 'healthy' ? 'Stable' : trip.status === 'needs_attention' ? 'Disrupted' : trip.status === 'resolving' ? 'Recovering' : 'Recovered';
 
   return (
     <div className="min-h-screen pb-20 md:pb-8" style={{ background: '#F7F5EC' }}>
@@ -147,7 +148,7 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
                   className="font-extrabold"
                   style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', color: '#1B211C', letterSpacing: '-0.02em' }}
                 >
-                  {trip.origin === 'Multiple origins' ? 'Group Trip' : `${trip.origin} → ${trip.destination}`}
+                  {trip.name === 'Group Trip' ? 'Group Trip' : `${trip.name} → ${trip.destination}`}
                 </h1>
                 <span
                   className="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full"
@@ -306,7 +307,7 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
             <div className="lg:col-span-2">
               <div className="card p-5">
                 <h3 className="font-semibold mb-5" style={{ color: '#1B211C' }}>Journey Timeline</h3>
-                <TripTimeline nodes={trip.nodes} />
+                <TripTimeline nodes={trip.nodes} isDisrupted={isDisrupted} />
               </div>
             </div>
             <div className="lg:col-span-3 flex flex-col gap-5">
@@ -390,7 +391,7 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
             {isDisrupted && trip.recoveryPlans ? (
               <>
                 <RecoveryOptions
-                  plans={fetchedRecoveryPlans || trip.recoveryPlans || []}
+                  plans={fetchedRecoveryOptions || trip.recoveryPlans || []}
                   preferences={prefs}
                   onPreferencesChange={setPrefs}
                   selectedPlan={selectedPlan}
@@ -416,7 +417,7 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
         {/* ACTIVITY */}
         {activeTab === 'activity' && (
           <div className="max-w-2xl">
-            <EventTimeline events={trip.eventLog.length > 0 ? trip.eventLog : [{ id: '0', time: 'now', message: 'Trip created and saved. No events yet.', type: 'info' }]} />
+            <EventTimeline events={trip.eventLog?.length > 0 ? trip.eventLog : [{ id: '0', tripId: trip.id, seq: 1, actor: 'system', ts: new Date().toISOString(), payload: { message: 'Trip created and saved. No events yet.' }, type: 'info' }]} />
           </div>
         )}
       </div>
@@ -443,9 +444,9 @@ function BookingsTab({ nodes }: { nodes: any[] }) {
               <div className="flex items-center gap-3 flex-wrap mb-1">
                 <span className="font-semibold" style={{ color: '#1B211C' }}>{node.label}</span>
                 <span
-                  className={`text-xs font-semibold px-2 py-0.5 rounded-full ${node.status === 'confirmed' ? 'badge-confirmed' : node.status === 'disrupted' ? 'badge-disrupted' : 'badge-pending'}`}
+                  className={`text-xs font-semibold px-2 py-0.5 rounded-full ${node.status === 'confirmed' ? 'badge-confirmed' : node.status === 'needs_attention' ? 'badge-disrupted' : 'badge-pending'}`}
                 >
-                  {node.status === 'confirmed' ? 'Confirmed' : node.status === 'disrupted' ? 'Disrupted' : 'At Risk'}
+                  {node.status === 'confirmed' ? 'Confirmed' : node.status === 'needs_attention' ? 'Disrupted' : 'At Risk'}
                 </span>
               </div>
               <div className="flex flex-wrap gap-4 text-xs" style={{ color: '#6F756C' }}>

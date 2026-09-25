@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Navbar } from '../components/Navbar';
 import { BottomNav } from '../components/BottomNav';
 import { Hero } from '../components/Hero';
@@ -11,16 +11,29 @@ import { GroupJourney } from '../components/GroupJourney';
 import { SurakshaPanel } from '../components/SurakshaPanel';
 import { UserDashboard } from '../components/UserDashboard';
 import { Footer } from '../components/Footer';
-import { defaultTrip, disrupted_priya_rahul } from '../data/mockData';
 import type { TripData } from '../types';
 
 type Page = 'home' | 'dashboard' | 'trips' | 'recovery' | 'group' | 'suraksha' | 'new-trip';
 
 export default function App() {
   const [page, setPage] = useState<Page>('home');
-  const [activeTrip, setActiveTrip] = useState<TripData>(defaultTrip);
-  const [trips, setTrips] = useState<TripData[]>([defaultTrip, disrupted_priya_rahul]);
-  const [tripCreated, setTripCreated] = useState(false);
+  const [activeTrip, setActiveTrip] = useState<TripData | null>(null);
+  const [trips, setTrips] = useState<TripData[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/trips')
+      .then(r => r.json())
+      .then(data => {
+        if (data.data?.trips) {
+          setTrips(data.data.trips);
+        } else if (Array.isArray(data.trips)) {
+          setTrips(data.trips);
+        }
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
 
   const navigate = useCallback((p: string) => {
     setPage(p as Page);
@@ -36,61 +49,42 @@ export default function App() {
   };
 
   const handleTripCreated = useCallback(() => {
-    setTripCreated(true);
-    // Add the demo trip as if it was newly created
-    setActiveTrip(defaultTrip);
+    // Refresh trips
+    fetch('/api/trips')
+      .then(r => r.json())
+      .then(data => {
+        if (data.data?.trips) {
+          setTrips(data.data.trips);
+          if (data.data.trips.length > 0) setActiveTrip(data.data.trips[0]);
+        }
+      });
   }, []);
 
   const handleDisrupt = useCallback((scenarioId: string) => {
-    if (scenarioId === 'train_delay') {
-      setActiveTrip(disrupted_priya_rahul);
-      setTrips(prev => prev.map(t => t.id === disrupted_priya_rahul.id ? disrupted_priya_rahul : t));
-      return;
-    }
-
-    setActiveTrip(prev => {
-      if (prev.status === 'disrupted' || prev.status === 'recovering') return prev;
-
-      const updatedNodes = prev.nodes.map((n, i) => {
-        if (i === 0) return { ...n, status: 'disrupted' as const, delay: 135, actualTime: (() => {
-          const [h, m] = n.scheduledTime.split(':').map(Number);
-          return `${String(h + 2).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
-        })() };
-        if (i === 1) return { ...n, status: 'disrupted' as const };
-        if (i === 2) return { ...n, status: 'pending' as const };
-        return n;
-      });
-      const updatedEdges = prev.edges.map((e, i) => {
-        if (i === 0) return { ...e, status: 'disrupted' as const };
-        if (i === 1) return { ...e, status: 'pending' as const };
-        return e;
-      });
-
-      const now = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
-      return {
-        ...prev,
-        status: 'disrupted' as const,
-        health: 54,
-        nodes: updatedNodes,
-        edges: updatedEdges,
-        disruption: {
-          id: 'dis-sim',
-          type: scenarioId,
-          affectedNodeId: prev.nodes[0].id,
-          description: `Simulated disruption — ${scenarioId.replace(/_/g, ' ')}. 3 downstream components affected.`,
-          delay: 135,
-          timestamp: now,
-          simulated: true,
-        },
-        recoveryPlans: disrupted_priya_rahul.recoveryPlans,
-        eventLog: [
-          { id: 'e1', time: now, message: `Disruption simulated: ${scenarioId.replace(/_/g, ' ')}.`, type: 'error' as const },
-          { id: 'e2', time: now, message: 'Cascade analysis complete. 3 downstream components evaluated.', type: 'warning' as const },
-          { id: 'e3', time: now, message: '3 feasible recovery options generated and ranked.', type: 'success' as const },
-        ],
-      };
+    if (!activeTrip) return;
+    
+    // Fire real endpoint
+    const affectedNodeId = activeTrip.nodes?.[0]?.id || 'unknown';
+    fetch('/api/disruptions/report', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tripId: activeTrip.id,
+        nodeId: affectedNodeId,
+        delayMin: 120,
+        source: 'user_reported'
+      })
+    }).then(() => {
+      // Trigger a re-fetch of the active trip
+      fetch(`/api/trips/${activeTrip.id}/graph`)
+        .then(r => r.json())
+        .then(data => {
+          if (data.status) {
+            setActiveTrip(prev => prev ? { ...prev, ...data } : prev);
+          }
+        });
     });
-  }, []);
+  }, [activeTrip]);
 
   const showFooter = page === 'home' || page === 'dashboard';
 
@@ -104,7 +98,7 @@ export default function App() {
         {page === 'dashboard' && (
           <UserDashboard 
             trips={trips} 
-            activeTrip={activeTrip} 
+            activeTrip={activeTrip || trips[0]} 
             onSelectTrip={handleSelectTrip} 
             onNavigate={navigate} 
           />
@@ -114,13 +108,13 @@ export default function App() {
           <MyTrips trips={trips} onSelectTrip={handleSelectTrip} onNavigate={navigate} />
         )}
 
-        {page === 'recovery' && (
+        {page === 'recovery' && activeTrip && (
           <TripControlCenter trip={activeTrip} onDisrupt={handleDisrupt} />
         )}
 
-        {page === 'group' && <GroupJourney />}
+        {page === 'group' && activeTrip && <GroupJourney tripId={activeTrip.id} />}
 
-        {page === 'suraksha' && <SurakshaPanel />}
+        {page === 'suraksha' && <SurakshaPanel trip={activeTrip} />}
 
         {page === 'new-trip' && (
           <CreateTrip onNavigate={navigate} onTripCreated={handleTripCreated} />

@@ -1,18 +1,19 @@
 import type { NodeStatus, TrustLevel } from '../types';
 
 export function StatusBadge({ status }: { status: NodeStatus }) {
-  const map = {
+  const map: Record<NodeStatus, { label: string, className: string }> = {
     confirmed: { label: 'Confirmed', className: 'status-confirmed' },
-    pending: { label: 'At Risk', className: 'status-pending' },
-    disrupted: { label: 'Disrupted', className: 'status-disrupted' },
-    safe: { label: 'Safe', className: 'status-confirmed' },
+    on_track: { label: 'On Track', className: 'status-confirmed' },
+    at_risk: { label: 'At Risk', className: 'status-pending' },
+    broken: { label: 'Broken', className: 'status-disrupted' },
+    pending_review: { label: 'Pending Review', className: 'status-pending' },
   };
-  const { label, className } = map[status];
+  const { label, className } = map[status] || map.pending_review;
   return (
     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${className}`}>
       <span className="w-1.5 h-1.5 rounded-full" style={{
-        background: status === 'confirmed' || status === 'safe' ? '#63A66B'
-          : status === 'pending' ? '#E7A943'
+        background: status === 'confirmed' || status === 'on_track' ? '#63A66B'
+          : status === 'at_risk' || status === 'pending_review' ? '#E7A943'
           : '#E45B4D'
       }} />
       {label}

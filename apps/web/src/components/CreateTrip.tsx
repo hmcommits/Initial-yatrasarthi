@@ -82,8 +82,8 @@ function CreateFromScratch({ onNavigate, onTripCreated, onBack }: { onNavigate: 
   const [startDate, setStartDate] = useState('2024-09-24');
   const [endDate, setEndDate] = useState('2024-09-27');
   const [travelers, setTravelers] = useState<TravelerEntry[]>([
-    { name: 'Tanvi', origin: 'Mumbai', mode: 'flight' },
-    { name: 'Rahul', origin: 'Pune', mode: 'train' },
+    { name: 'Harsh', origin: 'Mumbai', mode: 'flight' },
+    { name: 'Tanvi', origin: 'Pune', mode: 'train' },
   ]);
   const [budget, setBudget] = useState('medium');
   const [travelPref, setTravelPref] = useState<string[]>(['beach', 'food']);
@@ -335,8 +335,8 @@ const extractedItems = [
   { type: 'Hotel', icon: '🏨', detail: 'Grand Goa Resort · 3 nights · Check-in 11:00', ref: 'GGR-2024-09', confidence: 'high' },
   { type: 'Activity', icon: '🏝', detail: 'Dudhsagar Trek · 4 persons · 16:00', ref: 'GA-TREK-221', confidence: 'medium' },
   { type: 'Dinner', icon: '🍽', detail: 'Thalassa · Table for 4 · 19:30', ref: 'THA-VIP-6', confidence: 'medium' },
-  { type: 'Traveler', icon: '👤', detail: 'Tanvi Sharma', ref: '—', confidence: 'high' },
-  { type: 'Traveler', icon: '👤', detail: 'Rahul Mehta', ref: '—', confidence: 'high' },
+  { type: 'Traveler', icon: '👤', detail: 'Harsh', ref: '—', confidence: 'high' },
+  { type: 'Traveler', icon: '👤', detail: 'Tanvi', ref: '—', confidence: 'high' },
 ];
 
 function ImportFlow({ onNavigate, onTripCreated, onBack }: { onNavigate: (p: string) => void; onTripCreated: () => void; onBack: () => void }) {

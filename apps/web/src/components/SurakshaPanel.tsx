@@ -1,6 +1,14 @@
-import { Shield, MapPin, Battery, Phone, Share2, MessageSquare } from 'lucide-react';
+import { Shield, MapPin, Battery, Share2, MessageSquare } from 'lucide-react';
+import type { TripData } from '../types';
 
-export function SurakshaPanel() {
+export function SurakshaPanel({ trip }: { trip?: TripData | null }) {
+  if (!trip) {
+    return <div className="p-8 text-center text-gray-500">No active trip selected for Suraksha.</div>;
+  }
+
+  const nodes = trip.nodes || [];
+  const currentLoc = nodes.length > 0 ? nodes[0].label : 'Unknown location';
+  
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
       <div className="card p-8">
@@ -21,8 +29,8 @@ export function SurakshaPanel() {
               <MapPin size={16} style={{ color: '#65855A' }} />
               <span className="font-semibold text-sm" style={{ color: '#1D211C' }}>Last Known Location</span>
             </div>
-            <p className="text-sm" style={{ color: '#73776E' }}>Madgaon Railway Station, Goa</p>
-            <p className="text-xs mt-1" style={{ color: '#A9C39A' }}>Updated 3 min ago</p>
+            <p className="text-sm font-medium" style={{ color: '#73776E' }}>{currentLoc}</p>
+            <p className="text-xs mt-1" style={{ color: '#A9C39A' }}>Realtime fetching unavailable</p>
           </div>
 
           <div className="p-4 rounded-2xl" style={{ background: '#EEF1E4' }}>
@@ -31,32 +39,21 @@ export function SurakshaPanel() {
               <span className="font-semibold text-sm" style={{ color: '#1D211C' }}>Device Status</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="h-4 w-20 rounded-full overflow-hidden" style={{ background: '#E3E2D7' }}>
-                <div className="h-full rounded-full" style={{ width: '62%', background: '#63A66B' }} />
-              </div>
-              <span className="text-sm font-bold" style={{ color: '#1D211C' }}>62%</span>
+              <span className="text-sm" style={{ color: '#73776E' }}>Not connected to device telemetry.</span>
             </div>
           </div>
         </div>
 
         {/* Journey progress */}
         <div className="p-4 rounded-2xl mb-6" style={{ background: '#F5F3E8', border: '1px solid #E3E2D7' }}>
-          <div className="font-semibold text-sm mb-3" style={{ color: '#1D211C' }}>Journey progress</div>
-          <div className="flex items-center gap-3 text-sm">
-            <div className="flex flex-col items-center">
-              <div className="w-3 h-3 rounded-full mb-1" style={{ background: '#63A66B' }} />
-              <span className="text-xs" style={{ color: '#73776E' }}>✅ Mumbai CSMT</span>
-            </div>
-            <div className="flex-1 h-0.5" style={{ background: '#E3E2D7' }} />
-            <div className="flex flex-col items-center">
-              <div className="w-3 h-3 rounded-full mb-1" style={{ background: '#E7A943' }} />
-              <span className="text-xs" style={{ color: '#73776E' }}>📍 Madgaon</span>
-            </div>
-            <div className="flex-1 h-0.5" style={{ background: '#E3E2D7', borderStyle: 'dashed' }} />
-            <div className="flex flex-col items-center">
-              <div className="w-3 h-3 rounded-full mb-1" style={{ background: '#E3E2D7' }} />
-              <span className="text-xs" style={{ color: '#73776E' }}>Novotel Hotel</span>
-            </div>
+          <div className="font-semibold text-sm mb-3" style={{ color: '#1D211C' }}>Journey nodes</div>
+          <div className="flex flex-col gap-2">
+            {nodes.map(n => (
+              <div key={n.id} className="text-xs text-gray-500 flex items-center gap-2">
+                <div className={`w-2 h-2 rounded-full ${n.status === 'confirmed' || n.status === 'on_track' ? 'bg-green-500' : n.status === 'at_risk' ? 'bg-yellow-500' : 'bg-red-500'}`} />
+                {n.label} ({new Date(n.time).toLocaleTimeString()})
+              </div>
+            ))}
           </div>
         </div>
 
@@ -67,9 +64,7 @@ export function SurakshaPanel() {
             {[
               { label: 'National Emergency', number: '112' },
               { label: 'Police', number: '100' },
-              { label: 'Ambulance', number: '108' },
-              { label: 'Goa Police', number: '0832-2224444' },
-              { label: 'Tourist Helpline', number: '1800-111-363' },
+              { label: 'Ambulance', number: '108' }
             ].map(c => (
               <a
                 key={c.number}
@@ -83,28 +78,6 @@ export function SurakshaPanel() {
             ))}
           </div>
         </div>
-
-        {/* Actions */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <button className="flex items-center gap-3 p-4 rounded-xl text-left transition-all hover:scale-105 btn-secondary">
-            <Share2 size={18} style={{ color: '#F28C28' }} />
-            <div>
-              <div className="font-semibold text-sm" style={{ color: '#1D211C' }}>Share location</div>
-              <div className="text-xs" style={{ color: '#73776E' }}>Send current GPS to group</div>
-            </div>
-          </button>
-          <button className="flex items-center gap-3 p-4 rounded-xl text-left transition-all hover:scale-105 btn-secondary">
-            <MessageSquare size={18} style={{ color: '#F28C28' }} />
-            <div>
-              <div className="font-semibold text-sm" style={{ color: '#1D211C' }}>Emergency SMS</div>
-              <div className="text-xs" style={{ color: '#73776E' }}>Requires your tap to send</div>
-            </div>
-          </button>
-        </div>
-
-        <p className="text-xs mt-4 text-center" style={{ color: '#A9C39A' }}>
-          Suraksha does not optimise for safety. It provides emergency access and communication tools.
-        </p>
       </div>
     </div>
   );

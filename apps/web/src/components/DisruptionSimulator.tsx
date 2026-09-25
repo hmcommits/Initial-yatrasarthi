@@ -1,6 +1,43 @@
 import { useState } from 'react';
 import { AlertTriangle, Play, Loader, Clock, Ban, Train, Car, CloudRain, User } from 'lucide-react';
-import { disruptionScenarios } from '../data/mockData';
+
+export const disruptionScenarios = [
+  {
+    id: 'flight_delay',
+    label: 'IndiGo 6E-204 Delayed',
+    description: 'Flight delayed by 2h 15m. Impacts cab pickup and Airbnb check-in window.',
+    icon: <Clock size={16} />,
+    type: 'delay',
+  },
+  {
+    id: 'train_delay',
+    label: 'Vande Bharat Delayed',
+    description: 'Delayed by 4 hours. Group misses Goa connecting cab.',
+    icon: <Train size={16} />,
+    type: 'delay',
+  },
+  {
+    id: 'cab_cancel',
+    label: 'Cab driver cancelled',
+    description: 'Shared cab from airport cancelled 15 mins before arrival.',
+    icon: <Ban size={16} />,
+    type: 'cancel',
+  },
+  {
+    id: 'weather',
+    label: 'Heavy rain alert',
+    description: 'Red alert in destination city. High risk of localized flooding.',
+    icon: <CloudRain size={16} />,
+    type: 'weather',
+  },
+  {
+    id: 'member_sick',
+    label: 'Member dropping out',
+    description: 'Nupur reporting sick, dropping out. Requires split payment recalculation.',
+    icon: <User size={16} />,
+    type: 'member',
+  }
+];
 
 interface DisruptionSimulatorProps {
   onDisrupt: (scenarioId: string) => void;

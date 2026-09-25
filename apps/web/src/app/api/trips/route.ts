@@ -14,21 +14,36 @@ export async function POST(request: Request) {
     const newTrip: Omit<Trip, 'id'> & { _id?: ObjectId } = {
       name: body.name || 'New Trip',
       destination: body.destination || 'Unknown',
-      dates: {
-        start: body.startDate ? new Date(body.startDate) : new Date(),
-        end: body.endDate ? new Date(body.endDate) : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-      },
-      memberIds: body.userId ? [body.userId] : [],
+      startDate: body.startDate || new Date().toISOString(),
+      endDate: body.endDate || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+      ownerId: body.userId || 'demo',
+      memberIds: body.userId ? [body.userId] : ['demo'],
       joinCode,
       healthScore: 100,
-      status: 'planning'
+      status: 'healthy',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      version: 1
     };
 
     const result = await db.collection('trips').insertOne(newTrip);
     
-    return NextResponse.json({ id: result.insertedId, ...newTrip }, { status: 201 });
+    return NextResponse.json({ data: { id: result.insertedId.toString(), ...newTrip } }, { status: 201 });
   } catch (error) {
     console.error('Failed to create trip', error);
     return NextResponse.json({ error: 'Failed to create trip' }, { status: 500 });
+  }
+}
+
+export async function GET(request: Request) {
+  try {
+    const client = await clientPromise;
+    const db = client.db();
+    const trips = await db.collection('trips').find({}).toArray();
+    
+    const mapped = trips.map(t => ({ id: t._id.toString(), ...t }));
+    return NextResponse.json({ data: { trips: mapped } });
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to fetch trips' }, { status: 500 });
   }
 }

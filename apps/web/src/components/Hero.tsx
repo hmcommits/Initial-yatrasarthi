@@ -440,10 +440,10 @@ function SolutionV2PillarsSection({ onNavigate }: { onNavigate: (p: string) => v
 ────────────────────────────────────────────── */
 function GroupJourneySection({ onNavigate }: { onNavigate: (p: string) => void }) {
   const travelers = [
-    { name: 'Tanvi', origin: 'Mumbai', mode: 'Flight', color: '#F28A28', status: 'on_track' },
-    { name: 'Rahul', origin: 'Pune', mode: 'Train', color: '#E45B4D', status: 'delayed', delay: '+4h' },
-    { name: 'Priya', origin: 'Nashik', mode: 'Bus', color: '#62A86B', status: 'on_track' },
-    { name: 'Aarav', origin: 'Bangalore', mode: 'Flight', color: '#E5A43F', status: 'on_track' },
+    { name: 'Harsh', origin: 'Mumbai', mode: 'Flight', color: '#F28A28', status: 'on_track' },
+    { name: 'Tanvi', origin: 'Pune', mode: 'Train', color: '#E45B4D', status: 'delayed', delay: '+4h' },
+    { name: 'Nupur', origin: 'Nashik', mode: 'Bus', color: '#62A86B', status: 'on_track' },
+    { name: 'Shravani', origin: 'Bangalore', mode: 'Flight', color: '#E5A43F', status: 'on_track' },
   ];
 
   return (
@@ -678,7 +678,7 @@ function DisruptionStorySection({ onNavigate }: { onNavigate: (p: string) => voi
     {
       label: 'Healthy trip',
       nodes: [
-        { label: "Rahul's Train", status: 'confirmed', note: 'On time' },
+        { label: "Tanvi's Train", status: 'confirmed', note: 'On time' },
         { label: 'Shared Cab', status: 'confirmed', note: 'Booked' },
         { label: 'Hotel Check-in', status: 'confirmed', note: 'Confirmed' },
         { label: 'Group Dinner', status: 'confirmed', note: 'Reserved' },
@@ -687,7 +687,7 @@ function DisruptionStorySection({ onNavigate }: { onNavigate: (p: string) => voi
     {
       label: 'Disruption detected',
       nodes: [
-        { label: "Rahul's Train", status: 'disrupted', note: '+4h delay' },
+        { label: "Tanvi's Train", status: 'disrupted', note: '+4h delay' },
         { label: 'Shared Cab', status: 'disrupted', note: 'Buffer exceeded' },
         { label: 'Hotel Check-in', status: 'pending', note: 'AT RISK' },
         { label: 'Group Dinner', status: 'confirmed', note: '6h buffer · SAFE' },
@@ -696,7 +696,7 @@ function DisruptionStorySection({ onNavigate }: { onNavigate: (p: string) => voi
     {
       label: 'Recovery approved',
       nodes: [
-        { label: "Rahul's Train", status: 'disrupted', note: '+4h delay' },
+        { label: "Tanvi's Train", status: 'disrupted', note: '+4h delay' },
         { label: 'Cab pushed to 14:00', status: 'pending', note: 'Pending vendor' },
         { label: 'Hotel Check-in', status: 'pending', note: 'Notified' },
         { label: 'Group Dinner', status: 'confirmed', note: 'Preserved' },
@@ -705,7 +705,7 @@ function DisruptionStorySection({ onNavigate }: { onNavigate: (p: string) => voi
     {
       label: 'Trip recovered',
       nodes: [
-        { label: "Rahul's Train", status: 'disrupted', note: '+4h (arrived)' },
+        { label: "Tanvi's Train", status: 'disrupted', note: '+4h (arrived)' },
         { label: 'Cab rescheduled', status: 'confirmed', note: 'Vendor confirmed' },
         { label: 'Hotel Check-in', status: 'confirmed', note: 'Confirmed 14:30' },
         { label: 'Group Dinner', status: 'confirmed', note: 'Preserved' },

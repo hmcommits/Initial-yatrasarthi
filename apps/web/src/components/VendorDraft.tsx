@@ -6,7 +6,7 @@ export function VendorDraft() {
   const [confirmed, setConfirmed] = useState(false);
   const [uploading, setUploading] = useState(false);
 
-  const message = `Dear Grand Goa Resort,\n\nDue to a travel disruption, our group expects to arrive later than originally planned. Our new estimated arrival time is 15:30, instead of the booked 11:00.\n\nPlease retain our reservation (Booking ref: GGR-2024-09) and update the expected check-in time accordingly. We appreciate your understanding.\n\nThank you,\nPriya Sharma (on behalf of Goa group)`;
+  const message = `Dear Grand Goa Resort,\n\nDue to a travel disruption, our group expects to arrive later than originally planned. Our new estimated arrival time is 15:30, instead of the booked 11:00.\n\nPlease retain our reservation (Booking ref: GGR-2024-09) and update the expected check-in time accordingly. We appreciate your understanding.\n\nThank you,\nNupur Sharma (on behalf of Goa group)`;
 
   const handleCopy = () => {
     navigator.clipboard?.writeText(message);

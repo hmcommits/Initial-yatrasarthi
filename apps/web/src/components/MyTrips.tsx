@@ -55,8 +55,8 @@ export function MyTrips({ trips, onSelectTrip, onNavigate }: MyTripsProps) {
 
 function TripCard({ trip, onSelect }: { trip: TripData; onSelect: () => void }) {
   const healthColor = trip.health >= 80 ? '#62A86B' : trip.health >= 60 ? '#E5A43F' : '#E45B4D';
-  const statusLabel = trip.status === 'healthy' ? 'Stable' : trip.status === 'disrupted' ? 'Disrupted' : trip.status === 'recovering' ? 'Recovering' : 'Recovered';
-  const isDisrupted = trip.status === 'disrupted';
+  const statusLabel = trip.status === 'healthy' ? 'Healthy' : trip.status === 'needs_attention' ? 'Needs Attention' : trip.status === 'resolving' ? 'Resolving' : 'Completed';
+  const isDisrupted = trip.status === 'needs_attention';
   const nextNode = trip.nodes[0];
 
   const typeIcons: Record<string, string> = { flight: '✈', train: '🚆', bus: '🚌', cab: '🚕', hotel: '🏨', activity: '🏝', restaurant: '🍽' };
@@ -71,7 +71,7 @@ function TripCard({ trip, onSelect }: { trip: TripData; onSelect: () => void }) 
       <div className="flex items-start justify-between mb-4">
         <div>
           <h3 className="font-bold text-xl mb-1" style={{ color: '#1B211C', letterSpacing: '-0.01em' }}>
-            {trip.origin === 'Multiple origins' ? 'Group Trip' : `${trip.origin} → ${trip.destination}`}
+            {trip.name || trip.destination}
           </h3>
           <div className="flex items-center gap-1.5 text-sm" style={{ color: '#6F756C' }}>
             <MapPin size={12} />
@@ -110,7 +110,7 @@ function TripCard({ trip, onSelect }: { trip: TripData; onSelect: () => void }) 
       {/* Node strip */}
       <div className="flex gap-1.5 flex-wrap mb-4">
         {trip.nodes.map(node => {
-          const nodeColor = node.status === 'confirmed' || node.status === 'safe' ? '#62A86B' : node.status === 'disrupted' ? '#E45B4D' : '#E5A43F';
+          const nodeColor = node.status === 'confirmed' || node.status === 'on_track' ? '#62A86B' : node.status === 'broken' ? '#E45B4D' : '#E5A43F';
           return (
             <div
               key={node.id}
@@ -118,7 +118,7 @@ function TripCard({ trip, onSelect }: { trip: TripData; onSelect: () => void }) 
               style={{ background: '#F7F5EC', border: `1px solid ${nodeColor}25` }}
             >
               <span style={{ fontSize: 11 }}>{typeIcons[node.type] || '📌'}</span>
-              <span style={{ color: '#6F756C' }}>{node.scheduledTime}</span>
+              <span style={{ color: '#6F756C' }}>{node.time ? new Date(node.time).toLocaleTimeString() : ''}</span>
               <span className="w-1.5 h-1.5 rounded-full" style={{ background: nodeColor }} />
             </div>
           );
@@ -131,7 +131,7 @@ function TripCard({ trip, onSelect }: { trip: TripData; onSelect: () => void }) 
           <span className="text-sm">{typeIcons[nextNode.type] || '📌'}</span>
           <div className="flex-1 min-w-0">
             <div className="text-xs font-semibold truncate" style={{ color: '#1B211C' }}>{nextNode.label}</div>
-            <div className="text-xs" style={{ color: '#6F756C' }}>{nextNode.scheduledTime}</div>
+            <div className="text-xs" style={{ color: '#6F756C' }}>{nextNode.time ? new Date(nextNode.time).toLocaleTimeString() : ''}</div>
           </div>
           <span className="text-xs font-medium flex-shrink-0" style={{ color: '#6F756C' }}>Next</span>
         </div>
