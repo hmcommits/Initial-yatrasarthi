@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Share, Bell, Users, MapPin, ChevronDown, AlertTriangle, Clock, Check, RotateCcw, Settings } from 'lucide-react';
+import { Share, Bell, Users, MapPin, ChevronDown, AlertTriangle, Clock, Check, RotateCcw, Settings, Compass, ShieldCheck } from 'lucide-react';
 import type { TripData, UserPreferences, RecoveryOption } from '../types';
 import { TripTimeline } from './TripTimeline';
 import { DependencyGraph } from './DependencyGraph';
@@ -128,6 +128,7 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
   }, [initialTrip.id]);
 
   const isDisrupted = trip.status === 'needs_attention' || trip.status === 'resolving';
+  const isSolo = trip.tripType === 'solo' || (!trip.tripType && (trip.travellers?.length === 1 || trip.memberIds?.length === 1));
   const healthColor = trip.health >= 80 ? '#62A86B' : trip.health >= 60 ? '#E5A43F' : '#E45B4D';
   const statusLabel = trip.status === 'healthy' ? 'Stable' : trip.status === 'needs_attention' ? 'Disrupted' : trip.status === 'resolving' ? 'Recovering' : 'Recovered';
 
@@ -165,6 +166,21 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
                   <span className="w-1.5 h-1.5 rounded-full" style={{ background: healthColor }} />
                   {statusLabel}
                 </span>
+                {isSolo ? (
+                  <span
+                    className="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full shadow-sm"
+                    style={{ background: '#172017', color: '#C5D82D' }}
+                  >
+                    <Compass size={13} /> Solo Explorer
+                  </span>
+                ) : (
+                  <span
+                    className="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full"
+                    style={{ background: '#EDE9D8', color: '#172017', border: '1px solid #D5D9CC' }}
+                  >
+                    <Users size={13} /> Kutumb Group
+                  </span>
+                )}
               </div>
               <div className="flex items-center gap-4 flex-wrap">
                 <div className="flex items-center gap-1.5 text-sm" style={{ color: '#5F665B' }}>
@@ -172,8 +188,8 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
                   {trip.startDate} – {trip.endDate}
                 </div>
                 <div className="flex items-center gap-1.5 text-sm" style={{ color: '#5F665B' }}>
-                  <Users size={13} />
-                  {trip.travellers.length} travelers
+                  {isSolo ? <Compass size={13} className="text-[#4E8752]" /> : <Users size={13} />}
+                  {isSolo ? 'Solo Explorer (1 traveler)' : `${trip.travellers.length} travelers`}
                 </div>
                 <div className="text-xs font-semibold px-2 py-0.5 rounded" style={{ background: '#DCE8D2', color: '#172017', border: '1px solid #D5D9CC' }}>
                   ID: {trip.id}
@@ -194,9 +210,10 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
                 <button
                   onClick={() => setShowInviteModal(true)}
                   className="btn-ghost text-sm cursor-pointer flex items-center gap-1.5 border border-[#D5D9CC] rounded-xl px-3 py-2 bg-white"
+                  title={isSolo ? "Share Live Tracking link with contacts" : "Invite members to Kutumb"}
                 >
                   <Share size={15} />
-                  Kutumb Link
+                  {isSolo ? 'Share Tracking' : 'Kutumb Link'}
                 </button>
                 <button
                   onClick={() => setShowSettingsModal(true)}
@@ -240,7 +257,11 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
           {!isDisrupted && (
             <div className="mt-4 flex items-center gap-2 text-xs font-medium" style={{ color: '#4E8752' }}>
               <Check size={12} />
-              <span>Your itinerary is already connected. YatraSarthi is monitoring for disruptions.</span>
+              <span>
+                {isSolo
+                  ? 'Solo itinerary active: Live phantom micro-transit buffers and Suraksha emergency stand-by enabled.'
+                  : 'Your itinerary is already connected. YatraSarthi is monitoring for disruptions.'}
+              </span>
             </div>
           )}
 

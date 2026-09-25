@@ -34,6 +34,7 @@ export async function GET(
       destination: trip.destination,
       startDate: trip.startDate,
       endDate: trip.endDate,
+      tripType: trip.tripType || (trip.memberIds?.length === 1 ? 'solo' : 'group'),
       ownerId: trip.ownerId,
       memberIds: trip.memberIds || [trip.ownerId],
       joinCode: trip.joinCode,
@@ -70,7 +71,7 @@ export async function PATCH(
     }
 
     const body = await request.json();
-    const { baseVersion, name, startDate, endDate } = body;
+    const { baseVersion, name, startDate, endDate, tripType } = body;
 
     const client = await clientPromise;
     const db = client.db();
@@ -107,6 +108,7 @@ export async function PATCH(
     if (name) updates.name = name;
     if (startDate) updates.startDate = startDate;
     if (endDate) updates.endDate = endDate;
+    if (tripType === 'solo' || tripType === 'group') updates.tripType = tripType;
 
     await db.collection('trips').updateOne({ _id: new ObjectId(id) }, { $set: updates });
 

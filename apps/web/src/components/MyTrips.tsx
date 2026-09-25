@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { 
   Plus, ArrowRight, MapPin, Users, ChevronRight, 
-  AlertTriangle, Share2, Settings, ShieldAlert, Sparkles, UserPlus 
+  AlertTriangle, Share2, Settings, ShieldAlert, Sparkles, UserPlus, Compass 
 } from 'lucide-react';
 import type { TripData } from '../types';
 import { KutumbInviteModal } from './trips/KutumbInviteModal';
@@ -303,6 +303,7 @@ function TripCard({
       ? 'Resolving'
       : 'Completed';
   const isDisrupted = trip.status === 'needs_attention' || trip.health < 60;
+  const isSolo = trip.tripType === 'solo' || (!trip.tripType && (trip.travellers?.length === 1 || trip.memberIds?.length === 1));
   const nextNode = trip.nodes?.[0];
 
   const typeIcons: Record<string, string> = {
@@ -326,12 +327,23 @@ function TripCard({
         {/* Header & Status */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1 min-w-0 pr-2">
-            <h3
-              className="font-extrabold text-xl mb-1 truncate text-[#172017]"
-              style={{ letterSpacing: '-0.01em' }}
-            >
-              {trip.name || trip.destination}
-            </h3>
+            <div className="flex items-center gap-2 mb-1">
+              <h3
+                className="font-extrabold text-xl truncate text-[#172017]"
+                style={{ letterSpacing: '-0.01em' }}
+              >
+                {trip.name || trip.destination}
+              </h3>
+              {isSolo ? (
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#DCE8D2] text-[#172017] border border-[#172017]/10 flex items-center gap-1 flex-shrink-0">
+                  <Compass size={10} className="text-[#4E8752]" /> Solo
+                </span>
+              ) : (
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#EDE9D8] text-[#5F665B] border border-[#D5D9CC] flex items-center gap-1 flex-shrink-0">
+                  <Users size={10} /> Kutumb
+                </span>
+              )}
+            </div>
             <div className="flex items-center gap-1.5 text-xs text-[#5F665B]">
               <MapPin size={12} className="text-[#172017]" />
               <span>
@@ -357,7 +369,7 @@ function TripCard({
             <button
               onClick={e => { e.stopPropagation(); onOpenInvite(); }}
               className="p-1.5 rounded-xl hover:bg-[#DCE8D2] text-[#5F665B] hover:text-[#172017] transition-colors cursor-pointer"
-              title="Kutumb Invite Link"
+              title={isSolo ? "Share Live Tracking" : "Kutumb Invite Link"}
             >
               <Share2 size={15} />
             </button>
@@ -376,8 +388,17 @@ function TripCard({
         <div className="mb-4">
           <div className="flex items-center justify-between mb-1.5">
             <div className="flex items-center gap-1.5 text-xs text-[#5F665B]">
-              <Users size={12} />
-              <span>{trip.travellers?.length || 1} Kutumb members</span>
+              {isSolo ? (
+                <>
+                  <Compass size={12} className="text-[#4E8752]" />
+                  <span className="font-semibold text-[#172017]">Solo Traveler · Suraksha Active</span>
+                </>
+              ) : (
+                <>
+                  <Users size={12} />
+                  <span>{trip.travellers?.length || 1} Kutumb members</span>
+                </>
+              )}
             </div>
             <span className="font-extrabold text-base" style={{ color: healthColor, letterSpacing: '-0.02em' }}>
               {trip.health}

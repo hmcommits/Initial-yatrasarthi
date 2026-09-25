@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { X, Settings, Trash2, LogOut, UserMinus, Share2, Save, AlertTriangle, Check } from 'lucide-react';
+import { X, Settings, Trash2, LogOut, UserMinus, Share2, Save, AlertTriangle, Check, Compass, Users } from 'lucide-react';
 import type { TripData } from '../../types';
 import { useAuth } from '@/context/AuthContext';
 
@@ -16,6 +16,9 @@ interface TripSettingsModalProps {
 export function TripSettingsModal({ trip, isOpen, onClose, onTripUpdated, onOpenInvite }: TripSettingsModalProps) {
   const { user } = useAuth();
   const [name, setName] = useState(trip.name || trip.destination);
+  const [tripType, setTripType] = useState<'solo' | 'group'>(
+    trip.tripType || (trip.travellers?.length === 1 || trip.memberIds?.length === 1 ? 'solo' : 'group')
+  );
   const [startDate, setStartDate] = useState(trip.startDate ? trip.startDate.split('T')[0] : '');
   const [endDate, setEndDate] = useState(trip.endDate ? trip.endDate.split('T')[0] : '');
   const [saving, setSaving] = useState(false);
@@ -42,6 +45,7 @@ export function TripSettingsModal({ trip, isOpen, onClose, onTripUpdated, onOpen
           name,
           startDate,
           endDate,
+          tripType,
         }),
       });
 
@@ -158,6 +162,36 @@ export function TripSettingsModal({ trip, isOpen, onClose, onTripUpdated, onOpen
         <form onSubmit={handleSave} className="flex flex-col gap-4 mb-6">
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider mb-1.5 text-[#5F665B]">
+              Travel Style
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => setTripType('solo')}
+                className={`py-2 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  tripType === 'solo'
+                    ? 'bg-[#172017] text-[#C5D82D] border-[#172017] shadow-sm'
+                    : 'bg-[#F5F2E8]/60 text-[#172017] border-[#D5D9CC] hover:bg-white'
+                }`}
+              >
+                <Compass size={14} /> Solo Traveler
+              </button>
+              <button
+                type="button"
+                onClick={() => setTripType('group')}
+                className={`py-2 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  tripType === 'group'
+                    ? 'bg-[#172017] text-[#C5D82D] border-[#172017] shadow-sm'
+                    : 'bg-[#F5F2E8]/60 text-[#172017] border-[#D5D9CC] hover:bg-white'
+                }`}
+              >
+                <Users size={14} /> Kutumb Group
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider mb-1.5 text-[#5F665B]">
               Trip Name
             </label>
             <input
@@ -166,7 +200,9 @@ export function TripSettingsModal({ trip, isOpen, onClose, onTripUpdated, onOpen
               onChange={e => setName(e.target.value)}
               className="w-full px-4 py-3 rounded-xl bg-[#F5F2E8]/40 border border-[#D5D9CC] text-sm font-semibold text-[#172017] outline-none focus:ring-2 focus:ring-[#C5D82D]"
             />
-            <span className="text-[11px] text-[#5F665B] mt-1 block">Group members will see this name.</span>
+            <span className="text-[11px] text-[#5F665B] mt-1 block">
+              {tripType === 'solo' ? 'Personal trip name' : 'Group members will see this name.'}
+            </span>
           </div>
 
           <div className="grid grid-cols-2 gap-3">

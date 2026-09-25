@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowRight, ArrowLeft, Plus, Trash2, Check, Upload, FileText, Sparkles, RefreshCw, AlertCircle } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Plus, Trash2, Check, Upload, FileText, Sparkles, RefreshCw, AlertCircle, User, Users, Compass, ShieldCheck } from 'lucide-react';
 import { Recommendations } from './Recommendations';
 
 interface CreateTripProps {
@@ -60,6 +60,7 @@ function QuickCreateTrip({
   onTripCreatedWithData?: (trip: any) => void;
   onSwitchMode: (m: Mode) => void;
 }) {
+  const [travelStyle, setTravelStyle] = useState<'solo' | 'group'>('solo');
   const [name, setName] = useState('');
   const [destination, setDestination] = useState('Goa');
   const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
@@ -76,7 +77,7 @@ function QuickCreateTrip({
     setLoading(true);
     setError(null);
 
-    const tripName = name.trim() || `${destination} with the gang`;
+    const tripName = name.trim() || (travelStyle === 'solo' ? `${destination} Solo Journey` : `${destination} with the gang`);
 
     try {
       const res = await fetch('/api/trips', {
@@ -87,6 +88,7 @@ function QuickCreateTrip({
           destination: destination.trim(),
           startDate,
           endDate,
+          tripType: travelStyle,
         }),
       });
 
@@ -136,6 +138,76 @@ function QuickCreateTrip({
 
         <div className="card p-6 sm:p-8 bg-white border border-[#D5D9CC] shadow-xl rounded-3xl">
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            {/* Travel Style Selector (Solo vs Group) */}
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider mb-2 text-[#5F665B]">
+                Travel Style
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setTravelStyle('solo')}
+                  className={`p-3.5 rounded-2xl border text-left transition-all cursor-pointer flex items-start gap-3 ${
+                    travelStyle === 'solo'
+                      ? 'bg-[#172017] text-[#F5F2E8] border-[#172017] shadow-md'
+                      : 'bg-[#F5F2E8]/60 text-[#172017] border-[#D5D9CC] hover:bg-white'
+                  }`}
+                >
+                  <div
+                    className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                      travelStyle === 'solo' ? 'bg-[#C5D82D] text-[#172017]' : 'bg-[#DCE8D2] text-[#172017]'
+                    }`}
+                  >
+                    <Compass size={18} />
+                  </div>
+                  <div>
+                    <div className="text-sm font-bold flex items-center gap-1.5">
+                      Solo Traveler
+                      {travelStyle === 'solo' && (
+                        <span className="text-[10px] px-1.5 py-0.2 rounded bg-[#C5D82D] text-[#172017] font-extrabold">
+                          ACTIVE
+                        </span>
+                      )}
+                    </div>
+                    <p className={`text-[11px] mt-0.5 leading-snug ${travelStyle === 'solo' ? 'text-[#DCE8D2]' : 'text-[#5F665B]'}`}>
+                      Suraksha SOS beacon, phantom micro-transit & personal buffers
+                    </p>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setTravelStyle('group')}
+                  className={`p-3.5 rounded-2xl border text-left transition-all cursor-pointer flex items-start gap-3 ${
+                    travelStyle === 'group'
+                      ? 'bg-[#172017] text-[#F5F2E8] border-[#172017] shadow-md'
+                      : 'bg-[#F5F2E8]/60 text-[#172017] border-[#D5D9CC] hover:bg-white'
+                  }`}
+                >
+                  <div
+                    className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                      travelStyle === 'group' ? 'bg-[#C5D82D] text-[#172017]' : 'bg-[#DCE8D2] text-[#172017]'
+                    }`}
+                  >
+                    <Users size={18} />
+                  </div>
+                  <div>
+                    <div className="text-sm font-bold flex items-center gap-1.5">
+                      Kutumb / Group
+                      {travelStyle === 'group' && (
+                        <span className="text-[10px] px-1.5 py-0.2 rounded bg-[#C5D82D] text-[#172017] font-extrabold">
+                          ACTIVE
+                        </span>
+                      )}
+                    </div>
+                    <p className={`text-[11px] mt-0.5 leading-snug ${travelStyle === 'group' ? 'text-[#DCE8D2]' : 'text-[#5F665B]'}`}>
+                      Multi-origin sync, Kutumb invite code & UPI split payments
+                    </p>
+                  </div>
+                </button>
+              </div>
+            </div>
+
             {/* Trip Name */}
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider mb-2 text-[#5F665B]">
@@ -145,12 +217,14 @@ function QuickCreateTrip({
                 type="text"
                 value={name}
                 onChange={e => setName(e.target.value)}
-                placeholder="e.g. Goa with the gang"
+                placeholder={travelStyle === 'solo' ? 'e.g. Solo Backpacking in Himachal' : 'e.g. Goa with the gang'}
                 className="w-full px-4 py-3.5 rounded-2xl bg-[#F5F2E8]/40 border border-[#D5D9CC] text-base font-semibold text-[#172017] outline-none focus:ring-2 focus:ring-[#C5D82D]"
                 autoFocus
               />
               <span className="text-[11px] text-[#5F665B] mt-1.5 block">
-                You can rename this later — group members will see this name.
+                {travelStyle === 'solo'
+                  ? 'Give your solo trip an adventure name. You can customize this anytime.'
+                  : 'You can rename this later — group members will see this name.'}
               </span>
             </div>
 
@@ -226,9 +300,13 @@ function QuickCreateTrip({
                   <RefreshCw size={16} className="animate-spin" />
                   Creating Trip in Database...
                 </>
+              ) : travelStyle === 'solo' ? (
+                <>
+                  Create Solo Trip & Activate Suraksha <ShieldCheck size={16} />
+                </>
               ) : (
                 <>
-                  Create trip & generate Kutumb code <ArrowRight size={16} />
+                  Create Trip & Generate Kutumb Code <ArrowRight size={16} />
                 </>
               )}
             </button>
