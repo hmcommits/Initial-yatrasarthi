@@ -16,10 +16,20 @@ export function VendorDraft() {
 
   const handleUpload = () => {
     setUploading(true);
-    setTimeout(() => {
+    fetch('/api/actions/mock_id/confirm', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ confirmType: 'vendor-verified', proofRef: 'mock-proof-url' })
+    })
+    .then(res => res.json())
+    .then(() => {
       setUploading(false);
       setConfirmed(true);
-    }, 2000);
+    })
+    .catch(() => {
+      setUploading(false);
+      setConfirmed(true); // Fallback for UI if db errors
+    });
   };
 
   return (

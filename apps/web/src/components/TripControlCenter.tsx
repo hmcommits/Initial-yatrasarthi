@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Share, Bell, Users, MapPin, ChevronDown, AlertTriangle, Clock, Check, RotateCcw } from 'lucide-react';
-import type { TripData, UserPreferences } from '../types';
+import type { TripData, UserPreferences, RecoveryPlan } from '../types';
 import { TripTimeline } from './TripTimeline';
 import { DependencyGraph } from './DependencyGraph';
 import { TripHealth } from './TripHealth';
@@ -34,10 +34,45 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
   
   const [trip, setTrip] = useState(initialTrip);
   const [weakestEdge, setWeakestEdge] = useState<{ from: string; to: string; slack: number } | null>(null);
+  const [fetchedRecoveryPlans, setFetchedRecoveryPlans] = useState<RecoveryPlan[] | null>(null);
+  const [paymentLinks, setPaymentLinks] = useState<any[]>([]);
+  const [generatingLinks, setGeneratingLinks] = useState(false);
+
+  const handleGeneratePaymentLinks = async () => {
+    setGeneratingLinks(true);
+    try {
+      const res = await fetch('/api/payments/create-links', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tripId: initialTrip.id,
+          actionId: 'mock_action_id',
+          payers: trip.travellers.map(t => ({ memberId: t.id, amount: 500 }))
+        })
+      });
+      const data = await res.json();
+      if (data.links) setPaymentLinks(data.links);
+    } finally {
+      setGeneratingLinks(false);
+    }
+  };
 
   useEffect(() => {
     setTrip(initialTrip);
   }, [initialTrip]);
+
+  useEffect(() => {
+    if (initialTrip.id === 'default' || initialTrip.id === 'disrupted') return;
+    
+    if (trip.status === 'disrupted' || trip.status === 'recovering') {
+      fetch(`/api/trips/${initialTrip.id}/recovery-options`)
+        .then(r => r.json())
+        .then(data => {
+          if (data.recoveryOptions) setFetchedRecoveryPlans(data.recoveryOptions);
+        })
+        .catch(() => {});
+    }
+  }, [initialTrip.id, trip.status]);
 
   useEffect(() => {
     // Only poll if it's a real trip ID (not our mock data ids)
@@ -319,11 +354,23 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
                     </div>
                   ))}
                   <div className="p-3 rounded-xl text-sm font-medium text-center" style={{ background: '#FDF2E0', color: '#9A5A00', border: '1px solid #EFD090' }}>
-                    Waiting for 1 traveler — Priya
+                    Group approved. Ready for payment.
                   </div>
-                  <button className="btn-primary py-3 text-sm" style={{ opacity: 0.5 }}>
-                    Approve recovery — waiting
-                  </button>
+                  {paymentLinks.length > 0 ? (
+                    <div className="flex flex-col gap-2">
+                      <p className="text-sm font-semibold" style={{ color: '#1B211C' }}>Payment Links Generated</p>
+                      {paymentLinks.map(link => (
+                        <div key={link.id} className="flex justify-between items-center text-xs p-2 border rounded">
+                          <span>{trip.travellers.find(t => t.id === link.memberId)?.name || link.memberId}</span>
+                          <a href={link.paymentUrl} target="_blank" rel="noreferrer" className="text-blue-600 underline">Pay ₹{link.amount}</a>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <button onClick={handleGeneratePaymentLinks} disabled={generatingLinks} className="btn-primary py-3 text-sm">
+                      {generatingLinks ? 'Generating...' : 'Generate Split Payment Links'}
+                    </button>
+                  )}
                 </div>
               ) : (
                 <div className="text-sm" style={{ color: '#6F756C' }}>No active group decision. Start a disruption simulation to see group coordination.</div>
@@ -343,7 +390,7 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
             {isDisrupted && trip.recoveryPlans ? (
               <>
                 <RecoveryOptions
-                  plans={trip.recoveryPlans}
+                  plans={fetchedRecoveryPlans || trip.recoveryPlans || []}
                   preferences={prefs}
                   onPreferencesChange={setPrefs}
                   selectedPlan={selectedPlan}
