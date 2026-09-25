@@ -418,7 +418,10 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
 
         {/* BOOKINGS */}
         {activeTab === 'bookings' && (
-          <BookingsTab nodes={trip.nodes} />
+          <div className="flex flex-col gap-6">
+            <IngestionHub tripId={trip.id} joinCode={trip.joinCode || ''} />
+            <BookingsTab nodes={trip.nodes} />
+          </div>
         )}
 
         {/* RECOVERY */}
