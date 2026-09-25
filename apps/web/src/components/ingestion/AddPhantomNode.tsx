@@ -145,7 +145,7 @@ const styles: Record<string, React.CSSProperties> = {
   label: { fontSize: 12, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 },
   modeGrid: { display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8, marginBottom: 24 },
   modeTile: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, padding: '10px 4px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, cursor: 'pointer' },
-  modeTileActive: { background: '#eef2ff', borderColor: '#6366f1' },
+  modeTileActive: { background: '#eef2ff', border: '1px solid #6366f1' },
   modeIcon: { fontSize: 20 },
   modeLabel: { fontSize: 10, color: '#475569', fontWeight: 500, textAlign: 'center' },
   row: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 16 },
