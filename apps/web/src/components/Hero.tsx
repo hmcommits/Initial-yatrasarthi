@@ -63,12 +63,6 @@ function BeachScene() {
         @keyframes dash-flight-trail {
           to { stroke-dashoffset: -30; }
         }
-        @keyframes bus-gentle-ride {
-          0%, 100% { transform: translate(0px, 0px); }
-          25% { transform: translate(2px, -1px); }
-          50% { transform: translate(4px, 0.5px); }
-          75% { transform: translate(2px, -0.8px); }
-        }
         @keyframes badge-float-subtle {
           0%, 100% { transform: translateY(0px); }
           50% { transform: translateY(-5px); }
@@ -89,9 +83,6 @@ function BeachScene() {
         .anim-flight-path {
           animation: dash-flight-trail 1.2s linear infinite;
         }
-        .anim-bus-drive {
-          animation: bus-gentle-ride 2s ease-in-out infinite;
-        }
         .anim-pill-badge {
           animation: badge-float-subtle 4s ease-in-out infinite;
         }
@@ -111,17 +102,15 @@ function BeachScene() {
             <stop offset="100%" stopColor="#F5F2E8" stopOpacity="0" />
           </radialGradient>
 
-          {/* Soft Pastel Rolling Hills Gradients that melt into website background #F5F2E8 */}
+          {/* Solid rich pastel blue land layers matching left, center, right and downside */}
           <linearGradient id="pastel-hill-back" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#A8D2DF" />
-            <stop offset="65%" stopColor="#BFE0E9" />
-            <stop offset="100%" stopColor="#F5F2E8" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="#96C5D4" />
           </linearGradient>
 
           <linearGradient id="pastel-hill-front" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#8EC3D5" />
-            <stop offset="60%" stopColor="#A8D3E2" />
-            <stop offset="95%" stopColor="#F5F2E8" />
+            <stop offset="100%" stopColor="#76B5C7" />
           </linearGradient>
 
           {/* Soft Floating Pill Badge Shadow */}
@@ -236,76 +225,82 @@ function BeachScene() {
           </g>
         </g>
 
-        {/* ── 6. Rolling Ground Hills & Winding Road (Melting into #F5F2E8) ── */}
+        {/* ── 6. Rolling Ground Hills & Winding Road ── */}
         {/* Back rolling hill */}
         <path
-          d="M -10 326 Q 140 308 280 318 Q 420 328 570 312 L 570 380 L -10 380 Z"
+          d="M -20 326 Q 140 308 280 318 Q 420 328 580 312 L 580 380 L -20 380 Z"
           fill="url(#pastel-hill-back)"
         />
-        {/* Front rolling hill (fades seamlessly into website cream) */}
+        {/* Front rolling hill (matching consistent pastel blue across left, right, and downside) */}
         <path
-          d="M -10 338 Q 180 322 360 330 Q 480 336 570 322 L 570 380 L -10 380 Z"
+          d="M -20 338 Q 180 322 360 330 Q 480 336 580 322 L 580 380 L -20 380 Z"
           fill="url(#pastel-hill-front)"
         />
 
         {/* Road (Smooth pastel golden ribbon) */}
         <path
-          d="M -10 345 Q 180 335 360 324 T 570 302"
+          d="M -50 348 Q 180 335 360 324 T 610 300"
           fill="none"
           stroke="#E5AF5E"
           strokeWidth="3.2"
           strokeLinecap="round"
         />
 
-        {/* ── 7. Animated Pastel Travel Mini-Bus ── */}
-        <g className="anim-bus-drive" style={{ transformOrigin: '260px 316px' }}>
-          <g transform="translate(235, 300)">
-            {/* Bus shadow */}
-            <rect x="2" y="22" width="48" height="3.5" rx="1.8" fill="rgba(23,32,23,0.12)" />
+        {/* ── 7. Animated Pastel Travel Mini-Bus (Drives directly along the yellow line) ── */}
+        <g>
+          <animateMotion
+            path="M -50 348 Q 180 335 360 324 T 610 300"
+            dur="9s"
+            repeatCount="indefinite"
+            rotate="auto"
+          />
+          <animate
+            attributeName="opacity"
+            values="0; 1; 1; 1; 0"
+            keyTimes="0; 0.05; 0.92; 0.98; 1"
+            dur="9s"
+            repeatCount="indefinite"
+          />
+          {/* Bus shadow touching the road */}
+          <ellipse cx="0" cy="0.5" rx="23" ry="2" fill="rgba(23,32,23,0.16)" />
 
-            {/* Main Body (Soft Warm Honey/Amber) */}
-            <rect x="0" y="0" width="52" height="23" rx="6" fill="#F5BA58" />
-            {/* Roof tint layer */}
-            <path d="M 0 6 Q 0 0 6 0 L 46 0 Q 52 0 52 6 L 52 9.5 L 0 9.5 Z" fill="#F9CA77" />
+          {/* Main Body (Soft Warm Honey/Amber) */}
+          <rect x="-24" y="-23.5" width="48" height="19.5" rx="5" fill="#F5BA58" />
+          {/* Roof tint layer */}
+          <path d="M -24 -19 Q -24 -23.5 -19 -23.5 L 19 -23.5 Q 24 -23.5 24 -19 L 24 -16 L -24 -16 Z" fill="#F9CA77" />
 
-            {/* Windows (3 rounded passenger windows) */}
-            <rect x="6" y="5" width="9" height="7.5" rx="2" fill="#FFF7EA" />
-            <rect x="18" y="5" width="9" height="7.5" rx="2" fill="#FFF7EA" />
-            <rect x="30" y="5" width="9" height="7.5" rx="2" fill="#FFF7EA" />
-            {/* Front windshield */}
-            <rect x="42" y="5" width="6" height="7.5" rx="2" fill="#FFF7EA" />
+          {/* Windows (3 passenger windows + front windshield) */}
+          <rect x="-19" y="-19.5" width="7.5" height="6.5" rx="1.8" fill="#FFF7EA" />
+          <rect x="-9" y="-19.5" width="7.5" height="6.5" rx="1.8" fill="#FFF7EA" />
+          <rect x="1" y="-19.5" width="7.5" height="6.5" rx="1.8" fill="#FFF7EA" />
+          <rect x="11" y="-19.5" width="8" height="6.5" rx="1.8" fill="#FFF7EA" />
 
-            {/* Wheels */}
-            {/* Rear Wheel */}
-            <circle cx="12" cy="24" r="5.8" fill="#253A3A" />
-            <circle cx="12" cy="24" r="2.2" fill="#A1BCBC" />
-            {/* Front Wheel */}
-            <circle cx="41" cy="23.5" r="5.8" fill="#253A3A" />
-            <circle cx="41" cy="23.5" r="2.2" fill="#A1BCBC" />
+          {/* Headlight (Soft pastel gold) */}
+          <rect x="23" y="-11" width="2" height="3" rx="1" fill="#FFF2BD" />
+
+          {/* Wheels (placed directly on the yellow road surface) */}
+          {/* Rear Wheel */}
+          <circle cx="-13" cy="-4.5" r="5" fill="#253A3A" />
+          <circle cx="-13" cy="-4.5" r="2" fill="#A1BCBC" />
+          <circle cx="-13" cy="-4.5" r="0.8" fill="#253A3A" />
+
+          {/* Front Wheel */}
+          <circle cx="14" cy="-4.5" r="5" fill="#253A3A" />
+          <circle cx="14" cy="-4.5" r="2" fill="#A1BCBC" />
+          <circle cx="14" cy="-4.5" r="0.8" fill="#253A3A" />
+        </g>
+
+        {/* ── 8. Soft Floating Pastel Pill Badge (Right Pill only: Connected Trip) ── */}
+        <g transform="translate(376, 218)">
+          <g className="anim-pill-badge" style={{ animationDelay: '1.5s' }} filter="url(#soft-pill-shadow)">
+            <rect width="164" height="42" rx="21" fill="rgba(255,255,255,0.92)" stroke="#D5D9CC" strokeWidth="1" />
+            <circle cx="21" cy="21" r="11" fill="#DCE8D2" />
+            <text x="14" y="25" fontSize="11">✈</text>
+            <text x="38" y="18" fontSize="8" fill="#5F665B" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="700" letterSpacing="0.04em">CONNECTED TRIP</text>
+            <text x="38" y="31" fontSize="10.5" fill="#172017" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="700">
+              Flight + Cab + Stay
+            </text>
           </g>
-        </g>
-
-        {/* ── 8. Soft Floating Pastel Pill Badges (Borderless, Merged Integration) ── */}
-        {/* Left Pill: Trip Health */}
-        <g transform="translate(20, 218)" className="anim-pill-badge" filter="url(#soft-pill-shadow)">
-          <rect width="138" height="42" rx="21" fill="rgba(255,255,255,0.92)" stroke="#D5D9CC" strokeWidth="1" />
-          <circle cx="21" cy="21" r="11" fill="#DCE8D2" />
-          <path d="M 17 21 L 20 24 L 25 18" fill="none" stroke="#2D7836" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          <text x="38" y="18" fontSize="8" fill="#5F665B" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="700" letterSpacing="0.04em">TRIP HEALTH</text>
-          <text x="38" y="31" fontSize="13" fill="#172017" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="800">
-            94% <tspan fontSize="8.5" fontWeight="600" fill="#3E6F4B">· Safe</tspan>
-          </text>
-        </g>
-
-        {/* Right Pill: Multi-modal Sync */}
-        <g transform="translate(376, 218)" className="anim-pill-badge" style={{ animationDelay: '1.5s' }} filter="url(#soft-pill-shadow)">
-          <rect width="164" height="42" rx="21" fill="rgba(255,255,255,0.92)" stroke="#D5D9CC" strokeWidth="1" />
-          <circle cx="21" cy="21" r="11" fill="#DCE8D2" />
-          <text x="14" y="25" fontSize="11">✈</text>
-          <text x="38" y="18" fontSize="8" fill="#5F665B" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="700" letterSpacing="0.04em">CONNECTED TRIP</text>
-          <text x="38" y="31" fontSize="10.5" fill="#172017" fontFamily="Plus Jakarta Sans, sans-serif" fontWeight="700">
-            Flight + Cab + Stay
-          </text>
         </g>
       </svg>
     </div>
