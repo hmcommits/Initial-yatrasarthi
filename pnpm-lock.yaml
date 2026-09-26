@@ -87,6 +87,9 @@ importers:
       '@yatrasarthi/types':
         specifier: workspace:*
         version: link:../../packages/types
+      dotenv:
+        specifier: ^18.0.3
+        version: 18.0.3
       mongodb:
         specifier: ^7.6.0
         version: 7.6.0

@@ -1,0 +1,870 @@
+﻿{
+  "users": [
+    {
+      "_id": "user_tanvi_001",
+      "id": "user_tanvi_001",
+      "name": "Tanvi Sharma",
+      "phone": "+91 98200 11001",
+      "whatsappOptIn": true,
+      "notificationPrefs": {
+        "disruptionAlerts": "on",
+        "phantomWarnings": true,
+        "paymentRequests": true,
+        "groupActivity": true
+      },
+      "emergencyContacts": [
+        {
+          "id": "ec_tanvi_001",
+          "name": "Priya Sharma (Maa)",
+          "phone": "+91 98200 55001",
+          "deliveryMethod": "whatsapp"
+        }
+      ],
+      "subscription": { "tier": "pro", "expiresAt": "2027-03-31T00:00:00.000Z" },
+      "createdAt": "2025-06-01T10:00:00.000Z"
+    },
+    {
+      "_id": "user_harsh_002",
+      "id": "user_harsh_002",
+      "name": "Harsh Mehta",
+      "phone": "+91 98200 22002",
+      "whatsappOptIn": true,
+      "notificationPrefs": {
+        "disruptionAlerts": "on",
+        "phantomWarnings": true,
+        "paymentRequests": true,
+        "groupActivity": true
+      },
+      "emergencyContacts": [
+        {
+          "id": "ec_harsh_001",
+          "name": "Ramesh Mehta (Papa)",
+          "phone": "+91 98200 66002",
+          "deliveryMethod": "sms"
+        }
+      ],
+      "subscription": { "tier": "pro", "expiresAt": "2027-03-31T00:00:00.000Z" },
+      "createdAt": "2025-06-01T10:05:00.000Z"
+    },
+    {
+      "_id": "user_nupur_003",
+      "id": "user_nupur_003",
+      "name": "Nupur Joshi",
+      "phone": "+91 98200 33003",
+      "whatsappOptIn": true,
+      "notificationPrefs": {
+        "disruptionAlerts": "on",
+        "phantomWarnings": false,
+        "paymentRequests": true,
+        "groupActivity": true
+      },
+      "emergencyContacts": [],
+      "subscription": { "tier": "free" },
+      "createdAt": "2025-06-10T09:30:00.000Z"
+    },
+    {
+      "_id": "user_shravani_004",
+      "id": "user_shravani_004",
+      "name": "Shravani Kulkarni",
+      "phone": "+91 98200 44004",
+      "whatsappOptIn": true,
+      "notificationPrefs": {
+        "disruptionAlerts": "on",
+        "phantomWarnings": true,
+        "paymentRequests": true,
+        "groupActivity": false
+      },
+      "emergencyContacts": [
+        {
+          "id": "ec_shravani_001",
+          "name": "Anjali Kulkarni (Maa)",
+          "phone": "+91 98200 77004",
+          "deliveryMethod": "whatsapp"
+        }
+      ],
+      "subscription": { "tier": "free" },
+      "createdAt": "2025-07-05T11:00:00.000Z"
+    }
+  ],
+  "trips": [
+    {
+      "_id": "trip_solo_varanasi_001",
+      "id": "trip_solo_varanasi_001",
+      "name": "Kashi Yatra - Varanasi",
+      "destination": "Varanasi, Uttar Pradesh",
+      "startDate": "2026-10-05",
+      "endDate": "2026-10-09",
+      "tripType": "solo",
+      "ownerId": "user_tanvi_001",
+      "memberIds": ["user_tanvi_001"],
+      "joinCode": "KASHI405",
+      "status": "healthy",
+      "healthScore": 94,
+      "weakestEdge": {
+        "edgeId": "edge_solo_v2",
+        "label": "Train to Hotel Sarnath",
+        "missChance": 12
+      },
+      "activeDisruptionId": null,
+      "createdAt": "2026-09-10T08:00:00.000Z",
+      "updatedAt": "2026-09-25T18:00:00.000Z",
+      "version": 3
+    },
+    {
+      "_id": "trip_group_ladakh_002",
+      "id": "trip_group_ladakh_002",
+      "name": "Ladakh Calling - Leh and Nubra",
+      "destination": "Leh, Ladakh",
+      "startDate": "2026-10-12",
+      "endDate": "2026-10-19",
+      "tripType": "group",
+      "ownerId": "user_tanvi_001",
+      "memberIds": [
+        "user_tanvi_001",
+        "user_harsh_002",
+        "user_nupur_003",
+        "user_shravani_004"
+      ],
+      "joinCode": "LADAKH712",
+      "status": "needs_attention",
+      "healthScore": 48,
+      "weakestEdge": {
+        "edgeId": "edge_group_l1",
+        "label": "Delhi to Leh Flight Pickup",
+        "missChance": 71
+      },
+      "activeDisruptionId": "disr_group_001",
+      "createdAt": "2026-09-01T10:00:00.000Z",
+      "updatedAt": "2026-09-26T07:30:00.000Z",
+      "version": 8
+    }
+  ],
+  "nodes": [
+    {
+      "_id": "node_solo_v1",
+      "id": "node_solo_v1",
+      "tripId": "trip_solo_varanasi_001",
+      "ownerId": "user_tanvi_001",
+      "type": "train",
+      "vendor": "Indian Railways",
+      "label": "Pune Jn to Varanasi Jn 12168 Varanasi Exp",
+      "time": "2026-10-05T21:30:00+05:30",
+      "constraintType": "hard",
+      "status": "confirmed",
+      "rawExtract": {
+        "trainNumber": "12168",
+        "from": "Pune Jn (PUNE)",
+        "to": "Varanasi Jn (BSB)",
+        "departure": "21:30",
+        "arrival": "05:10+1",
+        "class": "3A",
+        "pnr": "4561237890",
+        "coach": "B2",
+        "berth": "32 (Side Upper)"
+      },
+      "confidence": { "overall": 0.97 },
+      "refundPolicy": {
+        "source": "policy_library",
+        "summary": "Cancellation over 48 hrs: 25% charge. 12 to 48 hrs: 50% charge. Under 12 hrs: No refund.",
+        "ruleId": "IR_3A_CANCEL"
+      },
+      "createdAt": "2026-09-10T08:10:00.000Z",
+      "updatedAt": "2026-09-10T08:10:00.000Z"
+    },
+    {
+      "_id": "node_solo_v2",
+      "id": "node_solo_v2",
+      "tripId": "trip_solo_varanasi_001",
+      "ownerId": "user_tanvi_001",
+      "type": "hotel",
+      "vendor": "Hotel Surya Varanasi",
+      "label": "Check-in Hotel Surya Varanasi",
+      "time": "2026-10-06T14:00:00+05:30",
+      "constraintType": "soft",
+      "status": "confirmed",
+      "rawExtract": {
+        "hotelName": "Hotel Surya",
+        "address": "S-20/51A Varuna Bridge Varanasi 221001",
+        "checkIn": "2026-10-06",
+        "checkOut": "2026-10-08",
+        "roomType": "Deluxe River View",
+        "bookingRef": "HSV-2026-78932",
+        "rate": "Rs 2800 per night"
+      },
+      "confidence": { "overall": 0.99 },
+      "refundPolicy": {
+        "source": "extracted",
+        "summary": "Free cancellation until 24 hrs before check-in.",
+        "ruleId": null
+      },
+      "createdAt": "2026-09-10T08:15:00.000Z",
+      "updatedAt": "2026-09-10T08:15:00.000Z"
+    },
+    {
+      "_id": "node_solo_v3",
+      "id": "node_solo_v3",
+      "tripId": "trip_solo_varanasi_001",
+      "ownerId": "user_tanvi_001",
+      "type": "phantom",
+      "phantomMode": "auto_cab",
+      "vendor": null,
+      "label": "Cab: Varanasi Jn to Hotel Surya (auto_cab)",
+      "time": "2026-10-06T05:10:00+05:30",
+      "constraintType": "soft",
+      "status": "on_track",
+      "rawExtract": {},
+      "routing": {
+        "fromLabel": "Varanasi Jn (BSB)",
+        "toLabel": "Hotel Surya Varuna Bridge",
+        "estimatedMin": 25,
+        "paddingMin": 15,
+        "provider": "Ola/Rapido"
+      },
+      "confidence": { "overall": 0.82 },
+      "createdAt": "2026-09-10T08:20:00.000Z",
+      "updatedAt": "2026-09-10T08:20:00.000Z"
+    },
+    {
+      "_id": "node_solo_v4",
+      "id": "node_solo_v4",
+      "tripId": "trip_solo_varanasi_001",
+      "ownerId": "user_tanvi_001",
+      "type": "train",
+      "vendor": "Indian Railways",
+      "label": "Varanasi Jn to Pune Jn 12167 Return",
+      "time": "2026-10-09T06:45:00+05:30",
+      "constraintType": "hard",
+      "status": "confirmed",
+      "rawExtract": {
+        "trainNumber": "12167",
+        "from": "Varanasi Jn (BSB)",
+        "to": "Pune Jn (PUNE)",
+        "departure": "06:45",
+        "class": "3A",
+        "pnr": "4561237899",
+        "coach": "B3",
+        "berth": "45 (Lower)"
+      },
+      "confidence": { "overall": 0.97 },
+      "refundPolicy": {
+        "source": "policy_library",
+        "summary": "Cancellation over 48 hrs: 25% charge. 12 to 48 hrs: 50% charge. Under 12 hrs: No refund.",
+        "ruleId": "IR_3A_CANCEL"
+      },
+      "createdAt": "2026-09-10T08:25:00.000Z",
+      "updatedAt": "2026-09-10T08:25:00.000Z"
+    },
+    {
+      "_id": "node_group_l1",
+      "id": "node_group_l1",
+      "tripId": "trip_group_ladakh_002",
+      "ownerId": "user_tanvi_001",
+      "type": "flight",
+      "vendor": "IndiGo",
+      "label": "Delhi IGI to Leh Kushok Bakula 6E-2476",
+      "time": "2026-10-12T07:20:00+05:30",
+      "constraintType": "hard",
+      "status": "at_risk",
+      "rawExtract": {
+        "airline": "IndiGo",
+        "flightNo": "6E-2476",
+        "from": "Indira Gandhi Intl (DEL)",
+        "to": "Kushok Bakula Rimpochhe (IXL)",
+        "departure": "07:20",
+        "scheduledArrival": "09:35",
+        "class": "Economy",
+        "pnr": "DLLEIH",
+        "passengers": ["Tanvi Sharma", "Harsh Mehta", "Nupur Joshi", "Shravani Kulkarni"]
+      },
+      "confidence": { "overall": 0.98 },
+      "refundPolicy": {
+        "source": "policy_library",
+        "summary": "DGCA: If delay over 2 hrs airline must offer meal vouchers; over 6 hrs full refund or rebooking at no charge.",
+        "ruleId": "DGCA_DELAY_RULE_2023"
+      },
+      "createdAt": "2026-09-01T10:15:00.000Z",
+      "updatedAt": "2026-09-26T07:30:00.000Z"
+    },
+    {
+      "_id": "node_group_l2",
+      "id": "node_group_l2",
+      "tripId": "trip_group_ladakh_002",
+      "ownerId": "user_harsh_002",
+      "type": "phantom",
+      "phantomMode": "auto_cab",
+      "label": "Cab: Leh Airport to Grand Dragon Hotel",
+      "time": "2026-10-12T09:35:00+05:30",
+      "constraintType": "soft",
+      "status": "at_risk",
+      "rawExtract": {},
+      "routing": {
+        "fromLabel": "Kushok Bakula Rimpochhe Airport (IXL)",
+        "toLabel": "The Grand Dragon Hotel Leh",
+        "estimatedMin": 20,
+        "paddingMin": 30,
+        "provider": "Pre-booked local taxi"
+      },
+      "confidence": { "overall": 0.75 },
+      "createdAt": "2026-09-01T10:20:00.000Z",
+      "updatedAt": "2026-09-26T07:30:00.000Z"
+    },
+    {
+      "_id": "node_group_l3",
+      "id": "node_group_l3",
+      "tripId": "trip_group_ladakh_002",
+      "ownerId": "user_tanvi_001",
+      "type": "hotel",
+      "vendor": "The Grand Dragon Ladakh",
+      "label": "Check-in The Grand Dragon Leh",
+      "time": "2026-10-12T12:00:00+05:30",
+      "constraintType": "soft",
+      "status": "confirmed",
+      "rawExtract": {
+        "hotelName": "The Grand Dragon Ladakh",
+        "address": "Old Leh Road Leh Ladakh 194101",
+        "checkIn": "2026-10-12",
+        "checkOut": "2026-10-16",
+        "roomType": "Superior Mountain View x2 rooms",
+        "bookingRef": "GDL-2026-44501",
+        "rate": "Rs 6500 per room per night"
+      },
+      "confidence": { "overall": 0.99 },
+      "refundPolicy": {
+        "source": "extracted",
+        "summary": "Free cancellation until 72 hrs before check-in. 50% charge within 72 hrs.",
+        "ruleId": null
+      },
+      "createdAt": "2026-09-01T10:25:00.000Z",
+      "updatedAt": "2026-09-01T10:25:00.000Z"
+    },
+    {
+      "_id": "node_group_l4",
+      "id": "node_group_l4",
+      "tripId": "trip_group_ladakh_002",
+      "ownerId": "user_harsh_002",
+      "type": "cab",
+      "vendor": "Leh Local Tours",
+      "label": "Full-Day Cab: Leh to Nubra Valley via Khardung La",
+      "time": "2026-10-14T06:00:00+05:30",
+      "constraintType": "hard",
+      "status": "confirmed",
+      "rawExtract": {
+        "vendor": "Leh Local Tours",
+        "route": "Leh to Khardung La to Hunder to Diskit Nubra Valley",
+        "vehicleType": "Innova Crysta",
+        "bookingRef": "LLT-OCT14-GRP4",
+        "cost": "Rs 7200 total",
+        "pickup": "06:00 from Grand Dragon Hotel"
+      },
+      "confidence": { "overall": 0.95 },
+      "refundPolicy": {
+        "source": "user_provided",
+        "summary": "Non-refundable once booked. Cancellation over 24 hrs: 30% charge.",
+        "ruleId": null
+      },
+      "createdAt": "2026-09-05T12:00:00.000Z",
+      "updatedAt": "2026-09-05T12:00:00.000Z"
+    },
+    {
+      "_id": "node_group_l5",
+      "id": "node_group_l5",
+      "tripId": "trip_group_ladakh_002",
+      "ownerId": "user_tanvi_001",
+      "type": "hotel",
+      "vendor": "Hunder Eco Resort",
+      "label": "Stay: Hunder Eco Resort Nubra Valley",
+      "time": "2026-10-14T18:00:00+05:30",
+      "constraintType": "soft",
+      "status": "confirmed",
+      "rawExtract": {
+        "hotelName": "Hunder Eco Resort",
+        "address": "Hunder Village Nubra Valley Ladakh",
+        "checkIn": "2026-10-14",
+        "checkOut": "2026-10-15",
+        "roomType": "Luxury Tent x2",
+        "bookingRef": "HER-2026-7812",
+        "rate": "Rs 4800 per tent per night"
+      },
+      "confidence": { "overall": 0.97 },
+      "refundPolicy": {
+        "source": "extracted",
+        "summary": "Non-refundable. No cancellations accepted within 7 days.",
+        "ruleId": null
+      },
+      "createdAt": "2026-09-05T12:10:00.000Z",
+      "updatedAt": "2026-09-05T12:10:00.000Z"
+    },
+    {
+      "_id": "node_group_l6",
+      "id": "node_group_l6",
+      "tripId": "trip_group_ladakh_002",
+      "ownerId": "user_tanvi_001",
+      "type": "flight",
+      "vendor": "Air India",
+      "label": "Leh IXL to Delhi IGI AI-441 Return",
+      "time": "2026-10-19T11:05:00+05:30",
+      "constraintType": "hard",
+      "status": "confirmed",
+      "rawExtract": {
+        "airline": "Air India",
+        "flightNo": "AI-441",
+        "from": "Kushok Bakula Rimpochhe (IXL)",
+        "to": "Indira Gandhi Intl (DEL)",
+        "departure": "11:05",
+        "scheduledArrival": "12:55",
+        "class": "Economy",
+        "pnr": "IXLDEL9",
+        "passengers": ["Tanvi Sharma", "Harsh Mehta", "Nupur Joshi", "Shravani Kulkarni"]
+      },
+      "confidence": { "overall": 0.98 },
+      "refundPolicy": {
+        "source": "policy_library",
+        "summary": "DGCA: If delay over 2 hrs airline must offer meal vouchers; over 6 hrs full refund or rebooking at no charge.",
+        "ruleId": "DGCA_DELAY_RULE_2023"
+      },
+      "createdAt": "2026-09-01T10:30:00.000Z",
+      "updatedAt": "2026-09-01T10:30:00.000Z"
+    }
+  ],
+  "edges": [
+    {
+      "_id": "edge_solo_v1",
+      "id": "edge_solo_v1",
+      "tripId": "trip_solo_varanasi_001",
+      "fromNodeId": "node_solo_v1",
+      "toNodeId": "node_solo_v3",
+      "bufferMin": 0,
+      "paddingMin": 20,
+      "constraint": "soft",
+      "shared": false
+    },
+    {
+      "_id": "edge_solo_v2",
+      "id": "edge_solo_v2",
+      "tripId": "trip_solo_varanasi_001",
+      "fromNodeId": "node_solo_v3",
+      "toNodeId": "node_solo_v2",
+      "bufferMin": 120,
+      "paddingMin": 60,
+      "constraint": "soft",
+      "shared": false
+    },
+    {
+      "_id": "edge_group_l1",
+      "id": "edge_group_l1",
+      "tripId": "trip_group_ladakh_002",
+      "fromNodeId": "node_group_l1",
+      "toNodeId": "node_group_l2",
+      "bufferMin": 0,
+      "paddingMin": 30,
+      "constraint": "hard",
+      "shared": true,
+      "sharedByMemberIds": ["user_tanvi_001", "user_harsh_002", "user_nupur_003", "user_shravani_004"]
+    },
+    {
+      "_id": "edge_group_l2",
+      "id": "edge_group_l2",
+      "tripId": "trip_group_ladakh_002",
+      "fromNodeId": "node_group_l2",
+      "toNodeId": "node_group_l3",
+      "bufferMin": 150,
+      "paddingMin": 30,
+      "constraint": "soft",
+      "shared": true,
+      "sharedByMemberIds": ["user_tanvi_001", "user_harsh_002", "user_nupur_003", "user_shravani_004"]
+    },
+    {
+      "_id": "edge_group_l3",
+      "id": "edge_group_l3",
+      "tripId": "trip_group_ladakh_002",
+      "fromNodeId": "node_group_l3",
+      "toNodeId": "node_group_l4",
+      "bufferMin": 2880,
+      "paddingMin": 60,
+      "constraint": "hard",
+      "shared": true,
+      "sharedByMemberIds": ["user_tanvi_001", "user_harsh_002", "user_nupur_003", "user_shravani_004"]
+    }
+  ],
+  "disruptions": [
+    {
+      "_id": "disr_group_001",
+      "id": "disr_group_001",
+      "tripId": "trip_group_ladakh_002",
+      "nodeId": "node_group_l1",
+      "type": "flight_delay",
+      "source": "flight_provider",
+      "description": "IndiGo 6E-2476 DEL to IXL delayed 3 hrs 40 min due to ATC hold Delhi. New departure 11:00. Arrival Leh approx 13:15. Pre-booked airport taxi at 09:35 will be missed.",
+      "delayMin": 220,
+      "causeFlag": "airline_controlled",
+      "affectedNodeIds": ["node_group_l1", "node_group_l2"],
+      "timestamp": "2026-10-12T05:48:00+05:30",
+      "resolved": false,
+      "simulated": false
+    }
+  ],
+  "actions": [
+    {
+      "_id": "action_group_001",
+      "id": "action_group_001",
+      "tripId": "trip_group_ladakh_002",
+      "disruptionId": "disr_group_001",
+      "optionId": "recovery_opt_A",
+      "state": "proposed",
+      "confirmType": null,
+      "proofRef": null,
+      "agreements": [
+        { "memberId": "user_tanvi_001", "response": "agreed", "respondedAt": "2026-10-12T06:05:00+05:30" },
+        { "memberId": "user_harsh_002", "response": "agreed", "respondedAt": "2026-10-12T06:08:00+05:30" },
+        { "memberId": "user_nupur_003", "response": "pending", "respondedAt": null },
+        { "memberId": "user_shravani_004", "response": "pending", "respondedAt": null }
+      ],
+      "vendorDraft": {
+        "subject": "Compensation Claim 6E-2476 DEL to IXL Delay 12 Oct 2026",
+        "body": "Dear IndiGo Customer Relations,\n\nWe are writing on behalf of 4 passengers (PNR: DLLEIH) aboard flight 6E-2476 from Delhi (DEL) to Leh (IXL) on 12 October 2026. The flight was delayed by 3 hours and 40 minutes (scheduled 07:20, actual departure 11:00).\n\nUnder DGCA regulations passengers are entitled to meal vouchers for delays over 2 hours and full refund or free rebooking if delay exceeds 6 hours.\n\nKindly confirm the applicable compensation and process refunds for the pre-booked airport cab (Rs 1200) missed due to this delay.\n\nPassengers: Tanvi Sharma, Harsh Mehta, Nupur Joshi, Shravani Kulkarni\nPNR: DLLEIH\n\nThank you,\nTanvi Sharma\n+91 98200 11001",
+        "ruleCited": "DGCA_DELAY_RULE_2023",
+        "sentAt": "2026-10-12T06:10:00+05:30",
+        "nudgedAt": []
+      },
+      "costTotal": 3200,
+      "possibleCompensation": 4800,
+      "createdAt": "2026-10-12T06:00:00+05:30",
+      "updatedAt": "2026-10-12T06:10:00+05:30",
+      "version": 2
+    }
+  ],
+  "payments": [
+    {
+      "_id": "pay_group_001",
+      "id": "pay_group_001",
+      "tripId": "trip_group_ladakh_002",
+      "actionId": "action_group_001",
+      "memberId": "user_tanvi_001",
+      "amount": 800,
+      "status": "paid",
+      "aggregatorRef": "RAZORPAY_PAY_NK9X2B",
+      "paymentLinkUrl": "https://rzp.io/l/demo-tanvi",
+      "deadlineAt": "2026-10-12T10:00:00+05:30",
+      "paidAt": "2026-10-12T06:20:00+05:30"
+    },
+    {
+      "_id": "pay_group_002",
+      "id": "pay_group_002",
+      "tripId": "trip_group_ladakh_002",
+      "actionId": "action_group_001",
+      "memberId": "user_harsh_002",
+      "amount": 800,
+      "status": "paid",
+      "aggregatorRef": "RAZORPAY_PAY_HM7Y3C",
+      "paymentLinkUrl": "https://rzp.io/l/demo-harsh",
+      "deadlineAt": "2026-10-12T10:00:00+05:30",
+      "paidAt": "2026-10-12T06:25:00+05:30"
+    },
+    {
+      "_id": "pay_group_003",
+      "id": "pay_group_003",
+      "tripId": "trip_group_ladakh_002",
+      "actionId": "action_group_001",
+      "memberId": "user_nupur_003",
+      "amount": 800,
+      "status": "pending",
+      "aggregatorRef": null,
+      "paymentLinkUrl": "https://rzp.io/l/demo-nupur",
+      "deadlineAt": "2026-10-12T10:00:00+05:30",
+      "paidAt": null
+    },
+    {
+      "_id": "pay_group_004",
+      "id": "pay_group_004",
+      "tripId": "trip_group_ladakh_002",
+      "actionId": "action_group_001",
+      "memberId": "user_shravani_004",
+      "amount": 800,
+      "status": "pending",
+      "aggregatorRef": null,
+      "paymentLinkUrl": "https://rzp.io/l/demo-shravani",
+      "deadlineAt": "2026-10-12T10:00:00+05:30",
+      "paidAt": null
+    }
+  ],
+  "recovery_options": [
+    {
+      "_id": "recovery_opt_A",
+      "optionId": "recovery_opt_A",
+      "tripId": "trip_group_ladakh_002",
+      "disruptionId": "disr_group_001",
+      "name": "Rebook on Air India AI-9801 11:50 DEL to IXL (Recommended)",
+      "netCost": 3200,
+      "possibleCompensation": 4800,
+      "arrivalTime": "2026-10-12T13:45:00+05:30",
+      "nodesDropped": [],
+      "recommended": true,
+      "scoreBreakdown": { "costNorm": 0.72, "timeNorm": 0.81, "nodesNorm": 1.0 },
+      "changes": [
+        {
+          "nodeId": "node_group_l1",
+          "field": "label",
+          "from": "Delhi IGI to Leh 6E-2476",
+          "to": "Delhi IGI to Leh AI-9801 11:50"
+        },
+        {
+          "nodeId": "node_group_l2",
+          "field": "time",
+          "from": "2026-10-12T09:35:00+05:30",
+          "to": "2026-10-12T13:45:00+05:30"
+        }
+      ],
+      "perMemberShare": [
+        { "memberId": "user_tanvi_001", "amount": 800 },
+        { "memberId": "user_harsh_002", "amount": 800 },
+        { "memberId": "user_nupur_003", "amount": 800 },
+        { "memberId": "user_shravani_004", "amount": 800 }
+      ],
+      "quoteExpiresAt": "2026-10-12T08:30:00+05:30"
+    },
+    {
+      "_id": "recovery_opt_B",
+      "optionId": "recovery_opt_B",
+      "tripId": "trip_group_ladakh_002",
+      "disruptionId": "disr_group_001",
+      "name": "Wait for 6E-2476 Delayed Flight Arrive 13:15 Same Hotel Check-in",
+      "netCost": 1200,
+      "possibleCompensation": 4800,
+      "arrivalTime": "2026-10-12T13:15:00+05:30",
+      "nodesDropped": [],
+      "recommended": false,
+      "scoreBreakdown": { "costNorm": 0.95, "timeNorm": 0.68, "nodesNorm": 1.0 },
+      "changes": [
+        {
+          "nodeId": "node_group_l2",
+          "field": "time",
+          "from": "2026-10-12T09:35:00+05:30",
+          "to": "2026-10-12T13:15:00+05:30"
+        }
+      ],
+      "perMemberShare": [
+        { "memberId": "user_tanvi_001", "amount": 300 },
+        { "memberId": "user_harsh_002", "amount": 300 },
+        { "memberId": "user_nupur_003", "amount": 300 },
+        { "memberId": "user_shravani_004", "amount": 300 }
+      ],
+      "quoteExpiresAt": "2026-10-12T08:30:00+05:30"
+    },
+    {
+      "_id": "recovery_opt_C",
+      "optionId": "recovery_opt_C",
+      "tripId": "trip_group_ladakh_002",
+      "disruptionId": "disr_group_001",
+      "name": "Cancel Flight and Reroute Overnight Volvo Delhi to Manali then Cab to Leh",
+      "netCost": 0,
+      "possibleCompensation": 2800,
+      "arrivalTime": "2026-10-13T16:00:00+05:30",
+      "nodesDropped": ["node_group_l1"],
+      "recommended": false,
+      "scoreBreakdown": { "costNorm": 1.0, "timeNorm": 0.22, "nodesNorm": 0.6 },
+      "changes": [
+        {
+          "nodeId": "node_group_l1",
+          "field": "type",
+          "from": "flight",
+          "to": "dropped"
+        },
+        {
+          "nodeId": "node_group_l3",
+          "field": "time",
+          "from": "2026-10-12T12:00:00+05:30",
+          "to": "2026-10-13T16:00:00+05:30"
+        }
+      ],
+      "perMemberShare": [
+        { "memberId": "user_tanvi_001", "amount": 0 },
+        { "memberId": "user_harsh_002", "amount": 0 },
+        { "memberId": "user_nupur_003", "amount": 0 },
+        { "memberId": "user_shravani_004", "amount": 0 }
+      ],
+      "quoteExpiresAt": "2026-10-12T08:30:00+05:30"
+    }
+  ],
+  "events": [
+    {
+      "_id": "evt_group_001",
+      "id": "evt_group_001",
+      "tripId": "trip_group_ladakh_002",
+      "seq": 1,
+      "actor": "system",
+      "type": "trip_created",
+      "payload": { "tripName": "Ladakh Calling" },
+      "ts": "2026-09-01T10:00:00.000Z"
+    },
+    {
+      "_id": "evt_group_002",
+      "id": "evt_group_002",
+      "tripId": "trip_group_ladakh_002",
+      "seq": 2,
+      "actor": "user_harsh_002",
+      "type": "member_joined",
+      "payload": { "memberName": "Harsh Mehta", "joinCode": "LADAKH712" },
+      "ts": "2026-09-01T11:30:00.000Z"
+    },
+    {
+      "_id": "evt_group_003",
+      "id": "evt_group_003",
+      "tripId": "trip_group_ladakh_002",
+      "seq": 3,
+      "actor": "user_nupur_003",
+      "type": "member_joined",
+      "payload": { "memberName": "Nupur Joshi", "joinCode": "LADAKH712" },
+      "ts": "2026-09-02T09:15:00.000Z"
+    },
+    {
+      "_id": "evt_group_004",
+      "id": "evt_group_004",
+      "tripId": "trip_group_ladakh_002",
+      "seq": 4,
+      "actor": "user_shravani_004",
+      "type": "member_joined",
+      "payload": { "memberName": "Shravani Kulkarni", "joinCode": "LADAKH712" },
+      "ts": "2026-09-03T14:00:00.000Z"
+    },
+    {
+      "_id": "evt_group_005",
+      "id": "evt_group_005",
+      "tripId": "trip_group_ladakh_002",
+      "seq": 5,
+      "actor": "system",
+      "type": "node_ingested",
+      "payload": { "nodeId": "node_group_l1", "nodeLabel": "Delhi IGI to Leh 6E-2476", "confidence": 0.98 },
+      "ts": "2026-09-01T10:15:00.000Z"
+    },
+    {
+      "_id": "evt_group_006",
+      "id": "evt_group_006",
+      "tripId": "trip_group_ladakh_002",
+      "seq": 6,
+      "actor": "system",
+      "type": "disruption_detected",
+      "payload": { "disruptionId": "disr_group_001", "description": "IndiGo 6E-2476 delayed 220 min ATC hold", "source": "flight_provider" },
+      "ts": "2026-10-12T05:48:00+05:30"
+    },
+    {
+      "_id": "evt_group_007",
+      "id": "evt_group_007",
+      "tripId": "trip_group_ladakh_002",
+      "seq": 7,
+      "actor": "system",
+      "type": "recovery_options_generated",
+      "payload": { "options": ["recovery_opt_A", "recovery_opt_B", "recovery_opt_C"], "recommendedOptionId": "recovery_opt_A" },
+      "ts": "2026-10-12T05:50:00+05:30"
+    },
+    {
+      "_id": "evt_group_008",
+      "id": "evt_group_008",
+      "tripId": "trip_group_ladakh_002",
+      "seq": 8,
+      "actor": "user_tanvi_001",
+      "type": "action_proposed",
+      "payload": { "actionId": "action_group_001", "optionId": "recovery_opt_A", "optionName": "Rebook on Air India AI-9801" },
+      "ts": "2026-10-12T06:00:00+05:30"
+    },
+    {
+      "_id": "evt_group_009",
+      "id": "evt_group_009",
+      "tripId": "trip_group_ladakh_002",
+      "seq": 9,
+      "actor": "user_tanvi_001",
+      "type": "member_agreed",
+      "payload": { "actionId": "action_group_001", "memberName": "Tanvi Sharma" },
+      "ts": "2026-10-12T06:05:00+05:30"
+    },
+    {
+      "_id": "evt_group_010",
+      "id": "evt_group_010",
+      "tripId": "trip_group_ladakh_002",
+      "seq": 10,
+      "actor": "user_harsh_002",
+      "type": "member_agreed",
+      "payload": { "actionId": "action_group_001", "memberName": "Harsh Mehta" },
+      "ts": "2026-10-12T06:08:00+05:30"
+    },
+    {
+      "_id": "evt_group_011",
+      "id": "evt_group_011",
+      "tripId": "trip_group_ladakh_002",
+      "seq": 11,
+      "actor": "system",
+      "type": "vendor_email_sent",
+      "payload": { "actionId": "action_group_001", "subject": "Compensation Claim 6E-2476", "airline": "IndiGo", "ruleCited": "DGCA_DELAY_RULE_2023" },
+      "ts": "2026-10-12T06:10:00+05:30"
+    },
+    {
+      "_id": "evt_group_012",
+      "id": "evt_group_012",
+      "tripId": "trip_group_ladakh_002",
+      "seq": 12,
+      "actor": "system",
+      "type": "payment_link_sent",
+      "payload": { "actionId": "action_group_001", "membersSent": ["user_tanvi_001","user_harsh_002","user_nupur_003","user_shravani_004"], "amountPerMember": 800 },
+      "ts": "2026-10-12T06:15:00+05:30"
+    },
+    {
+      "_id": "evt_group_013",
+      "id": "evt_group_013",
+      "tripId": "trip_group_ladakh_002",
+      "seq": 13,
+      "actor": "user_tanvi_001",
+      "type": "payment_completed",
+      "payload": { "paymentId": "pay_group_001", "amount": 800, "memberName": "Tanvi Sharma" },
+      "ts": "2026-10-12T06:20:00+05:30"
+    },
+    {
+      "_id": "evt_group_014",
+      "id": "evt_group_014",
+      "tripId": "trip_group_ladakh_002",
+      "seq": 14,
+      "actor": "user_harsh_002",
+      "type": "payment_completed",
+      "payload": { "paymentId": "pay_group_002", "amount": 800, "memberName": "Harsh Mehta" },
+      "ts": "2026-10-12T06:25:00+05:30"
+    },
+    {
+      "_id": "evt_solo_001",
+      "id": "evt_solo_001",
+      "tripId": "trip_solo_varanasi_001",
+      "seq": 1,
+      "actor": "system",
+      "type": "trip_created",
+      "payload": { "tripName": "Kashi Yatra Varanasi" },
+      "ts": "2026-09-10T08:00:00.000Z"
+    },
+    {
+      "_id": "evt_solo_002",
+      "id": "evt_solo_002",
+      "tripId": "trip_solo_varanasi_001",
+      "seq": 2,
+      "actor": "system",
+      "type": "node_ingested",
+      "payload": { "nodeId": "node_solo_v1", "nodeLabel": "Pune Jn to Varanasi Jn 12168", "confidence": 0.97 },
+      "ts": "2026-09-10T08:10:00.000Z"
+    },
+    {
+      "_id": "evt_solo_003",
+      "id": "evt_solo_003",
+      "tripId": "trip_solo_varanasi_001",
+      "seq": 3,
+      "actor": "system",
+      "type": "phantom_node_auto_created",
+      "payload": { "nodeId": "node_solo_v3", "nodeLabel": "Cab Varanasi Jn to Hotel Surya", "mode": "auto_cab" },
+      "ts": "2026-09-10T08:20:00.000Z"
+    },
+    {
+      "_id": "evt_solo_004",
+      "id": "evt_solo_004",
+      "tripId": "trip_solo_varanasi_001",
+      "seq": 4,
+      "actor": "system",
+      "type": "health_computed",
+      "payload": { "healthScore": 94, "weakestEdgeId": "edge_solo_v2", "missChance": 12 },
+      "ts": "2026-09-25T18:00:00.000Z"
+    }
+  ]
+}

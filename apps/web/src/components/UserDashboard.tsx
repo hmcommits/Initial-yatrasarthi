@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { 
-  Shield, CheckCircle2, 
-  CreditCard, FileText, 
+import {
+  Shield, CheckCircle2,
+  CreditCard, FileText,
   Users, Check, Phone, Calendar
 } from 'lucide-react';
 import type { TripData } from '../types';
@@ -17,7 +17,7 @@ interface UserDashboardProps {
 
 export function UserDashboard({ trips, activeTrip, onSelectTrip, onNavigate, user }: UserDashboardProps) {
   const [activeTab, setActiveTab] = useState<'overview' | 'dgca' | 'payments' | 'vault' | 'settings'>('overview');
-  
+
   const displayName = user?.name || (user?.phone ? `Traveler (${user.phone})` : 'Harsh');
   const initial = displayName ? displayName[0].toUpperCase() : 'U';
 
@@ -27,7 +27,7 @@ export function UserDashboard({ trips, activeTrip, onSelectTrip, onNavigate, use
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="flex items-center gap-4">
-              <div 
+              <div
                 className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-bold shadow-md relative"
                 style={{ background: '#172017', color: '#C5D82D' }}
               >
@@ -113,7 +113,7 @@ export function UserDashboard({ trips, activeTrip, onSelectTrip, onNavigate, use
             </div>
           </div>
         )}
-        {activeTab === 'dgca' && <div className="text-center py-12 text-gray-500">DGCA Compensation Data will appear here once connected to APIs.</div>}
+        {activeTab === 'dgca' && <DGCACompensation trips={trips} />}
         {activeTab === 'payments' && <div className="text-center py-12 text-gray-500">Payment splits will appear here. No mock data.</div>}
         {activeTab === 'vault' && <div className="text-center py-12 text-gray-500">Document vault is empty.</div>}
       </div>

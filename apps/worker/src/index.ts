@@ -1,223 +1,122 @@
-/**
- * YatraSarthi Background Worker
- *
- * Runs two recurring jobs:
- *
- * 1. Phantom Node Poller (every 5 minutes)
- *    - Finds all nodes with status 'pending_review' that are within 3 hours of their scheduled time.
- *    - Flags them as 'at_risk' and publishes a realtime warning so the user can confirm or replace.
- *
- * 2. Payment Timeout Sweep (every 10 minutes)
- *    - Finds payments with status 'pending' where deadlineAt has passed.
- *    - Marks them as 'failed'.
- *    - If ALL payments for an action are now failed/refunded, moves that action back to 'proposed'
- *      so the group can try again.
- *
- * Environment variables required:
- *   MONGODB_URI       - MongoDB Atlas connection string
- *   ABLY_API_KEY      - Ably REST publish key (optional; skipped gracefully if absent)
- */
+import { MongoClient, ObjectId } from 'mongodb';
+import dotenv from 'dotenv';
 
-import { MongoClient } from 'mongodb';
+// Load env vars
+dotenv.config({ path: '../../apps/web/.env' }); // Adjust if needed
 
-const MONGODB_URI = process.env.MONGODB_URI;
-if (!MONGODB_URI) {
-  console.error('[worker] MONGODB_URI is not set — exiting.');
-  process.exit(1);
-}
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/yatrasarthi';
+const AVIATION_STACK_KEY = process.env.AVIATION_STACK_KEY;
+const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:3000';
+const POLL_INTERVAL_MS = 60000; // Poll every 60 seconds
 
-let client: MongoClient;
+let client: MongoClient | null = null;
 
-async function getDb() {
-  if (!client) {
-    client = new MongoClient(MONGODB_URI!);
-    await client.connect();
-    console.log('[worker] Connected to MongoDB');
-  }
-  return client.db();
-}
-
-// ─── Realtime helper (same logic as apps/web/src/lib/realtime.ts, inlined) ───
-
-async function publishEvent(tripId: string, type: string, entityId: string) {
-  const apiKey = process.env.ABLY_API_KEY;
-  if (!apiKey) {
-    console.warn('[worker:realtime] ABLY_API_KEY not set — skipping publish', type);
-    return;
-  }
-  const channel = `trip:${tripId}`;
-  const [keyId, keySecret] = apiKey.split(':');
-  const basicAuth = Buffer.from(`${keyId}:${keySecret}`).toString('base64');
+async function checkFlights() {
+  console.log(`[FlightTracker] Running check at ${new Date().toISOString()}`);
   try {
-    const res = await fetch(
-      `https://rest.ably.io/channels/${encodeURIComponent(channel)}/messages`,
-      {
-        method: 'POST',
-        headers: { Authorization: `Basic ${basicAuth}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: type, data: { type, tripId, entityId, ts: new Date().toISOString() } }),
+    if (!client) {
+      client = new MongoClient(MONGODB_URI);
+      await client.connect();
+    }
+    const db = client.db();
+
+    // Find all confirmed flight nodes (that have not been completed)
+    const activeFlights = await db.collection('nodes').find({
+      type: 'flight',
+      status: 'confirmed'
+    }).toArray();
+
+    console.log(`[FlightTracker] Found ${activeFlights.length} active flights to monitor.`);
+
+    for (const flight of activeFlights) {
+      const flightNumber = getFlightNumber(flight);
+      if (!flightNumber) continue;
+
+      console.log(`[FlightTracker] Checking status for ${flightNumber} (Trip: ${flight.tripId})`);
+      
+      const delayMin = await fetchFlightDelay(flightNumber);
+      
+      if (delayMin > 0) {
+        console.log(`[FlightTracker] ALERT: Flight ${flightNumber} is delayed by ${delayMin} mins! Triggering disruption.`);
+        await reportDisruption(flight.tripId, flight._id.toString(), delayMin);
+      } else {
+        console.log(`[FlightTracker] Flight ${flightNumber} is on time.`);
       }
-    );
-    if (!res.ok) console.error('[worker:realtime] Ably publish failed:', res.status, await res.text());
-  } catch (err) {
-    console.error('[worker:realtime] Ably publish error:', err);
+    }
+  } catch (error) {
+    console.error('[FlightTracker] Error running check:', error);
   }
 }
 
-// ─── Job 1: Phantom Node Poller ────────────────────────────────────────────
-
-async function runPhantomPoller() {
-  console.log('[worker:phantom] Running phantom node poll...');
-  try {
-    const db = await getDb();
-    const now = new Date();
-    const windowEnd = new Date(now.getTime() + 3 * 60 * 60 * 1000); // 3 hours from now
-
-    // Find pending_review nodes whose scheduled time is within the next 3 hours
-    const phantomNodes = await db.collection('nodes').find({
-      status: 'pending_review',
-      type: 'phantom',
-      time: { $gte: now.toISOString(), $lte: windowEnd.toISOString() },
-    }).toArray();
-
-    if (phantomNodes.length === 0) {
-      console.log('[worker:phantom] No phantom nodes in the T-3h window.');
-      return;
-    }
-
-    console.log(`[worker:phantom] Found ${phantomNodes.length} phantom node(s) in the T-3h window.`);
-
-    for (const node of phantomNodes) {
-      const nodeId = node._id.toString();
-      const tripId = node.tripId;
-
-      // Flip to at_risk — the user needs to confirm or replace this leg
-      await db.collection('nodes').updateOne(
-        { _id: node._id },
-        { $set: { status: 'at_risk', phantomWarningAt: now.toISOString() } }
-      );
-
-      // Append event log
-      const count = await db.collection('events').countDocuments({ tripId });
-      await db.collection('events').insertOne({
-        tripId,
-        seq: count + 1,
-        actor: 'system',
-        type: 'node.phantom_warning',
-        payload: { nodeId, label: node.label, scheduledTime: node.time },
-        ts: now.toISOString(),
-      });
-
-      // Publish realtime warning
-      await publishEvent(tripId, 'node.updated', nodeId);
-
-      console.log(`[worker:phantom] Flagged node ${nodeId} (${node.label}) as at_risk for trip ${tripId}`);
-    }
-  } catch (err) {
-    console.error('[worker:phantom] Error during phantom poll:', err);
-  }
+// Helper to extract flight number from node (could be in label, vendor, or rawExtract)
+function getFlightNumber(node: any): string | null {
+  if (node.rawExtract?.flightNumber) return node.rawExtract.flightNumber;
+  if (node.rawExtract?.pnr) return node.rawExtract.pnr; // fallback
+  const label = typeof node.label === 'object' ? node.label.value : node.label;
+  if (label && typeof label === 'string') return label;
+  return null;
 }
 
-// ─── Job 2: Payment Timeout Sweep ──────────────────────────────────────────
-
-async function runPaymentTimeoutSweep() {
-  console.log('[worker:payments] Running payment timeout sweep...');
-  try {
-    const db = await getDb();
-    const now = new Date();
-
-    // Find all pending payments whose deadline has passed
-    const expiredPayments = await db.collection('payments').find({
-      status: 'pending',
-      deadlineAt: { $lte: now.toISOString() },
-    }).toArray();
-
-    if (expiredPayments.length === 0) {
-      console.log('[worker:payments] No expired payments found.');
-      return;
-    }
-
-    console.log(`[worker:payments] Found ${expiredPayments.length} expired payment(s).`);
-
-    // Group expired payments by actionId
-    const byAction = new Map<string, typeof expiredPayments>();
-    for (const p of expiredPayments) {
-      const key = p.actionId;
-      if (!byAction.has(key)) byAction.set(key, []);
-      byAction.get(key)!.push(p);
-    }
-
-    for (const [actionId, payments] of byAction) {
-      // Mark expired payments as failed
-      const expiredIds = payments.map((p: any) => p._id);
-      await db.collection('payments').updateMany(
-        { _id: { $in: expiredIds } },
-        { $set: { status: 'failed', failedAt: now.toISOString() } }
-      );
-
-      // Check if ALL payments for this action are now non-pending
-      const stillPending = await db.collection('payments').countDocuments({
-        actionId,
-        status: 'pending',
-      });
-
-      if (stillPending === 0) {
-        // Roll the action back to 'proposed' so the group can try again
-        let action: any = null;
-        try { action = await db.collection('actions').findOne({ _id: new (require('mongodb').ObjectId)(actionId) }); } catch {}
-        if (!action) action = await db.collection('actions').findOne({ id: actionId });
-
-        if (action) {
-          const filter = action._id
-            ? { _id: action._id }
-            : { id: actionId };
-
-          await db.collection('actions').updateOne(
-            filter,
-            { $set: { state: 'proposed', updatedAt: now.toISOString() } }
-          );
-
-          const tripId: string = action.tripId;
-          // Append event log
-          const count = await db.collection('events').countDocuments({ tripId });
-          await db.collection('events').insertOne({
-            tripId,
-            seq: count + 1,
-            actor: 'system',
-            type: 'action.payment_timeout',
-            payload: { actionId, expiredCount: payments.length },
-            ts: now.toISOString(),
-          });
-
-          await publishEvent(tripId, 'action.updated', actionId);
-          console.log(`[worker:payments] Action ${actionId} rolled back to 'proposed' (all payments expired).`);
+// Fetches delay from AviationStack, or uses a mock if key is missing
+async function fetchFlightDelay(flightNumber: string): Promise<number> {
+  // If we have an API key, we make the real call
+  if (AVIATION_STACK_KEY) {
+    try {
+      const res = await fetch(`http://api.aviationstack.com/v1/flights?access_key=${AVIATION_STACK_KEY}&flight_iata=${encodeURIComponent(flightNumber)}`);
+      const data = await res.json();
+      
+      if (data && data.data && data.data.length > 0) {
+        const flightInfo = data.data[0];
+        if (flightInfo.flight_status === 'delayed' || flightInfo.flight_status === 'cancelled') {
+          // Calculate delay in minutes based on scheduled vs estimated
+          const scheduled = new Date(flightInfo.departure.scheduled).getTime();
+          const estimated = new Date(flightInfo.departure.estimated).getTime();
+          const diffMins = Math.floor((estimated - scheduled) / 60000);
+          return diffMins > 0 ? diffMins : 60; // default 60 min delay if status is delayed but times match
         }
+        return 0; // on time
       }
+    } catch (e) {
+      console.error(`[FlightTracker] AviationStack API error for ${flightNumber}:`, e);
     }
-  } catch (err) {
-    console.error('[worker:payments] Error during payment sweep:', err);
+  }
+
+  // --- MOCK FALLBACK ---
+  // If no API key, we simulate a delay randomly or based on a keyword for testing
+  if (flightNumber.toUpperCase().includes('DELAY')) {
+    return 120; // 2 hour delay
+  }
+  // 5% chance of a random 45 minute delay in development
+  if (Math.random() < 0.05) {
+    return 45;
+  }
+  
+  return 0;
+}
+
+// Calls the web API to report the disruption and calculate the cascade graph
+async function reportDisruption(tripId: string, nodeId: string, delayMin: number) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/disruptions/report`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tripId, nodeId, delayMin })
+    });
+    
+    if (!res.ok) {
+      console.error(`[FlightTracker] Failed to report disruption: ${res.statusText}`);
+    } else {
+      const data = await res.json();
+      console.log(`[FlightTracker] Successfully reported disruption. Cascade calculation complete. New Health: ${data.healthScore}`);
+    }
+  } catch (error) {
+    console.error(`[FlightTracker] Error calling disruption API:`, error);
   }
 }
 
-// ─── Scheduler ─────────────────────────────────────────────────────────────
+// Start the worker loop
+console.log("✈️ YatraSarthi Live Flight Tracker Worker Started");
+console.log(`Polling every ${POLL_INTERVAL_MS / 1000} seconds...`);
 
-function schedule(label: string, job: () => Promise<void>, intervalMs: number) {
-  console.log(`[worker] Scheduling "${label}" every ${intervalMs / 1000}s`);
-  job(); // run immediately on startup
-  setInterval(() => {
-    job().catch(err => console.error(`[worker] Unhandled error in "${label}":`, err));
-  }, intervalMs);
-}
-
-// ─── Entry point ────────────────────────────────────────────────────────────
-
-console.log('[worker] YatraSarthi worker starting...');
-
-schedule('Phantom Node Poller',    runPhantomPoller,        5  * 60 * 1000); // every 5 min
-schedule('Payment Timeout Sweep',  runPaymentTimeoutSweep,  10 * 60 * 1000); // every 10 min
-
-// Keep the process alive
-process.on('SIGTERM', async () => {
-  console.log('[worker] SIGTERM received — shutting down gracefully.');
-  if (client) await client.close();
-  process.exit(0);
-});
+checkFlights(); // run immediately once
+setInterval(checkFlights, POLL_INTERVAL_MS);
