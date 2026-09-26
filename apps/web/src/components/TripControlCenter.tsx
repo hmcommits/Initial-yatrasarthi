@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Share, Bell, Users, MapPin, ChevronDown, AlertTriangle, Clock, Check, RotateCcw, Settings, Compass, ShieldCheck } from 'lucide-react';
+import { Share, Bell, Users, MapPin, ChevronDown, AlertTriangle, Clock, Check, RotateCcw, Settings, Compass } from 'lucide-react';
 import type { TripData, UserPreferences, RecoveryOption } from '../types';
 import { TripTimeline } from './TripTimeline';
 import { DependencyGraph } from './DependencyGraph';
@@ -12,6 +12,10 @@ import { DisruptionSimulator } from './DisruptionSimulator';
 import { KutumbInviteModal } from './trips/KutumbInviteModal';
 import { TripSettingsModal } from './trips/TripSettingsModal';
 import IngestionHub from './ingestion/IngestionHub';
+import { RecoveryOptionsPanel } from './recovery/RecoveryOptions';
+import { GroupDecision } from './recovery/GroupDecision';
+import { VendorEmail } from './recovery/VendorEmail';
+import { PaymentStatus } from './recovery/PaymentStatus';
 
 const defaultPreferences = { cost: 40, time: 80, bookings: 100 };
 
@@ -43,6 +47,8 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
   const [generatingLinks, setGeneratingLinks] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  // Recovery flow: tracks the actionId once a recovery option is proposed to the group
+  const [activeActionId, setActiveActionId] = useState<string | null>(null);
 
   const handleGeneratePaymentLinks = async () => {
     setGeneratingLinks(true);
@@ -427,16 +433,43 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
         {/* RECOVERY */}
         {activeTab === 'recovery' && (
           <div className="flex flex-col gap-6">
-            {isDisrupted && trip.recoveryPlans ? (
+            {isDisrupted ? (
               <>
-                <RecoveryOptions
-                  plans={fetchedRecoveryOptions || trip.recoveryPlans || []}
-                  preferences={prefs}
-                  onPreferencesChange={setPrefs}
-                  selectedPlan={selectedPlan}
-                  onSelectPlan={setSelectedPlan}
+                {/* Step 1: Recovery option selection + propose to group */}
+                <RecoveryOptionsPanel
+                  tripId={trip.id}
+                  onProposed={(actionId) => setActiveActionId(actionId)}
                 />
-                <VendorDraft />
+
+                {/* Step 2: Group decision (only shown after an option is proposed) */}
+                {activeActionId && (
+                  <GroupDecision
+                    actionId={activeActionId}
+                    onStateChange={(state) => {
+                      // When state advances, the sub-components below self-load
+                      console.log('[Recovery] action state →', state);
+                    }}
+                  />
+                )}
+
+                {/* Step 3: Payment status (shown once action is awaiting_payment) */}
+                {activeActionId && (
+                  <PaymentStatus actionId={activeActionId} />
+                )}
+
+                {/* Step 4: Vendor email execution (shown once action is executing or pending_vendor) */}
+                {activeActionId && (
+                  <VendorEmail
+                    actionId={activeActionId}
+                    onSent={() => console.log('[Recovery] vendor email marked sent')}
+                    onFailureReported={() => {
+                      setActiveActionId(null);
+                    }}
+                  />
+                )}
+
+                {/* Legacy VendorDraft still renders for backwards-compat with existing mock data */}
+                {!activeActionId && <VendorDraft />}
               </>
             ) : (
               <div className="card p-12 text-center" style={{ background: '#FFFFFF', borderColor: '#D5D9CC' }}>

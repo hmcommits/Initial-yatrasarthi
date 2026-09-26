@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     }
 
     if (!extracted || !extracted.type) {
-      return NextResponse.json({ error: { code: 'EXTRACTION_FAILED', message: err.message || "Unknown error" } }, { status: 422 });
+      return NextResponse.json({ error: { code: 'EXTRACTION_FAILED', message: 'Extraction produced no result.' } }, { status: 422 });
     }
 
     const client = await clientPromise;
@@ -62,6 +62,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ data: node }, { status: 201 });
   } catch (err) {
     console.error('ingest/upload error', err);
-    return NextResponse.json({ error: { code: 'EXTRACTION_FAILED', message: err.message || "Unknown error" } }, { status: 422 });
+    return NextResponse.json({ error: { code: 'EXTRACTION_FAILED', message: err instanceof Error ? err.message : 'Unknown error' } }, { status: 422 });
   }
 }
