@@ -4,12 +4,18 @@ import { TripGraph } from '@yatrasarthi/graph';
 /**
  * Real recovery option ranker.
  *
+ * Output shape matches both:
+ * - The `RecoveryOption` interface in packages/types (api_contract.md §1)
+ * - The `RecoveryOptionData` interface in components/recovery/RecoveryOptions.tsx
+ *
  * Strategy:
- * 1. Find the broken node and all downstream nodes it affects via TripGraph.
- * 2. Generate candidate recovery strategies (skip broken, reschedule downstream, add phantom leg).
- * 3. Score each candidate on 3 axes: cost, time penalty, bookings preserved.
- * 4. Normalise scores 0-100, compute a weighted total, sort descending.
- * 5. Return top 3 options.
+ * 1. Find the broken node and run TripGraph to get cascade impact
+ * 2. Generate 3 candidate strategies (skip-soft, rebook, phantom leg)
+ * 3. Score on 3 axes: cost, time penalty, bookings preserved
+ * 4. Normalise scores 0-1 (Pareto), compute weighted total
+ * 5. Sort descending, mark top as recommended
+ *
+ * Scoring weights: 35% cost · 35% time · 30% bookings (matches api_contract §6)
  */
 
 interface RawNode extends Node {
@@ -17,28 +23,18 @@ interface RawNode extends Node {
   delay?: number;
 }
 
-interface RecoveryCandidate {
-  id: string;
-  label: string;
-  tagline: string;
-  icon: string;
-  additionalCost: number;
-  bookingsPreserved: number;
-  totalBookings: number;
-  timePenaltyMin: number;   // extra minutes added to arrival
-  droppedBookings: string[];
-  feasible: boolean;
-  reason: string;
-  arrivalTime: string;
-  actions: string[];
-  ranking: { costScore: number; timeScore: number; bookingScore: number; total: number };
-  explanation: string;
-}
+type RankingMode = 'cheapest' | 'fastest' | 'preserve_itinerary';
 
-function estimateArrivalTime(baseTime: string | undefined, extraMin: number): string {
-  if (!baseTime) return 'Unknown';
+const MODE_WEIGHTS: Record<RankingMode, { cost: number; time: number; bookings: number }> = {
+  cheapest:           { cost: 0.60, time: 0.20, bookings: 0.20 },
+  fastest:            { cost: 0.20, time: 0.60, bookings: 0.20 },
+  preserve_itinerary: { cost: 0.20, time: 0.20, bookings: 0.60 },
+};
+
+function arrivalTimeFromDelay(baseIso: string | undefined, extraMin: number): string {
+  if (!baseIso) return 'Unknown';
   try {
-    const d = new Date(baseTime);
+    const d = new Date(baseIso);
     d.setMinutes(d.getMinutes() + extraMin);
     return d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: false });
   } catch {
@@ -46,41 +42,43 @@ function estimateArrivalTime(baseTime: string | undefined, extraMin: number): st
   }
 }
 
+function isoExpiry(fromNow: number): string {
+  return new Date(Date.now() + fromNow).toISOString();
+}
+
 export function generateRecoveryOptions(
   tripId: string,
   rawNodes: RawNode[],
   rawEdges: Edge[],
-  brokenNodeId: string
-): RecoveryCandidate[] {
-  const nodes = rawNodes.map(n => ({ ...n, id: n.id ?? (n as any)._id?.toString() }));
-  const edges = rawEdges.map(e => ({ ...e, id: e.id ?? (e as any)._id?.toString() }));
+  brokenNodeId: string,
+  mode: RankingMode = 'cheapest'
+) {
+  const nodes = rawNodes.map((n) => ({ ...n, id: n.id ?? (n as any)._id?.toString() }));
+  const edges = rawEdges.map((e) => ({ ...e, id: e.id ?? (e as any)._id?.toString() }));
 
-  const brokenNode = nodes.find(n => n.id === brokenNodeId);
+  const brokenNode = nodes.find((n) => n.id === brokenNodeId) as any;
+  const totalBookings = nodes.filter((n) => n.type !== 'phantom').length;
+
   if (!brokenNode) {
-    // Fallback: no broken node found, return a safe "wait and see" option
     return [{
-      id: 'opt_wait',
-      label: 'Wait & Monitor',
-      tagline: 'No confirmed disruptions yet',
-      icon: '⏳',
-      additionalCost: 0,
-      bookingsPreserved: nodes.length,
-      totalBookings: nodes.length,
-      timePenaltyMin: 0,
-      droppedBookings: [],
-      feasible: true,
-      reason: 'No broken node identified — continue as planned and monitor.',
-      arrivalTime: estimateArrivalTime(nodes[nodes.length - 1]?.time, 0),
-      actions: ['Continue monitoring'],
-      ranking: { costScore: 100, timeScore: 100, bookingScore: 100, total: 100 },
-      explanation: 'Current plan is intact.',
+      optionId: 'opt_wait',
+      name: 'Wait & Monitor',
+      netCost: 0,
+      possibleCompensation: 0,
+      arrivalTime: arrivalTimeFromDelay(nodes[nodes.length - 1]?.time, 0),
+      nodesDropped: [],
+      recommended: true,
+      scoreBreakdown: { costNorm: 1, timeNorm: 1, nodesNorm: 1 },
+      changes: [],
+      perMemberShare: [],
+      quoteExpiresAt: isoExpiry(30 * 60 * 1000),
     }];
   }
 
-  // Build the graph to find downstream impact
+  // Build graph and propagate delay
   const graph = new TripGraph();
-  nodes.forEach(n => graph.addNode(n.id));
-  edges.forEach(e =>
+  nodes.forEach((n) => graph.addNode(n.id));
+  edges.forEach((e) =>
     graph.addEdge({
       from: e.fromNodeId,
       to: e.toNodeId,
@@ -90,124 +88,156 @@ export function generateRecoveryOptions(
     })
   );
 
-  const delayMin = (brokenNode as any).delay ?? 120;
+  const delayMin = brokenNode.delay ?? 120;
   const { broken: cascadeBroken, atRisk } = graph.propagateDelay(brokenNodeId, delayMin);
 
   const affectedIds = new Set([brokenNodeId, ...cascadeBroken, ...atRisk]);
-  const unaffectedNodes = nodes.filter(n => !affectedIds.has(n.id));
-  const affectedNodes = nodes.filter(n => affectedIds.has(n.id) && n.id !== brokenNodeId);
-  const totalBookings = nodes.length;
-
-  // Last node's time as the baseline "planned arrival"
+  const affectedNodes = nodes.filter((n) => affectedIds.has(n.id) && n.id !== brokenNodeId) as any[];
+  const unaffectedNodes = nodes.filter((n) => !affectedIds.has(n.id)) as any[];
   const lastNode = nodes[nodes.length - 1];
 
-  const candidates: RecoveryCandidate[] = [];
+  // Collect member IDs for per-member share split (evenly split among affected members)
+  const memberIds = [...new Set(nodes.map((n: any) => n.ownerId).filter(Boolean))];
 
-  // --- Option 1: Skip the broken node, push all soft-constraint downstream nodes ---
+  interface Candidate {
+    optionId: string;
+    name: string;
+    netCost: number;            // paise
+    possibleCompensation: number;
+    arrivalTime: string;
+    nodesDropped: string[];
+    timePenaltyMin: number;
+    bookingsPreserved: number;
+    recommended: boolean;
+    scoreBreakdown: { costNorm: number; timeNorm: number; nodesNorm: number };
+    changes: { nodeId: string; field: string; from: unknown; to: unknown }[];
+    perMemberShare: { memberId: string; amount: number }[];
+    quoteExpiresAt: string;
+  }
+
+  const candidates: Candidate[] = [];
+
+  // ── Option 1: Skip soft-constraint downstream nodes, keep hard ones ──────
   {
-    const softDropped = affectedNodes.filter(n => n.constraintType === 'soft');
-    const hardBlocked = affectedNodes.filter(n => n.constraintType === 'hard');
+    const softDropped = affectedNodes.filter((n) => n.constraintType !== 'hard');
+    const hardBlocked = affectedNodes.filter((n) => n.constraintType === 'hard');
     const feasible = hardBlocked.length === 0;
-    const preserved = totalBookings - softDropped.length - 1; // -1 for the broken node itself
-    const timePenalty = delayMin; // arrival pushed by the full delay
-    const additionalCost = softDropped.reduce((sum, n) => sum + (n.refundPolicy ? 0 : 500), 0); // cancellation fees
+
+    // Cancellation cost: ₹500 per non-refundable soft booking
+    const cancelCost = softDropped.reduce(
+      (sum, n) => sum + (n.refundPolicy?.source === 'unmatched' ? 50000 : 0),
+      0
+    );
+    const preserved = unaffectedNodes.length;  // bookings kept
 
     candidates.push({
-      id: 'opt_skip',
-      label: 'Skip & Reschedule Soft Legs',
-      tagline: `Drop ${softDropped.length} flexible booking${softDropped.length !== 1 ? 's' : ''}, keep the rest`,
-      icon: '✂️',
-      additionalCost,
+      optionId: 'opt_skip',
+      name: 'Skip & Reschedule',
+      netCost: cancelCost,
+      possibleCompensation: 0,
+      arrivalTime: arrivalTimeFromDelay(lastNode?.time, delayMin),
+      nodesDropped: softDropped.map((n) => n.id),
+      timePenaltyMin: delayMin,
       bookingsPreserved: preserved,
-      totalBookings,
-      timePenaltyMin: timePenalty,
-      droppedBookings: softDropped.map(n => n.label),
-      feasible,
-      reason: feasible
-        ? 'No hard-constraint bookings are broken — safe to drop flexible ones.'
-        : `${hardBlocked.length} hard-constraint booking(s) also broken — not fully feasible.`,
-      arrivalTime: estimateArrivalTime(lastNode?.time, timePenalty),
-      actions: [
-        ...softDropped.map(n => `Cancel: ${n.label}`),
-        'Continue with remaining itinerary',
-      ],
-      ranking: { costScore: 0, timeScore: 0, bookingScore: 0, total: 0 }, // filled below
-      explanation: feasible
-        ? 'Preserves mandatory bookings at the cost of flexible ones.'
-        : 'Hard-constraint bookings are still at risk — escalate to rebook.',
+      recommended: false,
+      scoreBreakdown: { costNorm: 0, timeNorm: 0, nodesNorm: 0 },
+      changes: softDropped.map((n) => ({
+        nodeId: n.id,
+        field: 'status',
+        from: n.status,
+        to: 'cancelled',
+      })),
+      perMemberShare: memberIds.map((mid) => ({ memberId: mid, amount: Math.round(cancelCost / memberIds.length) })),
+      quoteExpiresAt: isoExpiry(30 * 60 * 1000),
     });
   }
 
-  // --- Option 2: Rebook the broken node with an estimated replacement cost ---
+  // ── Option 2: Rebook the broken node ────────────────────────────────────
   {
-    const rebookCost = brokenNode.type === 'flight' ? 6500 : brokenNode.type === 'train' ? 1200 : 800;
-    const preserved = unaffectedNodes.length + affectedNodes.length; // all others preserved if rebook succeeds
-    const timePenalty = Math.max(0, delayMin - 60); // rebook shaves ~1 hour off delay
+    const rebookCostPaise =
+      brokenNode.type === 'flight' ? 650000 :
+      brokenNode.type === 'train'  ? 120000 :
+      brokenNode.type === 'hotel'  ? 300000 : 80000;
+
+    // DGCA compensation applies when flight delay > 2h and airline-controlled
+    const possibleCompensation = brokenNode.type === 'flight' && delayMin >= 120 ? 1000000 : 0;
+    const timeSaved = Math.max(0, delayMin - 60);
+    const preserved = totalBookings; // rebook keeps everything
 
     candidates.push({
-      id: 'opt_rebook',
-      label: `Rebook ${brokenNode.label || brokenNode.type}`,
-      tagline: 'Fastest recovery, higher cost',
-      icon: brokenNode.type === 'flight' ? '✈️' : brokenNode.type === 'train' ? '🚆' : '🚕',
-      additionalCost: rebookCost,
+      optionId: 'opt_rebook',
+      name: `Rebook ${brokenNode.label || brokenNode.type}`,
+      netCost: rebookCostPaise,
+      possibleCompensation,
+      arrivalTime: arrivalTimeFromDelay(lastNode?.time, delayMin - timeSaved),
+      nodesDropped: [],
+      timePenaltyMin: delayMin - timeSaved,
       bookingsPreserved: preserved,
-      totalBookings,
-      timePenaltyMin: timePenalty,
-      droppedBookings: [],
-      feasible: true,
-      reason: `Replace ${brokenNode.label ?? brokenNode.type} with next available option.`,
-      arrivalTime: estimateArrivalTime(lastNode?.time, timePenalty),
-      actions: [`Book replacement ${brokenNode.type} for ${brokenNode.vendor ?? 'next available'}`],
-      ranking: { costScore: 0, timeScore: 0, bookingScore: 0, total: 0 },
-      explanation: 'Preserves all downstream plans but costs more.',
+      recommended: false,
+      scoreBreakdown: { costNorm: 0, timeNorm: 0, nodesNorm: 0 },
+      changes: [{ nodeId: brokenNodeId, field: 'status', from: 'broken', to: 'on_track' }],
+      perMemberShare: memberIds.map((mid) => ({
+        memberId: mid,
+        amount: Math.round(rebookCostPaise / memberIds.length),
+      })),
+      quoteExpiresAt: isoExpiry(20 * 60 * 1000), // prices expire in 20min
     });
   }
 
-  // --- Option 3: Add a phantom leg (cab/alternate transit) to bridge the gap ---
+  // ── Option 3: Add a phantom transit leg to bridge the gap ───────────────
   {
-    const phantomCost = 1500;
-    const timePenalty = delayMin + 30; // phantom adds extra transit time
-    const softDropped = affectedNodes.filter(n => n.constraintType === 'soft' && n.type !== 'hotel');
-    const preserved = totalBookings - softDropped.length - 1;
+    const phantomCostPaise = 150000; // ₹1500
+    const softDropped = affectedNodes.filter(
+      (n) => n.constraintType !== 'hard' && !['hotel', 'flight', 'train'].includes(n.type)
+    );
+    const preserved = unaffectedNodes.length + (affectedNodes.length - softDropped.length);
 
     candidates.push({
-      id: 'opt_phantom',
-      label: 'Add Alternate Transit Leg',
-      tagline: 'Cheapest workaround, latest arrival',
-      icon: '🛺',
-      additionalCost: phantomCost,
+      optionId: 'opt_phantom',
+      name: 'Add Alternate Transit',
+      netCost: phantomCostPaise,
+      possibleCompensation: 0,
+      arrivalTime: arrivalTimeFromDelay(lastNode?.time, delayMin + 30),
+      nodesDropped: softDropped.map((n) => n.id),
+      timePenaltyMin: delayMin + 30,
       bookingsPreserved: preserved,
-      totalBookings,
-      timePenaltyMin: timePenalty,
-      droppedBookings: softDropped.map(n => n.label),
-      feasible: true,
-      reason: 'Use alternate road/local transit to bridge to next hard node.',
-      arrivalTime: estimateArrivalTime(lastNode?.time, timePenalty),
-      actions: [
-        'Book cab/auto to nearest interchange',
-        ...softDropped.map(n => `Reschedule: ${n.label}`),
+      recommended: false,
+      scoreBreakdown: { costNorm: 0, timeNorm: 0, nodesNorm: 0 },
+      changes: [
+        ...softDropped.map((n) => ({ nodeId: n.id, field: 'status', from: n.status, to: 'cancelled' })),
+        {
+          nodeId: 'phantom_new',
+          field: 'type',
+          from: null,
+          to: 'phantom',
+        },
       ],
-      ranking: { costScore: 0, timeScore: 0, bookingScore: 0, total: 0 },
-      explanation: 'Cheapest option but adds travel time and drops some flexible bookings.',
+      perMemberShare: memberIds.map((mid) => ({
+        memberId: mid,
+        amount: Math.round(phantomCostPaise / memberIds.length),
+      })),
+      quoteExpiresAt: isoExpiry(30 * 60 * 1000),
     });
   }
 
-  // --- Normalise and score (Pareto multi-objective) ---
-  const maxCost = Math.max(...candidates.map(c => c.additionalCost), 1);
-  const maxTime = Math.max(...candidates.map(c => c.timePenaltyMin), 1);
-  const maxBooks = totalBookings;
+  // ── Normalise scores (0→1) and apply mode weights ───────────────────────
+  const maxCost = Math.max(...candidates.map((c) => c.netCost), 1);
+  const maxTime = Math.max(...candidates.map((c) => c.timePenaltyMin), 1);
+  const maxBooks = Math.max(totalBookings, 1);
 
-  candidates.forEach(c => {
-    const costScore = Math.round((1 - c.additionalCost / maxCost) * 100);
-    const timeScore = Math.round((1 - c.timePenaltyMin / maxTime) * 100);
-    const bookingScore = Math.round((c.bookingsPreserved / maxBooks) * 100);
-    // Weighted: 35% cost, 35% time, 30% bookings
-    const total = Math.round(costScore * 0.35 + timeScore * 0.35 + bookingScore * 0.30);
-    c.ranking = { costScore, timeScore, bookingScore, total };
+  const weights = MODE_WEIGHTS[mode] ?? MODE_WEIGHTS.cheapest;
+
+  const scored = candidates.map((c) => {
+    const costNorm = 1 - c.netCost / maxCost;
+    const timeNorm = 1 - c.timePenaltyMin / maxTime;
+    const nodesNorm = c.bookingsPreserved / maxBooks;
+    const total = costNorm * weights.cost + timeNorm * weights.time + nodesNorm * weights.bookings;
+    return { ...c, scoreBreakdown: { costNorm, timeNorm, nodesNorm }, _total: total };
   });
 
-  // Sort by total score descending, mark the top one as recommended
-  candidates.sort((a, b) => b.ranking.total - a.ranking.total);
+  scored.sort((a, b) => b._total - a._total);
+  scored[0].recommended = true;
 
-  return candidates.slice(0, 3).map((c, i) => ({ ...c, recommended: i === 0 }));
+  // Strip internal _total before returning
+  return scored.slice(0, 3).map(({ _total, ...rest }) => rest);
 }
