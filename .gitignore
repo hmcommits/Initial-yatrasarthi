@@ -37,3 +37,4 @@ pnpm-debug.log*
 # Dev database
 .dev-db.json
 *.dev-db.json
+.rocketride/
