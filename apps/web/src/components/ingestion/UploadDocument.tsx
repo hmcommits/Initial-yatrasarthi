@@ -115,7 +115,7 @@ const styles: Record<string, React.CSSProperties> = {
   heading: { fontSize: 22, fontWeight: 700, color: '#0f172a', marginBottom: 20 },
   tabs: { display: 'flex', gap: 8, marginBottom: 20 },
   tab: { flex: 1, padding: '8px', background: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 500, color: '#475569' },
-  tabActive: { background: '#6366f1', color: '#fff', borderColor: '#6366f1' },
+  tabActive: { background: '#6366f1', color: '#fff', border: '1px solid #6366f1' },
   dropzone: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, height: 160, border: '2px dashed #cbd5e1', borderRadius: 12, cursor: 'pointer', marginBottom: 20, background: '#f8fafc' },
   dropIcon: { fontSize: 40 },
   dropText: { fontSize: 14, color: '#64748b', fontWeight: 500 },
