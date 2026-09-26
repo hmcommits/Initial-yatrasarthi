@@ -139,7 +139,7 @@ export default function IngestionHub({ tripId, joinCode }: IngestionHubProps) {
                       {nodeIcon(node)}
                     </div>
                     <div className="flex-1 min-w-0 flex flex-col gap-1">
-                      <span className="text-[15px] font-bold text-[#0F172A] truncate group-hover:text-[#172017] transition-colors">{node.label}</span>
+                      <span className="text-[15px] font-bold text-[#0F172A] truncate group-hover:text-[#172017] transition-colors">{typeof node.label === 'object' ? (node.label as any)?.value ?? node.type : node.label}</span>
                       <span className="text-xs font-medium text-[#64748B]">
                         {node.time ? new Date(node.time).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : 'Time pending'}
                       </span>

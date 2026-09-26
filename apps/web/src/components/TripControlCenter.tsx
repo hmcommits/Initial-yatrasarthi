@@ -525,6 +525,12 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
   );
 }
 
+function safeStr(val: unknown, fallback = ''): string {
+  if (val === null || val === undefined) return fallback;
+  if (typeof val === 'object') return (val as any)?.value ?? fallback;
+  return String(val);
+}
+
 function BookingsTab({ nodes }: { nodes: any[] }) {
   const typeIcons: Record<string, string> = { flight: '✈', train: '🚆', bus: '🚌', cab: '🚕', hotel: '🏨', activity: '🏝', restaurant: '🍽', phantom: '📍', meetup: '🎯' };
   const sourceMap: Record<string, string> = { high: 'Provider API', medium: 'Vendor contact', low: 'User report' };
@@ -535,9 +541,17 @@ function BookingsTab({ nodes }: { nodes: any[] }) {
     <div className="flex flex-col gap-3 max-w-2xl mx-auto w-full font-sans">
       <p className="text-xs font-bold uppercase tracking-widest text-[#94A3B8] ml-2">Booked Itinerary</p>
       {nodes.map((node, idx) => {
-        const isDisrupted = node.status === 'needs_attention' || node.status === 'disrupted';
-        const isConfirmed = node.status === 'confirmed';
-        
+        const status   = safeStr(node.status,       'unknown');
+        const label    = safeStr(node.label,         safeStr(node.type, 'Booking'));
+        const vendor   = safeStr(node.vendor,        '—');
+        const location = safeStr(node.location,      '—');
+        const time     = safeStr(node.scheduledTime, '');
+        const delay    = safeStr(node.delay,         '');
+        const trust    = safeStr(node.trustLevel,    '');
+
+        const isDisrupted = status === 'needs_attention' || status === 'disrupted';
+        const isConfirmed = status === 'confirmed';
+
         return (
           <div 
             key={node.id ?? node._id ?? idx}
@@ -551,12 +565,12 @@ function BookingsTab({ nodes }: { nodes: any[] }) {
               className="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0 transition-transform duration-300 group-hover:scale-110 shadow-sm"
               style={{ background: isDisrupted ? '#FEE2E2' : isConfirmed ? '#DCE8D2' : '#F8FAFC', border: `1px solid ${isDisrupted ? '#FCA5A5' : isConfirmed ? '#C6DDA6' : '#E2E8F0'}` }}
             >
-              {typeIcons[node.type] || '📌'}
+              {typeIcons[safeStr(node.type)] || '📌'}
             </div>
             
             <div className="flex-1 min-w-0 flex flex-col gap-1.5">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-[15px] font-bold text-[#0F172A] truncate group-hover:text-[#172017] transition-colors">{node.label}</span>
+                <span className="text-[15px] font-bold text-[#0F172A] truncate group-hover:text-[#172017] transition-colors">{label}</span>
                 <span 
                   className="text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow-sm whitespace-nowrap"
                   style={{
@@ -570,19 +584,23 @@ function BookingsTab({ nodes }: { nodes: any[] }) {
               </div>
               
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-medium text-[#64748B]">
-                <span className="flex items-center gap-1"><span className="opacity-70">Vendor:</span> <span className="text-[#172017]">{node.vendor}</span></span>
-                <span className="flex items-center gap-1"><span className="opacity-70">Loc:</span> <span className="text-[#172017]">{node.location}</span></span>
-                <span className="flex items-center gap-1">
-                  <span className="opacity-70">Time:</span> 
-                  <span className="text-[#172017]">{node.scheduledTime}{node.delay ? <span className="text-red-500 font-bold ml-1">(+{node.delay}m)</span> : ''}</span>
-                </span>
+                {vendor && <span className="flex items-center gap-1"><span className="opacity-70">Vendor:</span> <span className="text-[#172017]">{vendor}</span></span>}
+                {location && <span className="flex items-center gap-1"><span className="opacity-70">Loc:</span> <span className="text-[#172017]">{location}</span></span>}
+                {time && (
+                  <span className="flex items-center gap-1">
+                    <span className="opacity-70">Time:</span> 
+                    <span className="text-[#172017]">{time}{delay ? <span className="text-red-500 font-bold ml-1">(+{delay}m)</span> : ''}</span>
+                  </span>
+                )}
               </div>
             </div>
             
-            <div className="hidden sm:flex flex-col items-end gap-0.5 bg-gray-50/50 px-3 py-1.5 rounded-lg border border-gray-100">
-              <span className="text-[9px] uppercase tracking-wider font-bold text-[#9CA3AF]">Verification</span>
-              <span className="text-xs font-bold text-[#374151]">{sourceMap[node.trustLevel]}</span>
-            </div>
+            {trust && (
+              <div className="hidden sm:flex flex-col items-end gap-0.5 bg-gray-50/50 px-3 py-1.5 rounded-lg border border-gray-100">
+                <span className="text-[9px] uppercase tracking-wider font-bold text-[#9CA3AF]">Verification</span>
+                <span className="text-xs font-bold text-[#374151]">{sourceMap[trust] ?? trust}</span>
+              </div>
+            )}
           </div>
         );
       })}

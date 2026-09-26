@@ -431,7 +431,7 @@ function TripCard({
                   style={{ borderColor: `${nodeColor}40` }}
                 >
                   <span style={{ fontSize: 11 }}>{typeIcons[node.type] || '📌'}</span>
-                  <span className="truncate max-w-[80px] font-medium text-[#172017]">{node.label}</span>
+                  <span className="truncate max-w-[80px] font-medium text-[#172017]">{typeof node.label === 'object' ? (node.label as any)?.value ?? node.type : node.label}</span>
                   <span className="w-1.5 h-1.5 rounded-full" style={{ background: nodeColor }} />
                 </div>
               );
