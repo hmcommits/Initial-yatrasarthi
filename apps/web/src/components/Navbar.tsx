@@ -45,6 +45,9 @@ export function Navbar({ activePage, onNavigate }: NavbarProps) {
     return () => window.removeEventListener('scroll', handler);
   }, []);
 
+  const displayName = user?.name || 'User';
+  const initial = displayName[0].toUpperCase();
+
   return (
     <>
       <header
@@ -119,16 +122,17 @@ export function Navbar({ activePage, onNavigate }: NavbarProps) {
                     className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-[#F5F2E8]"
                     style={{ background: '#172017' }}
                   >
-                    {user.name ? user.name[0].toUpperCase() : 'U'}
+                    {initial}
                   </div>
-                  <span className="text-xs font-semibold">{user.name || user.phone}</span>
+                  <span className="text-xs font-semibold">{displayName}</span>
                 </button>
                 <button
                   onClick={() => logout()}
-                  className="btn-ghost text-xs p-2 text-[#5F665B] hover:text-[#D93829] transition-colors"
+                  className="btn-ghost flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#D5D9CC] text-xs font-bold text-[#D93829] hover:bg-[#FEF2F2] transition-colors"
                   title="Sign out"
                 >
-                  <LogOut size={16} />
+                  <LogOut size={14} />
+                  <span>Log out</span>
                 </button>
               </div>
             ) : (
@@ -201,8 +205,8 @@ export function Navbar({ activePage, onNavigate }: NavbarProps) {
             {user ? (
               <div className="p-4 mx-4 mt-3 rounded-2xl bg-[#E8F0E2] border border-[#D5D9CC] flex items-center justify-between">
                 <div>
-                  <div className="font-bold text-sm text-[#172017]">{user.name}</div>
-                  <div className="text-xs text-[#5F665B]">{user.phone}</div>
+                  <div className="font-bold text-sm text-[#172017]">{displayName}</div>
+                  {user?.phone && <div className="text-xs text-[#5F665B]">{user.phone}</div>}
                 </div>
                 <button
                   onClick={() => { logout(); setDrawerOpen(false); }}

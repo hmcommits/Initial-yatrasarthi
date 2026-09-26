@@ -15,9 +15,21 @@ export async function POST(request: Request) {
 
     const formattedPhone = formatToE164(phone);
 
+    let userExists = false;
+    try {
+      const client = await import('@/lib/mongodb').then(m => m.default);
+      const db = client.db();
+      const userDoc = await db.collection('users').findOne({ phone: formattedPhone });
+      if (userDoc && userDoc.name && userDoc.name.toLowerCase() !== 'traveler') {
+        userExists = true;
+      }
+    } catch (e) {
+      console.warn('Failed to check user existence:', e);
+    }
+
     if (!twilioClient || !VERIFY_SERVICE_SID) {
       console.warn('Twilio credentials not configured; in mock development mode');
-      return NextResponse.json({ data: { sent: true, mock: true } });
+      return NextResponse.json({ data: { sent: true, mock: true, userExists } });
     }
 
     try {
@@ -32,6 +44,7 @@ export async function POST(request: Request) {
         data: {
           sent: true,
           status: verification.status,
+          userExists,
         },
       });
     } catch (twilioErr: any) {

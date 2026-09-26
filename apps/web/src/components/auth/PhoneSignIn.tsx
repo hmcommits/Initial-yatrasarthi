@@ -1,17 +1,18 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Phone, Lock, RefreshCw, AlertCircle, CheckCircle2, ChevronRight } from 'lucide-react';
-import { User } from '@yatrasarthi/types';
+import { ArrowLeft, Phone, Lock, RefreshCw, AlertCircle, CheckCircle2, ChevronRight, User } from 'lucide-react';
+import { User as UserType } from '@yatrasarthi/types';
 
 interface PhoneSignInProps {
-  onSuccess: (user: User, isNewUser: boolean) => void;
+  onSuccess: (user: UserType, isNewUser: boolean) => void;
   onBack?: () => void;
 }
 
 export function PhoneSignIn({ onSuccess, onBack }: PhoneSignInProps) {
-  const [step, setStep] = useState<1 | 2>(1);
+  const [step, setStep] = useState<1 | 1.5 | 2>(1);
   const [phone, setPhone] = useState('');
+  const [name, setName] = useState('');
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [countdown, setCountdown] = useState(30);
   const [isSending, setIsSending] = useState(false);
@@ -54,11 +55,15 @@ export function PhoneSignIn({ onSuccess, onBack }: PhoneSignInProps) {
         throw new Error(data.error?.message || 'Failed to send verification code');
       }
 
-      setStep(2);
       setCountdown(30);
       setSuccessMsg(`OTP sent to +91 ${cleanDigits.slice(0, 5)} ${cleanDigits.slice(5)}`);
-      // Focus first OTP input
-      setTimeout(() => otpInputsRef.current[0]?.focus(), 150);
+
+      if (data.data?.userExists) {
+        setStep(2);
+        setTimeout(() => otpInputsRef.current[0]?.focus(), 150);
+      } else {
+        setStep(1.5 as any);
+      }
     } catch (err: any) {
       setError(err.message || 'Error sending OTP');
     } finally {
@@ -120,7 +125,7 @@ export function PhoneSignIn({ onSuccess, onBack }: PhoneSignInProps) {
       const res = await fetch('/api/auth/otp/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: fullPhone, code }),
+        body: JSON.stringify({ phone: fullPhone, code, name: name.trim() || undefined }),
       });
 
       const data = await res.json();
@@ -155,6 +160,13 @@ export function PhoneSignIn({ onSuccess, onBack }: PhoneSignInProps) {
                 setOtp(['', '', '', '', '', '']);
                 setError(null);
               }}
+              className="flex items-center gap-1.5 text-xs font-semibold text-[#5F665B] hover:text-[#172017] transition-colors"
+            >
+              <ArrowLeft size={14} /> Back
+            </button>
+          ) : step === 1.5 ? (
+            <button
+              onClick={() => { setStep(1); setError(null); }}
               className="flex items-center gap-1.5 text-xs font-semibold text-[#5F665B] hover:text-[#172017] transition-colors"
             >
               <ArrowLeft size={14} /> Back
@@ -240,7 +252,7 @@ export function PhoneSignIn({ onSuccess, onBack }: PhoneSignInProps) {
                 </>
               ) : (
                 <>
-                  Send OTP <ChevronRight size={16} />
+                  Continue <ChevronRight size={16} />
                 </>
               )}
             </button>
@@ -250,6 +262,63 @@ export function PhoneSignIn({ onSuccess, onBack }: PhoneSignInProps) {
               <span className="underline cursor-pointer hover:text-[#172017]">Terms</span> and{' '}
               <span className="underline cursor-pointer hover:text-[#172017]">Privacy Policy</span>.
             </p>
+          </form>
+        )}
+
+        {/* Step 1.5: Name entry */}
+        {step === (1.5 as any) && (
+          <form onSubmit={(e) => { 
+            e.preventDefault(); 
+            if (name.trim()) {
+              setStep(2);
+              setTimeout(() => otpInputsRef.current[0]?.focus(), 150);
+            }
+          }} className="flex flex-col">
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-5" style={{ background: '#DCE8D2' }}>
+              <User size={22} style={{ color: '#172017' }} />
+            </div>
+
+            <h2 className="font-extrabold text-2xl mb-1.5 text-[#172017]" style={{ letterSpacing: '-0.02em' }}>
+              What's your name?
+            </h2>
+            <p className="text-sm text-[#5F665B] mb-6">
+              This is how you'll appear to trip members and group chats.
+            </p>
+
+            {error && (
+              <div className="flex items-start gap-2.5 p-3 rounded-xl mb-4 bg-red-50 border border-red-200 text-red-700 text-xs leading-relaxed">
+                <AlertCircle size={16} className="flex-shrink-0 mt-0.5" />
+                <span>{error}</span>
+              </div>
+            )}
+
+            <div className="mb-6">
+              <label className="block text-xs font-bold uppercase tracking-wider mb-2 text-[#5F665B]">
+                Full Name
+              </label>
+              <input
+                type="text"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                placeholder="e.g. Priya Sharma"
+                maxLength={50}
+                className="w-full px-4 py-3.5 text-base font-semibold text-[#172017] rounded-2xl bg-white outline-none tracking-wide transition-all focus:ring-2 focus:ring-[#C5D82D] shadow-sm"
+                style={{ border: '1px solid #D5D9CC' }}
+                autoFocus
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={!name.trim()}
+              className="btn-accent w-full py-3.5 text-sm font-bold flex items-center justify-center gap-2 shadow-sm transition-all"
+              style={{
+                opacity: name.trim() ? 1 : 0.6,
+                cursor: name.trim() ? 'pointer' : 'not-allowed',
+              }}
+            >
+              Continue <ChevronRight size={16} />
+            </button>
           </form>
         )}
 

@@ -38,6 +38,7 @@ export function AuthFlowModal() {
         <OnboardingScreen
           onComplete={handleOnboardingComplete}
           onSkip={handleOnboardingComplete}
+          onClose={closeAuthFlow}
         />
       );
     case 'signin':
@@ -48,7 +49,7 @@ export function AuthFlowModal() {
         />
       );
     case 'permissions':
-      return <PermissionsScreen onComplete={handlePermissionsComplete} />;
+      return <PermissionsScreen onComplete={handlePermissionsComplete} onBack={() => setAuthStep('signin')} />;
     default:
       return null;
   }

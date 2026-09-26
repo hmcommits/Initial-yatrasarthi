@@ -22,6 +22,7 @@ export default function IngestionHub({ tripId, joinCode }: IngestionHubProps) {
   const [nodes, setNodes] = useState<Node[]>([]);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [pendingNode, setPendingNode] = useState<Node | null>(null);
+  const [uploadTab, setUploadTab] = useState<'file' | 'photo' | 'text'>('file');
 
 
   const fetchNodes = useCallback(async () => {
@@ -49,7 +50,7 @@ export default function IngestionHub({ tripId, joinCode }: IngestionHubProps) {
   };
 
   if (view === 'whatsapp') return <WhatsAppSetup tripId={tripId} joinCode={joinCode} onBack={() => setView('hub')} />;
-  if (view === 'upload') return <UploadDocument tripId={tripId} onUploaded={onUploaded} onBack={() => setView('hub')} />;
+  if (view === 'upload') return <UploadDocument tripId={tripId} onUploaded={onUploaded} onBack={() => setView('hub')} initialTab={uploadTab} />;
   if (view === 'review' && pendingNode) return <ExtractionReview node={pendingNode} onConfirmed={onConfirmed} onBack={() => setView('hub')} onPhantom={() => setView('phantom')} />;
   if (view === 'phantom') return <AddPhantomNode tripId={tripId} onAdded={onConfirmed} onBack={() => setView('hub')} />;
   if (view === 'detail' && selectedNode) return <BookingDetail nodeId={selectedNode.id} onBack={() => setView('hub')} onDeleted={onConfirmed} />;
@@ -79,8 +80,8 @@ export default function IngestionHub({ tripId, joinCode }: IngestionHubProps) {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
         {[
           { icon: <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" className="w-10 h-10 drop-shadow-sm" />, label: 'Forward via WhatsApp', action: () => setView('whatsapp'), color: '#25D366' },
-          { icon: <img src="https://img.icons8.com/color/96/add-file.png" alt="Upload" className="w-11 h-11 drop-shadow-sm" />, label: 'Upload a file or screenshot', action: () => setView('upload'), color: '#3B82F6' },
-          { icon: <img src="https://img.icons8.com/color/96/two-tickets.png" alt="PNR" className="w-11 h-11 drop-shadow-sm" />, label: 'Paste an SMS / PNR', action: () => setView('upload'), color: '#F59E0B' },
+          { icon: <img src="https://img.icons8.com/color/96/add-file.png" alt="Upload" className="w-11 h-11 drop-shadow-sm" />, label: 'Upload a file or screenshot', action: () => { setUploadTab('file'); setView('upload'); }, color: '#3B82F6' },
+          { icon: <img src="https://img.icons8.com/color/96/two-tickets.png" alt="PNR" className="w-11 h-11 drop-shadow-sm" />, label: 'Paste an SMS / PNR', action: () => { setUploadTab('text'); setView('upload'); }, color: '#F59E0B' },
           { icon: <img src="https://img.icons8.com/color/96/map-pin.png" alt="Map" className="w-11 h-11 drop-shadow-sm" />, label: 'Add a manual leg', action: () => setView('phantom'), color: '#8B5CF6' },
         ].map(({ icon, label, action, color }) => (
           <button 

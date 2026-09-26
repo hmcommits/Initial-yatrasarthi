@@ -10,10 +10,11 @@ interface UploadDocumentProps {
   tripId: string;
   onUploaded: (node: Node) => void;
   onBack: () => void;
+  initialTab?: Tab;
 }
 
-export default function UploadDocument({ tripId, onUploaded, onBack }: UploadDocumentProps) {
-  const [tab, setTab] = useState<Tab>('file');
+export default function UploadDocument({ tripId, onUploaded, onBack, initialTab = 'file' }: UploadDocumentProps) {
+  const [tab, setTab] = useState<Tab>(initialTab);
   const [pastedText, setPastedText] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);

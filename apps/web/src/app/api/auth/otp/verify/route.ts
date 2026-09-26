@@ -7,7 +7,7 @@ import { cookies } from 'next/headers';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { phone, code } = body;
+    const { phone, code, name } = body;
 
     if (!phone || !code) {
       return NextResponse.json(
@@ -75,12 +75,14 @@ export async function POST(request: Request) {
 
     let userDoc = await usersCollection.findOne({ phone: formattedPhone });
     let isNewUser = false;
+    
+    const providedName = (typeof name === 'string' && name.trim()) ? name.trim() : null;
 
     if (!userDoc) {
       isNewUser = true;
       const newUserDoc = {
         phone: formattedPhone,
-        name: 'Traveler',
+        name: providedName || 'Traveler',
         whatsappOptIn: false,
         notificationPrefs: {
           disruptionAlerts: 'on' as const,
@@ -98,6 +100,13 @@ export async function POST(request: Request) {
         _id: insertResult.insertedId,
         ...newUserDoc,
       };
+    } else if (providedName && userDoc.name !== providedName) {
+      // Update the user's name if they provided a new one during sign-in
+      await usersCollection.updateOne(
+        { _id: userDoc._id },
+        { $set: { name: providedName } }
+      );
+      userDoc.name = providedName;
     }
 
     const userId = userDoc._id.toString();

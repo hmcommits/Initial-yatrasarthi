@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState } from 'react';
-import { MapPin, Bell, UserCheck, Check, ArrowRight, Shield } from 'lucide-react';
+import { MapPin, Bell, UserCheck, Check, ArrowRight, Shield, X } from 'lucide-react';
 
 interface PermissionsScreenProps {
   onComplete: () => void;
+  onBack?: () => void;
 }
 
-export function PermissionsScreen({ onComplete }: PermissionsScreenProps) {
+export function PermissionsScreen({ onComplete, onBack }: PermissionsScreenProps) {
   const [permissions, setPermissions] = useState({
     location: false,
     notifications: false,
@@ -54,13 +55,25 @@ export function PermissionsScreen({ onComplete }: PermissionsScreenProps) {
             className="text-xs font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider"
             style={{ background: '#DCE8D2', color: '#172017' }}
           >
-            Permissions & Privacy
+            Permissions &amp; Privacy
           </span>
-          <div
-            className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
-            style={{ background: '#DCE8D2', color: '#172017' }}
-          >
-            A4
+          <div className="flex items-center gap-2">
+            <div
+              className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
+              style={{ background: '#DCE8D2', color: '#172017' }}
+            >
+              A4
+            </div>
+            {onBack && (
+              <button
+                onClick={onBack}
+                className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-[#F1F5F9]"
+                style={{ color: '#5F665B' }}
+                aria-label="Close"
+              >
+                <X size={18} />
+              </button>
+            )}
           </div>
         </div>
 

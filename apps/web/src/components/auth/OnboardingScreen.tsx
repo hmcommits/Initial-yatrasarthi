@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useState } from 'react';
-import { ArrowRight, Plane, Clock, Users, ShieldAlert, Sparkles } from 'lucide-react';
+import { ArrowRight, Plane, Clock, Users, ShieldAlert, Sparkles, X } from 'lucide-react';
 
 interface OnboardingScreenProps {
   onComplete: () => void;
   onSkip: () => void;
+  onClose?: () => void;
 }
 
 const slides = [
@@ -83,7 +84,7 @@ const slides = [
   },
 ];
 
-export function OnboardingScreen({ onComplete, onSkip }: OnboardingScreenProps) {
+export function OnboardingScreen({ onComplete, onSkip, onClose }: OnboardingScreenProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const handleNext = () => {
@@ -123,13 +124,25 @@ export function OnboardingScreen({ onComplete, onSkip }: OnboardingScreenProps) 
           >
             {slide.badge}
           </span>
-          <button
-            onClick={handleSkip}
-            className="text-sm font-semibold hover:opacity-75 transition-opacity px-2 py-1"
-            style={{ color: '#5F665B' }}
-          >
-            Skip
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={handleSkip}
+              className="text-sm font-semibold hover:opacity-75 transition-opacity px-2 py-1"
+              style={{ color: '#5F665B' }}
+            >
+              Skip
+            </button>
+            {onClose && (
+              <button
+                onClick={onClose}
+                className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-[#F1F5F9] ml-1"
+                style={{ color: '#5F665B' }}
+                aria-label="Close and return to website"
+              >
+                <X size={18} />
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Visual card */}
