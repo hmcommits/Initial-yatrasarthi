@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Share, Bell, Users, MapPin, ChevronDown, AlertTriangle, Clock, Check, RotateCcw, Settings, Compass } from 'lucide-react';
+import { Share, Bell, Users, MapPin, ChevronDown, AlertTriangle, Clock, Check, RotateCcw, Settings, Compass, ShieldCheck, Navigation, Phone, Zap } from 'lucide-react';
 import type { TripData, UserPreferences, RecoveryOption } from '../types';
 import { TripTimeline } from './TripTimeline';
 import { DependencyGraph } from './DependencyGraph';
@@ -36,7 +36,7 @@ const tabs: { id: Tab; label: string }[] = [
 ];
 
 export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlCenterProps) {
-  const [activeTab, setActiveTab] = useState<Tab>('overview');
+  const [activeTab, setActiveTab] = useState<Tab>(initialTrip.nodes && initialTrip.nodes.length > 0 ? 'overview' : 'bookings');
   const [prefs, setPrefs] = useState<UserPreferences>(defaultPreferences);
   const [selectedPlan, setSelectedPlan] = useState<string | undefined>();
   
@@ -136,8 +136,9 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
 
   const isDisrupted = trip.status === 'needs_attention' || trip.status === 'resolving';
   const isSolo = trip.tripType === 'solo' || (!trip.tripType && (trip.travellers?.length === 1 || trip.memberIds?.length === 1));
-  const healthColor = trip.health >= 80 ? '#62A86B' : trip.health >= 60 ? '#E5A43F' : '#E45B4D';
-  const statusLabel = trip.status === 'healthy' ? 'Stable' : trip.status === 'needs_attention' ? 'Disrupted' : trip.status === 'resolving' ? 'Recovering' : 'Recovered';
+  const hasNodes = trip.nodes && trip.nodes.length > 0;
+  const healthColor = !hasNodes ? '#9CA3AF' : trip.health >= 80 ? '#62A86B' : trip.health >= 60 ? '#E5A43F' : '#E45B4D';
+  const statusLabel = !hasNodes ? 'Planning' : trip.status === 'healthy' ? 'Stable' : trip.status === 'needs_attention' ? 'Disrupted' : trip.status === 'resolving' ? 'Recovering' : 'Recovered';
 
   return (
     <div className="min-h-screen pb-20 md:pb-8" style={{ background: '#F5F2E8' }}>
@@ -209,7 +210,7 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
               <div className="text-right">
                 <div className="text-xs font-medium mb-0.5" style={{ color: '#5F665B' }}>Trip Health</div>
                 <div className="font-extrabold" style={{ fontSize: '2.2rem', color: healthColor, letterSpacing: '-0.03em', lineHeight: 1 }}>
-                  {trip.health}
+                  {hasNodes ? trip.health : '--'}
                   <span className="text-base font-medium" style={{ color: '#D5D9CC' }}>/100</span>
                 </div>
               </div>
@@ -308,7 +309,7 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
         {activeTab === 'overview' && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 flex flex-col gap-6">
-              <TripHealth score={trip.health} status={trip.status} weakestEdge={weakestEdge} />
+              <TripHealth score={trip.health} status={trip.status} isEmpty={!hasNodes} weakestEdge={weakestEdge} />
               {/* Graph preview */}
               <div className="card p-5 bg-white border" style={{ borderColor: '#D5D9CC' }}>
                 <div className="flex items-center justify-between mb-4">
@@ -329,14 +330,14 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
               </div>
             </div>
             <div className="flex flex-col gap-4">
-              {!isSolo && <GroupPanel travellers={trip.travellers} />}
-              {trip.eventLog.length > 0 && (
+              {!isSolo ? <GroupPanel travellers={trip.travellers} /> : <SoloSurakshaPanel />}
+              {(trip.eventLog?.length ?? 0) > 0 && (
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <span className="font-semibold text-sm" style={{ color: '#172017' }}>Recent activity</span>
                     <button onClick={() => setActiveTab('activity')} className="text-xs font-bold" style={{ color: '#172017' }}>View all</button>
                   </div>
-                  <EventTimeline events={trip.eventLog.slice(0, 3)} compact />
+                  <EventTimeline events={(trip.eventLog || []).slice(0, 3)} compact />
                 </div>
               )}
             </div>
@@ -604,6 +605,59 @@ function BookingsTab({ nodes }: { nodes: any[] }) {
           </div>
         );
       })}
+    </div>
+  );
+}
+
+export function SoloSurakshaPanel() {
+  return (
+    <div className="card p-5 border rounded-2xl shadow-sm relative overflow-hidden" style={{ background: 'linear-gradient(145deg, #FDFDFD 0%, #F5F7F3 100%)', borderColor: '#C6DDA6' }}>
+      <div className="absolute top-0 right-0 w-32 h-32 bg-[#E8F0E2] rounded-full blur-3xl -mr-10 -mt-10 opacity-60 pointer-events-none" />
+      
+      <div className="relative z-10">
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#E8F0E2] flex items-center justify-center text-[#4E8752] border border-[#C6DDA6] shadow-sm">
+              <ShieldCheck size={20} />
+            </div>
+            <div>
+              <h3 className="font-extrabold text-[15px] text-[#172017]">Suraksha Shield</h3>
+              <p className="text-xs font-semibold text-[#62A86B]">Solo Protection Active</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-[#E2E8F0] shadow-sm transition-transform hover:-translate-y-0.5">
+            <div className="flex items-center gap-2.5">
+              <div className="p-1.5 bg-blue-50 rounded-lg text-blue-500"><Navigation size={14} /></div>
+              <span className="text-xs font-bold text-[#334155]">Live Tracking</span>
+            </div>
+            <span className="text-[9px] font-extrabold bg-[#ECFDF5] text-[#059669] px-2 py-0.5 rounded-full border border-[#A7F3D0] tracking-wider">ACTIVE</span>
+          </div>
+
+          <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-[#E2E8F0] shadow-sm transition-transform hover:-translate-y-0.5">
+            <div className="flex items-center gap-2.5">
+              <div className="p-1.5 bg-purple-50 rounded-lg text-purple-500"><Phone size={14} /></div>
+              <span className="text-xs font-bold text-[#334155]">Emergency Contact</span>
+            </div>
+            <span className="text-[11px] font-bold text-[#172017]">Linked</span>
+          </div>
+
+          <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-[#E2E8F0] shadow-sm transition-transform hover:-translate-y-0.5">
+            <div className="flex items-center gap-2.5">
+              <div className="p-1.5 bg-amber-50 rounded-lg text-amber-500"><Zap size={14} /></div>
+              <span className="text-xs font-bold text-[#334155]">Auto-Recovery</span>
+            </div>
+            <span className="text-[9px] font-extrabold bg-[#FEF3C7] text-[#B45309] px-2 py-0.5 rounded-full border border-[#FDE68A] tracking-wider">STANDBY</span>
+          </div>
+        </div>
+
+        <button className="w-full mt-4 py-2.5 rounded-xl border border-[#C6DDA6] text-[13px] font-bold text-[#4E8752] bg-white hover:bg-[#F5F9F0] transition-colors shadow-sm flex items-center justify-center gap-2">
+          <Share size={14} />
+          Share Live Location
+        </button>
+      </div>
     </div>
   );
 }

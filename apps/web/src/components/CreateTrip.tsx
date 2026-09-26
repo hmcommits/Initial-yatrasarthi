@@ -101,7 +101,7 @@ function QuickCreateTrip({
       if (onTripCreatedWithData) {
         onTripCreatedWithData(data.data);
       }
-      onNavigate('trips');
+      onNavigate('recovery');
     } catch (err: any) {
       setError(err.message || 'Error creating trip');
       setLoading(false);
@@ -380,7 +380,7 @@ function CreateFromScratch({
 
       onTripCreated();
       if (onTripCreatedWithData) onTripCreatedWithData(data.data);
-      onNavigate('trips');
+      onNavigate('recovery');
     } catch (e: any) {
       alert(e.message);
     } finally {
@@ -479,7 +479,7 @@ function ImportFlow({
 
       onTripCreated();
       if (onTripCreatedWithData) onTripCreatedWithData(data.data);
-      onNavigate('trips');
+      onNavigate('recovery');
     } catch (e: any) {
       alert(e.message);
     } finally {
