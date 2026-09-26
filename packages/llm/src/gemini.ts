@@ -14,7 +14,7 @@ export class GeminiAdapter implements ExtractorProvider {
 
   constructor() {
     this.client = new GoogleGenAI({ apiKey: process.env.GOOGLE_AI_STUDIO_API_KEY! });
-    this.model = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
+    this.model = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
   }
 
   async extractBooking(input: { text?: string; imageBase64?: string; mimeType?: string }): Promise<ExtractedBooking> {
@@ -32,7 +32,8 @@ export class GeminiAdapter implements ExtractorProvider {
     });
 
     const raw = result.text?.trim() ?? '{}';
-    const cleaned = raw.replace(/^```json\s*/i, '').replace(/```$/, '').trim();
+    const match = raw.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+    const cleaned = match ? match[1].trim() : raw.trim();
     return JSON.parse(cleaned) as ExtractedBooking;
   }
 
@@ -50,7 +51,8 @@ Return JSON: { "subject": "...", "body": "..." }. No markdown.`;
     });
 
     const raw = result.text?.trim() ?? '{}';
-    const cleaned = raw.replace(/^```json\s*/i, '').replace(/```$/, '').trim();
+    const match = raw.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+    const cleaned = match ? match[1].trim() : raw.trim();
     return JSON.parse(cleaned);
   }
 }

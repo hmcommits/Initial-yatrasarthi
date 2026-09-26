@@ -38,7 +38,7 @@ export default function UploadDocument({ tripId, onUploaded, onBack }: UploadDoc
       const json = await res.json();
 
       if (!res.ok) {
-        setError("We couldn't read that clearly. Try a clearer photo, or enter the details yourself.");
+        setError(json.error?.message || "We couldn't read that clearly. Try a clearer photo, or enter the details yourself.");
         return;
       }
 
