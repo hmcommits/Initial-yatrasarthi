@@ -174,17 +174,17 @@ function BeachScene() {
         {/* Left Mountain (Pastel Sage) */}
         <polygon points="155,188 228,330 82,330" fill="#8EBEAF" />
         {/* Left Mountain Snowcap */}
-        <path d="M 132 230 Q 155 235 178 230 L 155 188 Z" fill="#EEF7F3" />
+        <path d="M 132 230 Q 155 235 178 230 L 155 188 Z" fill="#CDE8DE" />
 
         {/* Center Mountain (Tallest Peak - Pastel Pine Teal) */}
         <polygon points="275,165 378,335 172,335" fill="#5AA899" />
         {/* Center Mountain Snowcap */}
-        <path d="M 241 221 Q 275 227 309 221 L 275 165 Z" fill="#ECF6F1" />
+        <path d="M 241 221 Q 275 227 309 221 L 275 165 Z" fill="#BCE0D1" />
 
         {/* Right Mountain (Pastel Jade Sage) */}
         <polygon points="426,176 520,335 332,335" fill="#78B3A4" />
         {/* Right Mountain Snowcap */}
-        <path d="M 394 222 Q 426 228 458 222 L 426 176 Z" fill="#F0F8F4" />
+        <path d="M 394 222 Q 426 228 458 222 L 426 176 Z" fill="#D3EBE4" />
 
         {/* ── 5. Flight Trajectory & Continuously Ascending Airplane ── */}
         {/* Dashed trajectory line extending up across the sky */}

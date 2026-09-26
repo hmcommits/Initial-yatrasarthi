@@ -8,6 +8,7 @@ import ExtractionReview from './ExtractionReview';
 import AddPhantomNode from './AddPhantomNode';
 import BookingDetail from './BookingDetail';
 import WhatsAppSetup from './WhatsAppSetup';
+import { MessageCircle, FileText, FileEdit, Map, FolderOpen, Plane, Train, Bus, Car, Hotel, User, MapPin } from 'lucide-react';
 
 type View = 'hub' | 'whatsapp' | 'upload' | 'review' | 'phantom' | 'detail';
 
@@ -69,79 +70,106 @@ export default function IngestionHub({ tripId, joinCode }: IngestionHubProps) {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <h2 style={styles.heading}>Add what you&apos;ve booked</h2>
+    <div className="max-w-2xl mx-auto p-4 sm:p-6 font-sans">
+      <div className="mb-6 flex items-center justify-between">
+        <h2 className="text-2xl font-extrabold text-[#172017] tracking-tight">Add what you've booked</h2>
       </div>
 
       {/* Add options */}
-      <div style={styles.addGrid}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
         {[
-          { icon: '💬', label: 'Forward via WhatsApp', action: () => setView('whatsapp') },
-          { icon: '📄', label: 'Upload a file or screenshot', action: () => setView('upload') },
-          { icon: '✏️', label: 'Paste an SMS / PNR', action: () => setView('upload') },
-          { icon: '🚶', label: 'Add a manual leg', action: () => setView('phantom') },
-        ].map(({ icon, label, action }) => (
-          <button key={label} style={styles.addTile} onClick={action}>
-            <span style={styles.tileIcon}>{icon}</span>
-            <span style={styles.tileLabel}>{label}</span>
+          { icon: <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" className="w-10 h-10 drop-shadow-sm" />, label: 'Forward via WhatsApp', action: () => setView('whatsapp'), color: '#25D366' },
+          { icon: <img src="https://img.icons8.com/color/96/add-file.png" alt="Upload" className="w-11 h-11 drop-shadow-sm" />, label: 'Upload a file or screenshot', action: () => setView('upload'), color: '#3B82F6' },
+          { icon: <img src="https://img.icons8.com/color/96/two-tickets.png" alt="PNR" className="w-11 h-11 drop-shadow-sm" />, label: 'Paste an SMS / PNR', action: () => setView('upload'), color: '#F59E0B' },
+          { icon: <img src="https://img.icons8.com/color/96/map-pin.png" alt="Map" className="w-11 h-11 drop-shadow-sm" />, label: 'Add a manual leg', action: () => setView('phantom'), color: '#8B5CF6' },
+        ].map(({ icon, label, action, color }) => (
+          <button 
+            key={label} 
+            onClick={action}
+            className="group relative overflow-hidden flex flex-col items-center gap-3 p-6 rounded-2xl transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+            style={{ 
+              background: 'linear-gradient(145deg, #FFFFFF 0%, #F9FAFB 100%)',
+              border: '1px solid #E5E7EB',
+            }}
+          >
+            {/* Ambient hover glow */}
+            <div 
+              className="absolute -inset-4 rounded-full blur-3xl opacity-0 group-hover:opacity-10 transition-opacity duration-500"
+              style={{ background: color }}
+            />
+            
+            <div 
+              className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm transition-transform duration-300 group-hover:scale-110"
+              style={{ background: '#FFFFFF', border: '1px solid #F3F4F6' }}
+            >
+              {icon}
+            </div>
+            <span className="text-sm font-semibold text-[#374151] text-center group-hover:text-[#172017] transition-colors">{label}</span>
           </button>
         ))}
       </div>
 
       {/* Node list */}
       {nodes.length === 0 ? (
-        <div style={styles.emptyState}>
-          <p>Nothing added yet. Forward a booking email or upload a screenshot to get started.</p>
+        <div className="relative overflow-hidden p-10 rounded-2xl text-center border transition-all" style={{ background: 'linear-gradient(145deg, #F8FAFC 0%, #F1F5F9 100%)', borderColor: '#E2E8F0' }}>
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#C5D82D] to-transparent opacity-50" />
+          <div className="flex justify-center mb-4 text-[#C5D82D] drop-shadow-md">
+             <FolderOpen size={48} strokeWidth={1.5} className="opacity-70" />
+          </div>
+          <p className="text-[#64748B] font-medium text-sm">Nothing added yet.<br/>Forward a booking email or upload a screenshot to get started.</p>
         </div>
       ) : (
-        Object.entries(grouped).map(([date, dateNodes]) => (
-          <div key={date} style={styles.group}>
-            <p style={styles.groupDate}>{date}</p>
-            {dateNodes.map(node => {
-              const tag = statusTag[node.status] ?? { label: node.status, color: '#6b7280' };
-              return (
-                <button
-                  key={node.id}
-                  style={styles.nodeRow}
-                  onClick={() => { setSelectedNode(node); setView('detail'); }}
-                >
-                  <span style={styles.nodeIcon}>{nodeIcon(node.type)}</span>
-                  <div style={styles.nodeInfo}>
-                    <span style={styles.nodeLabel}>{node.label}</span>
-                    <span style={styles.nodeTime}>{node.time ? new Date(node.time).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : ''}</span>
-                  </div>
-                  <span style={{ ...styles.statusTag, background: tag.color + '20', color: tag.color }}>{tag.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        ))
+        <div className="flex flex-col gap-6">
+          {Object.entries(grouped).map(([date, dateNodes]) => (
+            <div key={date} className="flex flex-col gap-3">
+              <p className="text-xs font-bold uppercase tracking-widest text-[#94A3B8] ml-2">{date}</p>
+              {dateNodes.map(node => {
+                const tag = statusTag[node.status] ?? { label: node.status, color: '#64748B' };
+                return (
+                  <button
+                    key={node.id}
+                    onClick={() => { setSelectedNode(node); setView('detail'); }}
+                    className="group relative flex items-center gap-4 w-full p-4 rounded-2xl transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 text-left overflow-hidden"
+                    style={{ background: 'linear-gradient(145deg, #FFFFFF 0%, #FDFDFD 100%)', border: '1px solid #E2E8F0' }}
+                  >
+                    <div 
+                      className="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0 transition-transform duration-300 group-hover:scale-110 shadow-sm"
+                      style={{ background: '#F8FAFC', border: '1px solid #E2E8F0' }}
+                    >
+                      {nodeIcon(node.type)}
+                    </div>
+                    <div className="flex-1 min-w-0 flex flex-col gap-1">
+                      <span className="text-[15px] font-bold text-[#0F172A] truncate group-hover:text-[#172017] transition-colors">{node.label}</span>
+                      <span className="text-xs font-medium text-[#64748B]">
+                        {node.time ? new Date(node.time).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : 'Time pending'}
+                      </span>
+                    </div>
+                    <span 
+                      className="text-[11px] font-bold px-3 py-1 rounded-full shadow-sm whitespace-nowrap"
+                      style={{ background: `${tag.color}15`, color: tag.color, border: `1px solid ${tag.color}30` }}
+                    >
+                      {tag.label}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );
 }
 
 function nodeIcon(type: string) {
-  const map: Record<string, string> = { flight: '✈️', train: '🚂', bus: '🚌', cab: '🚕', hotel: '🏨', phantom: '🚶' };
-  return map[type] ?? '📍';
+  const size = 20;
+  const map: Record<string, React.ReactNode> = { 
+    flight: <Plane size={size} />, 
+    train: <Train size={size} />, 
+    bus: <Bus size={size} />, 
+    cab: <Car size={size} />, 
+    hotel: <Hotel size={size} />, 
+    phantom: <User size={size} /> 
+  };
+  return map[type] ?? <MapPin size={size} />;
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  container: { padding: '20px', maxWidth: 480, margin: '0 auto', fontFamily: 'Inter, sans-serif' },
-  header: { marginBottom: 20 },
-  heading: { fontSize: 22, fontWeight: 700, color: '#0f172a', margin: 0 },
-  addGrid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 28 },
-  addTile: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '16px 12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 12, cursor: 'pointer', transition: 'all 0.15s' },
-  tileIcon: { fontSize: 24 },
-  tileLabel: { fontSize: 13, color: '#475569', textAlign: 'center', fontWeight: 500 },
-  emptyState: { textAlign: 'center', color: '#94a3b8', padding: '40px 20px', background: '#f8fafc', borderRadius: 12, fontSize: 14 },
-  group: { marginBottom: 20 },
-  groupDate: { fontSize: 12, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 },
-  nodeRow: { display: 'flex', alignItems: 'center', gap: 12, width: '100%', padding: '12px 16px', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 10, marginBottom: 8, cursor: 'pointer', textAlign: 'left' },
-  nodeIcon: { fontSize: 20, flexShrink: 0 },
-  nodeInfo: { flex: 1, display: 'flex', flexDirection: 'column', gap: 2 },
-  nodeLabel: { fontSize: 14, fontWeight: 600, color: '#0f172a' },
-  nodeTime: { fontSize: 12, color: '#94a3b8' },
-  statusTag: { fontSize: 11, fontWeight: 600, padding: '3px 8px', borderRadius: 20, whiteSpace: 'nowrap' },
-};
