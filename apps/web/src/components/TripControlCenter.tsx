@@ -274,7 +274,7 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
 
           {/* Tabs */}
           <div className="flex gap-0 mt-6 border-b" style={{ borderColor: '#D5D9CC' }}>
-            {tabs.map(tab => (
+            {tabs.filter(tab => !(isSolo && tab.id === 'group')).map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
@@ -329,7 +329,7 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
               </div>
             </div>
             <div className="flex flex-col gap-4">
-              <GroupPanel travellers={trip.travellers} />
+              {!isSolo && <GroupPanel travellers={trip.travellers} />}
               {trip.eventLog.length > 0 && (
                 <div>
                   <div className="flex items-center justify-between mb-3">
