@@ -1,5 +1,8 @@
 'use client';
 
+import { useState } from 'react';
+import { ChevronLeft, Copy, Check, MessageCircle, Link2, Sparkles } from 'lucide-react';
+
 interface WhatsAppSetupProps {
   tripId: string;
   joinCode: string;
@@ -8,65 +11,100 @@ interface WhatsAppSetupProps {
 
 export default function WhatsAppSetup({ joinCode, onBack }: WhatsAppSetupProps) {
   const waNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '+1 (555) 000-0000';
-  const instructions = [
-    'Copy this address.',
-    'Send any booking confirmation (PDF, screenshot, text) to it on WhatsApp.',
-    "We'll pull out the details and ask you to confirm before adding them.",
-  ];
+  const [copiedCode, setCopiedCode] = useState(false);
+  const [copiedNumber, setCopiedNumber] = useState(false);
 
-  const handleCopy = () => navigator.clipboard.writeText(waNumber);
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(joinCode);
+    setCopiedCode(true);
+    setTimeout(() => setCopiedCode(false), 2000);
+  };
+
+  const handleCopyNumber = () => {
+    navigator.clipboard.writeText(waNumber);
+    setCopiedNumber(true);
+    setTimeout(() => setCopiedNumber(false), 2000);
+  };
 
   return (
-    <div style={styles.container}>
-      <button style={styles.back} onClick={onBack}>← Back</button>
-      <h2 style={styles.heading}>Forward booking emails here</h2>
+    <div className="max-w-3xl mx-auto p-4 sm:p-8 font-sans animate-fade-in">
+      <button 
+        onClick={onBack} 
+        className="flex items-center gap-1.5 text-sm font-semibold text-[#5F665B] hover:text-[#172017] transition-colors mb-6 cursor-pointer"
+      >
+        <ChevronLeft size={18} /> Back
+      </button>
 
-      {/* Join code */}
-      <div style={styles.card}>
-        <p style={styles.cardLabel}>Your trip join code</p>
-        <div style={styles.codeRow}>
-          <span style={styles.code}>{joinCode}</span>
-          <button style={styles.copyBtn} onClick={() => navigator.clipboard.writeText(joinCode)}>Copy</button>
-        </div>
-        <p style={styles.note}>Send this code once to the WhatsApp number below to link your account.</p>
+      <div className="mb-10">
+        <h2 className="text-3xl font-extrabold text-[#172017] tracking-tight mb-2">Forward via WhatsApp</h2>
+        <p className="text-[#5F665B] font-medium text-[15px]">Simply forward your tickets and confirmations. We'll instantly extract the details and sync them with your trip.</p>
       </div>
 
-      {/* WhatsApp number */}
-      <div style={styles.card}>
-        <p style={styles.cardLabel}>WhatsApp number</p>
-        <div style={styles.codeRow}>
-          <span style={styles.code}>{waNumber}</span>
-          <button style={styles.copyBtn} onClick={handleCopy}>Copy</button>
-        </div>
-      </div>
-
-      {/* Steps */}
-      <div style={styles.steps}>
-        {instructions.map((step, i) => (
-          <div key={i} style={styles.step}>
-            <span style={styles.stepNum}>{i + 1}</span>
-            <span style={styles.stepText}>{step}</span>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+        {/* Join code Card */}
+        <div className="bg-white border border-[#D5D9CC] rounded-3xl p-6 shadow-sm flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl transition-all cursor-default relative overflow-hidden group">
+          <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-[#DCE8D2] to-[#C5D82D]" />
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-9 h-9 rounded-full bg-[#E8F0E2] flex items-center justify-center text-[#4E8752]">
+                <Link2 size={18} />
+              </div>
+              <h3 className="text-[11px] font-bold text-[#5F665B] uppercase tracking-widest">Step 1: Link Account</h3>
+            </div>
+            <p className="text-sm text-[#5F665B] mb-5 leading-relaxed">Send this unique join code once to our WhatsApp number to link your account securely.</p>
+            
+            <div className="flex items-center justify-between bg-[#F8FAFC] border border-[#E2E8F0] p-4 rounded-2xl">
+              <span className="text-2xl font-black text-[#172017] tracking-wider">{joinCode}</span>
+              <button 
+                onClick={handleCopyCode}
+                className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-bold transition-all cursor-pointer shadow-sm ${copiedCode ? 'bg-[#C5D82D] text-[#172017]' : 'bg-[#172017] text-[#C5D82D] hover:bg-[#2D3F2D]'}`}
+              >
+                {copiedCode ? <Check size={16} /> : <Copy size={16} />}
+                {copiedCode ? 'Copied' : 'Copy'}
+              </button>
+            </div>
           </div>
-        ))}
+        </div>
+
+        {/* WhatsApp number Card */}
+        <div className="bg-white border border-[#D5D9CC] rounded-3xl p-6 shadow-sm flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl transition-all cursor-default relative overflow-hidden group">
+          <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-[#4E8752] to-[#25D366]" />
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-9 h-9 rounded-full bg-[#E8FDF0] flex items-center justify-center text-[#25D366]">
+                <MessageCircle size={18} />
+              </div>
+              <h3 className="text-[11px] font-bold text-[#5F665B] uppercase tracking-widest">Step 2: Forward Docs</h3>
+            </div>
+            <p className="text-sm text-[#5F665B] mb-5 leading-relaxed">Save our WhatsApp number and forward PDFs, images, or text messages directly.</p>
+            
+            <div className="flex items-center justify-between bg-[#F8FAFC] border border-[#E2E8F0] p-4 rounded-2xl">
+              <span className="text-lg font-extrabold text-[#172017] tracking-wide">{waNumber}</span>
+              <button 
+                onClick={handleCopyNumber}
+                className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-bold transition-all cursor-pointer shadow-sm ${copiedNumber ? 'bg-[#25D366] text-white' : 'bg-[#172017] text-[#25D366] hover:bg-[#2D3F2D]'}`}
+              >
+                {copiedNumber ? <Check size={16} /> : <Copy size={16} />}
+                {copiedNumber ? 'Copied' : 'Copy'}
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <p style={styles.note}>Only messages from your linked number are accepted.</p>
+      {/* Info Banner */}
+      <div className="bg-[#E8F0E2] border border-[#DCE8D2] rounded-3xl p-6 flex items-start gap-4 shadow-sm animate-slide-up">
+        <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center flex-shrink-0 text-[#4E8752]">
+          <Sparkles size={24} />
+        </div>
+        <div>
+          <h4 className="text-lg font-extrabold text-[#172017] mb-1">Smart Extraction Magic</h4>
+          <p className="text-[15px] font-medium text-[#4E8752] leading-relaxed">
+            Our AI automatically scans the documents you forward. We'll extract flight numbers, PNRs, hotel details, and timings, then send a message back asking you to confirm before adding them to this trip.
+          </p>
+        </div>
+      </div>
+
     </div>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  container: { padding: '20px', maxWidth: 480, margin: '0 auto', fontFamily: 'Inter, sans-serif' },
-  back: { background: 'none', border: 'none', color: '#6366f1', cursor: 'pointer', fontSize: 14, padding: 0, marginBottom: 16 },
-  heading: { fontSize: 22, fontWeight: 700, color: '#0f172a', marginBottom: 24 },
-  card: { background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 12, padding: '16px', marginBottom: 16 },
-  cardLabel: { fontSize: 12, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase' as const, letterSpacing: '0.08em', marginBottom: 8 },
-  codeRow: { display: 'flex', alignItems: 'center', justifyContent: 'space-between' },
-  code: { fontSize: 18, fontWeight: 700, color: '#0f172a', letterSpacing: '0.04em' },
-  copyBtn: { background: '#6366f1', color: '#fff', border: 'none', borderRadius: 8, padding: '6px 14px', fontSize: 13, cursor: 'pointer', fontWeight: 600 },
-  steps: { marginBottom: 20 },
-  step: { display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 12 },
-  stepNum: { width: 24, height: 24, background: '#6366f1', color: '#fff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, flexShrink: 0, lineHeight: '24px', textAlign: 'center' as const },
-  stepText: { fontSize: 14, color: '#475569', lineHeight: 1.5, paddingTop: 2 },
-  note: { fontSize: 12, color: '#94a3b8', lineHeight: 1.5 },
-};

@@ -136,7 +136,7 @@ export default function IngestionHub({ tripId, joinCode }: IngestionHubProps) {
                       className="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0 transition-transform duration-300 group-hover:scale-110 shadow-sm"
                       style={{ background: '#F8FAFC', border: '1px solid #E2E8F0' }}
                     >
-                      {nodeIcon(node.type)}
+                      {nodeIcon(node)}
                     </div>
                     <div className="flex-1 min-w-0 flex flex-col gap-1">
                       <span className="text-[15px] font-bold text-[#0F172A] truncate group-hover:text-[#172017] transition-colors">{node.label}</span>
@@ -161,15 +161,25 @@ export default function IngestionHub({ tripId, joinCode }: IngestionHubProps) {
   );
 }
 
-function nodeIcon(type: string) {
+function nodeIcon(node: Node) {
   const size = 20;
+  const t = node.type;
+  
+  if (t === 'phantom' && node.label) {
+    const l = node.label.toLowerCase();
+    if (l.includes('train')) return <Train size={size} />;
+    if (l.includes('auto') || l.includes('cab')) return <Car size={size} />;
+    if (l.includes('bus')) return <Bus size={size} />;
+    if (l.includes('walk')) return <Map size={size} />;
+    return <MapPin size={size} />;
+  }
+
   const map: Record<string, React.ReactNode> = { 
     flight: <Plane size={size} />, 
     train: <Train size={size} />, 
     bus: <Bus size={size} />, 
     cab: <Car size={size} />, 
-    hotel: <Hotel size={size} />, 
-    phantom: <User size={size} /> 
+    hotel: <Hotel size={size} />
   };
-  return map[type] ?? <MapPin size={size} />;
+  return map[t] ?? <MapPin size={size} />;
 }

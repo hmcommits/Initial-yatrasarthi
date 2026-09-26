@@ -426,6 +426,7 @@ export function TripControlCenter({ trip: initialTrip, onDisrupt }: TripControlC
         {activeTab === 'bookings' && (
           <div className="flex flex-col gap-6">
             <IngestionHub tripId={trip.id} joinCode={trip.joinCode || ''} />
+            <div className="w-full h-px bg-[#E2E8F0] my-2"></div>
             <BookingsTab nodes={trip.nodes} />
           </div>
         )}
@@ -528,132 +529,65 @@ function BookingsTab({ nodes }: { nodes: any[] }) {
   const typeIcons: Record<string, string> = { flight: '✈', train: '🚆', bus: '🚌', cab: '🚕', hotel: '🏨', activity: '🏝', restaurant: '🍽', phantom: '📍', meetup: '🎯' };
   const sourceMap: Record<string, string> = { high: 'Provider API', medium: 'Vendor contact', low: 'User report' };
 
+  if (!nodes || nodes.length === 0) return null;
+
   return (
-    <div className="flex flex-col gap-5">
-      {nodes.map((node) => {
+    <div className="flex flex-col gap-3 max-w-2xl mx-auto w-full font-sans">
+      <p className="text-xs font-bold uppercase tracking-widest text-[#94A3B8] ml-2">Booked Itinerary</p>
+      {nodes.map((node, idx) => {
         const isDisrupted = node.status === 'needs_attention' || node.status === 'disrupted';
         const isConfirmed = node.status === 'confirmed';
         
-        // Define premium gradients based on status
-        const bgGradient = isDisrupted 
-          ? 'linear-gradient(145deg, #FFF5F5 0%, #FFFFFF 100%)'
-          : isConfirmed 
-            ? 'linear-gradient(145deg, #F9FCF8 0%, #FFFFFF 100%)' 
-            : 'linear-gradient(145deg, #FDFDFD 0%, #FFFFFF 100%)';
-            
-        const borderColor = isDisrupted ? '#FCA5A5' : isConfirmed ? '#C6DDA6' : '#E5E7EB';
-        
-        const badgeStyle = isDisrupted 
-          ? { background: 'linear-gradient(90deg, #FEE2E2 0%, #FECACA 100%)', color: '#991B1B', border: '1px solid #FCA5A5' }
-          : isConfirmed 
-            ? { background: 'linear-gradient(90deg, #ECFDF5 0%, #D1FAE5 100%)', color: '#065F46', border: '1px solid #A7F3D0' }
-            : { background: 'linear-gradient(90deg, #FEF3C7 0%, #FDE68A 100%)', color: '#92400E', border: '1px solid #FCD34D' };
-
         return (
           <div 
-            key={node.id} 
-            className="group relative overflow-hidden rounded-2xl p-5 sm:p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+            key={node.id ?? node._id ?? idx}
+            className="group relative overflow-hidden flex items-center gap-4 w-full p-4 rounded-2xl transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 text-left border"
             style={{ 
-              background: bgGradient, 
-              border: `1px solid ${borderColor}`,
-              boxShadow: '0 4px 20px rgba(0,0,0,0.03)'
+              background: 'linear-gradient(145deg, #FFFFFF 0%, #FDFDFD 100%)', 
+              borderColor: isDisrupted ? '#FCA5A5' : isConfirmed ? '#C6DDA6' : '#E2E8F0' 
             }}
           >
-            {/* Ambient glowing effect */}
             <div 
-              className="absolute -right-10 -top-10 w-40 h-40 rounded-full blur-3xl opacity-20 transition-opacity duration-500 group-hover:opacity-40"
-              style={{ background: isDisrupted ? '#EF4444' : isConfirmed ? '#10B981' : '#F59E0B' }}
-            />
+              className="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0 transition-transform duration-300 group-hover:scale-110 shadow-sm"
+              style={{ background: isDisrupted ? '#FEE2E2' : isConfirmed ? '#DCE8D2' : '#F8FAFC', border: `1px solid ${isDisrupted ? '#FCA5A5' : isConfirmed ? '#C6DDA6' : '#E2E8F0'}` }}
+            >
+              {typeIcons[node.type] || '📌'}
+            </div>
             
-            <div className="relative z-10 flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
-              {/* Icon Container */}
-              <div
-                className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 shadow-sm transition-transform duration-300 group-hover:scale-110"
-                style={{ 
-                  background: isDisrupted ? '#FEE2E2' : isConfirmed ? '#DCE8D2' : '#F3F4F6', 
-                  border: `1px solid ${isDisrupted ? '#FCA5A5' : '#C6DDA6'}` 
-                }}
-              >
-                {typeIcons[node.type] || '📌'}
+            <div className="flex-1 min-w-0 flex flex-col gap-1.5">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-[15px] font-bold text-[#0F172A] truncate group-hover:text-[#172017] transition-colors">{node.label}</span>
+                <span 
+                  className="text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow-sm whitespace-nowrap"
+                  style={{
+                    background: isDisrupted ? '#FEE2E2' : isConfirmed ? '#ECFDF5' : '#FEF3C7',
+                    color: isDisrupted ? '#991B1B' : isConfirmed ? '#065F46' : '#92400E',
+                    border: `1px solid ${isDisrupted ? '#FCA5A5' : isConfirmed ? '#A7F3D0' : '#FCD34D'}`
+                  }}
+                >
+                  {isConfirmed ? '✓ Confirmed' : isDisrupted ? '⚠ Disrupted' : '⏳ At Risk'}
+                </span>
               </div>
               
-              {/* Main Content */}
-              <div className="flex-1 min-w-0 w-full">
-                <div className="flex items-center justify-between gap-3 flex-wrap mb-2">
-                  <div className="flex items-center gap-3 flex-wrap">
-                    <span className="text-lg font-extrabold" style={{ color: '#172017', letterSpacing: '-0.01em' }}>{node.label}</span>
-                    <span
-                      className="text-xs font-bold px-3 py-1 rounded-full shadow-sm"
-                      style={badgeStyle}
-                    >
-                      {isConfirmed ? '✓ Confirmed' : isDisrupted ? '⚠ Disrupted' : '⏳ At Risk'}
-                    </span>
-                  </div>
-                  
-                  {/* Trust/Source Info (Moves to right on desktop) */}
-                  <div className="hidden sm:block text-right bg-white/60 backdrop-blur-sm px-4 py-2 rounded-xl border border-gray-100 shadow-sm">
-                    <div className="text-[10px] uppercase tracking-wider font-semibold mb-1" style={{ color: '#9CA3AF' }}>Verification</div>
-                    <div className="text-sm font-bold" style={{ color: '#374151' }}>{sourceMap[node.trustLevel]}</div>
-                    <div className="text-xs font-semibold mt-0.5 flex items-center justify-end gap-1.5" style={{ color: node.trustLevel === 'high' ? '#059669' : node.trustLevel === 'medium' ? '#D97706' : '#DC2626' }}>
-                      <span className="w-1.5 h-1.5 rounded-full" style={{ background: node.trustLevel === 'high' ? '#059669' : node.trustLevel === 'medium' ? '#D97706' : '#DC2626' }} />
-                      {node.trustLevel.charAt(0).toUpperCase() + node.trustLevel.slice(1)} Trust
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex flex-wrap gap-x-6 gap-y-3 text-sm font-medium mt-3" style={{ color: '#5F665B' }}>
-                  <div className="flex items-center gap-1.5">
-                    <span className="opacity-70">Vendor:</span> <span className="text-[#172017]">{node.vendor}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="opacity-70">Loc:</span> <span className="text-[#172017]">{node.location}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="opacity-70">Time:</span> 
-                    <span className="text-[#172017]">
-                      {node.scheduledTime}
-                      {node.delay ? <span className="ml-1 text-red-600 font-bold">(+{node.delay}m)</span> : ''}
-                    </span>
-                  </div>
-                  {node.bookingRef && (
-                    <div className="flex items-center gap-1.5">
-                      <span className="opacity-70">Ref:</span> 
-                      <span className="bg-white/80 text-gray-800 px-2 py-0.5 rounded text-xs font-mono border border-gray-200 shadow-sm">
-                        {node.bookingRef}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-              
-              {/* Trust/Source Info (Mobile version) */}
-              <div className="sm:hidden w-full mt-2 bg-white/60 backdrop-blur-sm px-4 py-3 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
-                <div className="flex flex-col">
-                  <span className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: '#9CA3AF' }}>Verification</span>
-                  <span className="text-sm font-bold" style={{ color: '#374151' }}>{sourceMap[node.trustLevel]}</span>
-                </div>
-                <div className="text-xs font-semibold flex items-center gap-1.5" style={{ color: node.trustLevel === 'high' ? '#059669' : node.trustLevel === 'medium' ? '#D97706' : '#DC2626' }}>
-                  <span className="w-1.5 h-1.5 rounded-full" style={{ background: node.trustLevel === 'high' ? '#059669' : node.trustLevel === 'medium' ? '#D97706' : '#DC2626' }} />
-                  {node.trustLevel.charAt(0).toUpperCase() + node.trustLevel.slice(1)} Trust
-                </div>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-medium text-[#64748B]">
+                <span className="flex items-center gap-1"><span className="opacity-70">Vendor:</span> <span className="text-[#172017]">{node.vendor}</span></span>
+                <span className="flex items-center gap-1"><span className="opacity-70">Loc:</span> <span className="text-[#172017]">{node.location}</span></span>
+                <span className="flex items-center gap-1">
+                  <span className="opacity-70">Time:</span> 
+                  <span className="text-[#172017]">{node.scheduledTime}{node.delay ? <span className="text-red-500 font-bold ml-1">(+{node.delay}m)</span> : ''}</span>
+                </span>
               </div>
             </div>
             
-            {/* Note / Alert Section */}
-            {node.note && (
-              <div className="relative z-10 mt-4 text-sm px-4 py-3.5 rounded-xl border flex items-start gap-3 shadow-sm" 
-                   style={{ 
-                     background: isDisrupted ? '#FEF2F2' : '#F8FAFC', 
-                     color: isDisrupted ? '#991B1B' : '#334155', 
-                     borderColor: isDisrupted ? '#FCA5A5' : '#E2E8F0' 
-                   }}>
-                <div className="mt-0.5 text-base">{isDisrupted ? '🚨' : 'ℹ️'}</div>
-                <div className="font-medium leading-relaxed">{node.note}</div>
-              </div>
-            )}
+            <div className="hidden sm:flex flex-col items-end gap-0.5 bg-gray-50/50 px-3 py-1.5 rounded-lg border border-gray-100">
+              <span className="text-[9px] uppercase tracking-wider font-bold text-[#9CA3AF]">Verification</span>
+              <span className="text-xs font-bold text-[#374151]">{sourceMap[node.trustLevel]}</span>
+            </div>
           </div>
         );
       })}
     </div>
   );
 }
+
+

@@ -318,7 +318,8 @@ function TripCard({
 
   return (
     <div
-      className="card p-6 text-left transition-all hover:shadow-xl rounded-3xl bg-white flex flex-col justify-between"
+      onClick={onSelect}
+      className="card p-6 text-left transition-all hover:shadow-xl hover:-translate-y-1 rounded-3xl bg-white flex flex-col justify-between cursor-pointer group"
       style={{
         border: isDisrupted ? '1px solid #EFAAA5' : '1px solid #D5D9CC',
       }}
@@ -447,8 +448,8 @@ function TripCard({
           CODE: {trip.joinCode || 'PENDING'}
         </span>
         <button
-          onClick={onSelect}
-          className="flex items-center gap-1 text-xs font-bold text-[#172017] hover:text-[#C5D82D] hover:gap-2 transition-all cursor-pointer"
+          onClick={(e) => { e.stopPropagation(); onSelect(); }}
+          className="flex items-center gap-1 text-xs font-bold text-[#172017] transition-all cursor-pointer group-hover:text-[#C5D82D] group-hover:gap-2"
         >
           Open trip <ChevronRight size={14} />
         </button>
