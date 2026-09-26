@@ -38,13 +38,15 @@ export async function POST(request: Request) {
 
     const sessionUser = await getSessionUser(request);
     const now = new Date().toISOString();
+    const getVal = (v: any) => typeof v === 'object' && v !== null && 'value' in v ? v.value : v;
+    
     const doc = {
       tripId,
       ownerId: sessionUser?.id ?? 'anonymous',
       type: extracted.type as NodeType,
-      label: (extracted.fields?.vendor as string) || (extracted.fields?.from as string) || extracted.type,
-      vendor: extracted.fields?.vendor as string | undefined,
-      time: (extracted.fields?.time as string) || (extracted.fields?.date as string) || now,
+      label: getVal(extracted.fields?.vendor) || getVal(extracted.fields?.from) || extracted.type,
+      vendor: getVal(extracted.fields?.vendor),
+      time: getVal(extracted.fields?.time) || getVal(extracted.fields?.date) || now,
       constraintType: 'soft' as const,
       status: 'pending_review' as const,
       rawExtract: extracted.fields,
