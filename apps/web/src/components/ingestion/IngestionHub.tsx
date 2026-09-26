@@ -56,7 +56,7 @@ export default function IngestionHub({ tripId, joinCode }: IngestionHubProps) {
 
   // Group nodes by date
   const grouped = nodes.reduce<Record<string, Node[]>>((acc, node) => {
-    const date = node.time ? new Date(node.time).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) : 'Unknown';
+    const date = node.time ? (isNaN(new Date(node.time).getTime()) ? String(node.time) : new Date(node.time).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })) : 'Unknown';
     (acc[date] ??= []).push(node);
     return acc;
   }, {});
@@ -141,7 +141,7 @@ export default function IngestionHub({ tripId, joinCode }: IngestionHubProps) {
                     <div className="flex-1 min-w-0 flex flex-col gap-1">
                       <span className="text-[15px] font-bold text-[#0F172A] truncate group-hover:text-[#172017] transition-colors">{typeof node.label === 'object' ? (node.label as any)?.value ?? node.type : node.label}</span>
                       <span className="text-xs font-medium text-[#64748B]">
-                        {node.time ? new Date(node.time).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : 'Time pending'}
+                        {node.time ? (isNaN(new Date(node.time).getTime()) ? String(node.time) : new Date(node.time).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })) : 'Time pending'}
                       </span>
                     </div>
                     <span 

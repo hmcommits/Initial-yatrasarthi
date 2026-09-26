@@ -19,11 +19,14 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       return NextResponse.json({ error: 'Trip not found' }, { status: 404 });
     }
 
+    const mappedNodes = nodes.map(n => ({ ...n, id: n._id.toString() }));
+    const mappedEdges = edges.map(e => ({ ...e, id: e._id.toString() }));
+
     return NextResponse.json({
       healthScore: trip.healthScore,
       status: trip.status,
-      nodes,
-      edges
+      nodes: mappedNodes,
+      edges: mappedEdges
     });
   } catch (error) {
     console.error('Failed to fetch graph', error);

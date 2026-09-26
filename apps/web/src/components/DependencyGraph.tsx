@@ -21,7 +21,7 @@ export function DependencyGraph({ nodes, edges, animating }: DependencyGraphProp
         return (
           <div key={node.id || node._id || i} className={`p-3 border rounded shadow-sm flex flex-col gap-2 min-w-[150px] bg-white ${status === 'broken' ? 'border-red-500' : status === 'at_risk' ? 'border-yellow-500' : 'border-green-500'}`}>
             <span className="font-semibold text-sm truncate">{label}</span>
-            <span className="text-xs text-gray-500">{node.time ? new Date(node.time).toLocaleTimeString() : ''}</span>
+            <span className="text-xs text-gray-500">{node.time ? (isNaN(new Date(node.time).getTime()) ? String(node.time) : new Date(node.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })) : ''}</span>
             <span className="text-[10px] uppercase font-bold text-gray-400">{status.replace('_', ' ')}</span>
           </div>
         );

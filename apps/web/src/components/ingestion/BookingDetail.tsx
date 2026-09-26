@@ -61,7 +61,7 @@ export default function BookingDetail({ nodeId, onBack, onDeleted }: BookingDeta
       {/* Timing */}
       <div style={styles.section}>
         <p style={styles.label}>Date &amp; time</p>
-        <p style={styles.value}>{node.time ? new Date(node.time).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : '—'}</p>
+        <p style={styles.value}>{node.time ? (isNaN(new Date(node.time).getTime()) ? String(node.time) : new Date(node.time).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })) : '—'}</p>
       </div>
 
       {/* Constraint */}
